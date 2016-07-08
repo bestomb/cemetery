@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bestomb.dao.ISystemUserDao">
+    <resultMap id="BaseResultMap" type="com.bestomb.entity.SystemUser">
+        <id column="id" property="id" jdbcType="VARCHAR"/>
+        <result column="login_name" property="loginName" jdbcType="VARCHAR"/>
+        <result column="login_password" property="loginPassword" jdbcType="VARCHAR"/>
+        <result column="real_name" property="realName" jdbcType="VARCHAR"/>
+        <result column="mobile" property="mobile" jdbcType="BIGINT"/>
+        <result column="create_time" property="createTime" jdbcType="INTEGER"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    id, login_name, login_password, real_name, mobile, create_time
+  </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from system_user
+        where id = #{id,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from system_user
+    where id IN
+    <foreach item="item" collection="id" open="(" separator="," close=")">
+        #{item}
+    </foreach>
+  </delete>
+    <insert id="insertSelective" parameterType="com.bestomb.entity.SystemUser">
+        <selectKey keyProperty="id" resultType="String" order="BEFORE">
+            select replace(uuid(),'-','') from dual
+        </selectKey>
+        insert into system_user
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="loginName != null">
+                login_name,
+            </if>
+            <if test="loginPassword != null">
+                login_password,
+            </if>
+            <if test="realName != null">
+                real_name,
+            </if>
+            <if test="mobile != null">
+                mobile,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=VARCHAR},
+            </if>
+            <if test="loginName != null">
+                #{loginName,jdbcType=VARCHAR},
+            </if>
+            <if test="loginPassword != null">
+                #{loginPassword,jdbcType=VARCHAR},
+            </if>
+            <if test="realName != null">
+                #{realName,jdbcType=VARCHAR},
+            </if>
+            <if test="mobile != null">
+                #{mobile,jdbcType=BIGINT},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=INTEGER},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.bestomb.entity.SystemUser">
+        update system_user
+        <set>
+            <if test="loginName != null">
+                login_name = #{loginName,jdbcType=VARCHAR},
+            </if>
+            <if test="realName != null">
+                real_name = #{realName,jdbcType=VARCHAR},
+            </if>
+            <if test="mobile != null">
+                mobile = #{mobile,jdbcType=BIGINT},
+            </if>
+        </set>
+        where id = #{id,jdbcType=VARCHAR}
+    </update>
+    <select id="selectByLogin" resultMap="BaseResultMap">
+    select
+    id, login_name, real_name
+    from system_user
+    where login_name = #{login_name} and login_password = #{login_password}
+  </select>
+    <select id="countByPagination" resultType="java.lang.Long">
+        select count(1) from system_user
+        <where>
+            <if test="role_id != null">
+                id in (
+                  select user_id from system_user_role_relate where role_id = #{role_id}
+                )
+            </if>
+        </where>
+    </select>
+    <select id="selectByPagination" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from system_user
+        <where>
+            <if test="role_id != null">
+                id in (
+                  select user_id from system_user_role_relate where role_id = #{role_id}
+                )
+            </if>
+        </where>
+        order by create_time desc
+        limit ${page.pageNo}, ${page.pageSize}
+    </select>
+</mapper>
