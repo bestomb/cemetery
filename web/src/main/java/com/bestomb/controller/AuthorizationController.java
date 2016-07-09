@@ -6,7 +6,6 @@ import com.bestomb.common.response.ServerResponse;
 import com.bestomb.common.util.SessionUtil;
 import com.bestomb.common.util.VerifyCodeUtils;
 import com.bestomb.common.util.yamlMapper.SystemConf;
-import com.bestomb.entity.SystemUserVo;
 import com.bestomb.sevice.AuthorizationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;

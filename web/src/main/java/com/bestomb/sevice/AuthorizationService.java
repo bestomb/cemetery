@@ -1,10 +1,10 @@
 package com.bestomb.sevice;
 
 import com.bestomb.common.exception.EqianyuanException;
+import com.bestomb.common.response.SystemUserVo;
 import com.bestomb.common.util.SessionUtil;
 import com.bestomb.common.util.yamlMapper.SystemConf;
-import com.bestomb.entity.SystemUserBo;
-import com.bestomb.entity.SystemUserVo;
+import com.bestomb.common.response.systemUser.SystemUserBo;
 import com.bestomb.service.ISystemUserService;
 import org.apache.log4j.Logger;
 import org.springframework.beans.BeanUtils;

@@ -4,7 +4,7 @@ import com.bestomb.common.exception.EqianyuanException;
 import com.bestomb.common.request.systemUser.SystemUserByEditRequest;
 import com.bestomb.common.response.PageResponse;
 import com.bestomb.common.response.ServerResponse;
-import com.bestomb.entity.SystemUserBo;
+import com.bestomb.common.response.systemUser.SystemUserBo;
 import com.bestomb.service.ISystemUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;

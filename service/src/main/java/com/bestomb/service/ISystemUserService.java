@@ -1,12 +1,9 @@
 package com.bestomb.service;
 
-import com.bestomb.common.Page;
 import com.bestomb.common.exception.EqianyuanException;
 import com.bestomb.common.request.systemUser.SystemUserByEditRequest;
 import com.bestomb.common.response.PageResponse;
-import com.bestomb.entity.SystemUserBo;
-
-import java.util.List;
+import com.bestomb.common.response.systemUser.SystemUserBo;
 
 /**
  * 系统用户管理业务逻辑

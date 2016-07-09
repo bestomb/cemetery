@@ -15,5 +15,6 @@
     select 
     <include refid="Base_Column_List" />
     from system_menu
+    order by parent_id asc, sort asc
   </select>
 </mapper>

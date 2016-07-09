@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bestomb.dao.ISystemRoleMenuRelateDao" >
+  <resultMap id="BaseResultMap" type="com.bestomb.entity.SystemRoleMenuRelate" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="role_id" property="roleId" jdbcType="VARCHAR" />
+    <result column="menu_id" property="menuId" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, role_id, menu_id
+  </sql>
+  <insert id="insert">
+    insert into system_role_menu_relate (id, role_id, menu_id
+    )
+    values
+    <foreach item="item" collection="menu_id" open="" separator="," close="">
+      (replace(uuid(),'-',''), #{role_id,jdbcType=VARCHAR}, #{item})
+    </foreach>
+  </insert>
+  <delete id="deleteBySystemUser" parameterType="java.lang.String">
+    delete from system_role_menu_relate
+    where role_id in
+    <foreach item="item" collection="role_id" open="(" separator="," close=")">
+      #{item}
+    </foreach>
+  </delete>
+</mapper>

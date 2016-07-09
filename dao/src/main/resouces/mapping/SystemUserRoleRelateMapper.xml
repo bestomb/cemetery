@@ -24,4 +24,11 @@
       #{item}
     </foreach>
   </delete>
+  <delete id="deleteBySystemRole" parameterType="java.lang.String">
+    delete from system_user_role_relate
+    where role_id in
+    <foreach item="item" collection="role_id" open="(" separator="," close=")">
+      #{item}
+    </foreach>
+  </delete>
 </mapper>

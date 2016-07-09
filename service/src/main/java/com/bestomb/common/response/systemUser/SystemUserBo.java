@@ -1,4 +1,4 @@
-package com.bestomb.entity;
+package com.bestomb.common.response.systemUser;
 
 public class SystemUserBo {
     private String id;

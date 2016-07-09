@@ -95,7 +95,7 @@
     <select id="countByPagination" resultType="java.lang.Long">
         select count(1) from system_user
         <where>
-            <if test="role_id != null">
+            <if test="role_id != null and role_id != ''">
                 id in (
                   select user_id from system_user_role_relate where role_id = #{role_id}
                 )
@@ -107,7 +107,7 @@
         <include refid="Base_Column_List"/>
         from system_user
         <where>
-            <if test="role_id != null">
+            <if test="role_id != null and role_id != ''">
                 id in (
                   select user_id from system_user_role_relate where role_id = #{role_id}
                 )

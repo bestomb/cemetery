@@ -1,6 +1,7 @@
 package com.bestomb.dao;
 
 import com.bestomb.entity.SystemMenu;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -11,4 +12,5 @@ public interface ISystemMenuDao {
      * @return
      */
     List<SystemMenu> selectByList();
+
 }

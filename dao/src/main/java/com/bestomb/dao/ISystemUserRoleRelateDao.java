@@ -18,5 +18,13 @@ public interface ISystemUserRoleRelateDao {
      * @param systemUserId
      * @return
      */
-    int deleteBySystemUser(@Param("user_id") String ... systemUserId);
+    int deleteBySystemUser(@Param("user_id") String... systemUserId);
+
+    /**
+     * 根据角色序列编号删除数据
+     *
+     * @param systemRoleId
+     * @return
+     */
+    int deleteBySystemRole(@Param("role_id") String... systemRoleId);
 }

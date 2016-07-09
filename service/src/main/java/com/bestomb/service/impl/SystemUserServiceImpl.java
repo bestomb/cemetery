@@ -12,7 +12,7 @@ import com.bestomb.common.util.yamlMapper.SystemConf;
 import com.bestomb.dao.ISystemUserDao;
 import com.bestomb.dao.ISystemUserRoleRelateDao;
 import com.bestomb.entity.SystemUser;
-import com.bestomb.entity.SystemUserBo;
+import com.bestomb.common.response.systemUser.SystemUserBo;
 import com.bestomb.service.ISystemUserService;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -214,7 +214,7 @@ public class SystemUserServiceImpl implements ISystemUserService {
     public SystemUserBo queryById(String id) throws EqianyuanException {
         //主键是否为空
         if (StringUtils.isEmpty(id)) {
-            logger.info("modify fail , because id is empty");
+            logger.info("queryById fail , because id is empty");
             throw new EqianyuanException(ExceptionMsgConstant.SYSTEM_USER_ID_IS_EMPTY);
         }
 
