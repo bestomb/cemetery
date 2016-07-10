@@ -11,8 +11,11 @@
     <link href="/css/style.css" rel="stylesheet">
     <link href="/css/view/common.css" rel="stylesheet">
     <link href="/css/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="/css/zTreeStyle/zTreeStyle.css" type="text/css">
     <script src="/js/jquery-1.10.1.min.js"></script>
     <script src="/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="/js/jquery.ztree.core-3.5.js"></script>
+    <script type="text/javascript" src="/js/jquery.ztree.excheck-3.5.js"></script>
 </head>
 
 <body>
@@ -21,7 +24,7 @@
     <div id="page-wrapper">
         <div class="row">
             <div class="col-lg-12">
-                <h1 class="page-header">修改上位机</h1>
+                <h1 class="page-header">修改管理员角色</h1>
             </div>
             <!-- /.col-lg-12 -->
         </div>
@@ -38,40 +41,19 @@
                                     <!-- 数据序列编号 -->
                                     <input class="form-control hidden" name="id" value="${param.id }">
                                     <div class="form-group">
-                                        <label>设备名称</label>
+                                        <label>角色名称</label>
                                         <input class="form-control" name="name">
                                     </div>
                                     <div class="form-group">
-                                        <label>设备代码</label>
-                                        <input class="form-control" name="code" placeholder="内容只能是数字">
-                                    </div>
-                                    <div class="row">
-                                        <div class="form-group col-xs-4">
-                                            <label>省</label>
-                                            <select class="form-control province" name="province">
-                                                <option value="">-- 请选择省 --</option>
-                                            </select>
-                                        </div>
-                                        <div class="form-group col-xs-4">
-                                            <label>市</label>
-                                            <select class="form-control city" name="city">
-                                                <option value="">-- 请选择市 --</option>
-                                            </select>
-                                        </div>
-                                        <div class="form-group col-xs-4">
-                                            <label>区</label>
-                                            <select class="form-control county" name="county">
-                                                <option value="">-- 请选择区 --</option>
-                                            </select>
-                                        </div>
+                                        <label>备注</label>
+                                        <textarea class="form-control" rows="3" name="remark"></textarea>
                                     </div>
                                     <div class="form-group">
-                                        <label>设备地址</label>
-                                        <input class="form-control" name="address">
-                                    </div>
-                                    <div class="form-group">
-                                        <label>设备描述</label>
-                                        <textarea class="form-control" rows="3" name="description"></textarea>
+                                        <label class="control-label">绑定菜单</label>
+                                        <div class="controls">
+                                            <ul id="menuTree" class="ztree span6 m-wrap"
+                                                style="border: 1px solid;overflow-y: scroll;overflow-x: auto;"></ul>
+                                        </div>
                                     </div>
                                     <input type="button" class="btn btn-outline btn-success submit" value="保存">
                                     <input type="button" class="btn btn-outline btn-info back" value="返回">
@@ -91,171 +73,53 @@
 
 <script>
     $(function () {
-        /**
-         * 获取地区集合
-         * params postUrl  请求地址
-         * params postData  请求参数
-         * params callBack  回调函数
-         */
-        var getArea = function (postUrl, postData, callBack) {
-            $.ajax({
-                type: "GET",
-                url: postUrl,
-                data: postData,
-                success: function (resp) {
-                    if (resp.code == "200") {
-                        eval(callBack + "(resp.data)");
-                    } else {
-                        $("#form-tip").removeClass("hidden alert-success").addClass("alert-warning").show().find("strong").text(resp.message);
-                        $(".submit").removeAttr("disabled");
-                    }
-                }
-            });
-        }
-
-        //获取省级数据地址
-        var getProvinceUrl = "/getProvince";
-        //获取市级数据地址
-        var getCityUrl = "/getCity";
-        //获取区级数据地址
-        var getCountyUrl = "/getCounty";
-
-        //省点击事件
-        $(".province").change(function () {
-            getArea(getCityUrl, {provinceId: $(this).val()}, "setCity");
-        });
-
-        //市点击事件
-        $(".city").change(function () {
-            getArea(getCountyUrl, {cityId: $(this).val()}, "setCounty");
-        });
-
-        /**
-         * 填充省级数据
-         */
-        var setProvince = function (data) {
-            /*
-             判断是否为修改首次加载，只有当时首次加载时，才不需要清空市区下拉数据
-             否则就是联动操作，每次都需要清空市区的下拉数据
-             */
-            if (initLoadByArea > 3) {
-                //还原市和区数据
-                $(".city").html("<option value=''>-- 请选择市 --</option>");
-                $(".county").html("<option value=''>-- 请选择区 --</option>");
-            }else{
-                initLoadByArea ++ ;
-            }
-
-            if (data != null && data.length > 0) {
-                var option = "<option value=''>-- 请选择省 --</option>";
-                $(data).each(function () {
-                    var selected = "";
-                    if (province == this.province_id) {
-                        selected = 'selected';
-                    }
-                    option += '<option value="' + this.province_id + '" ' + selected + '>' + this.province_name + '</option>';
-                });
-
-                $(".province").html(option);
-            }
-        }
-
-        /**
-         * 填充市级数据
-         */
-        var setCity = function (data) {
-            /*
-             判断是否为修改首次加载，只有当时首次加载时，才不需要清空区下拉数据
-             否则就是联动操作，每次都需要清空区的下拉数据
-             */
-            if (initLoadByArea > 3) {
-                //还原区数据
-                $(".county").html("<option value=''>-- 请选择区 --</option>");
-            }else{
-                initLoadByArea ++ ;
-            }
-
-            if (data != null && data.length > 0) {
-                var option = "<option value=''>-- 请选择市 --</option>";
-                $(data).each(function () {
-                    var selected = "";
-                    if (city == this.city_id) {
-                        selected = 'selected';
-                    }
-                    option += '<option value="' + this.city_id + '" ' + selected + '>' + this.city_name + '</option>';
-                });
-
-                $(".city").html(option);
-            }
-        }
-
-        /**
-         * 填充区级数据
-         */
-        var setCounty = function (data) {
-            if(initLoadByArea < 3){
-                //变更初始加载变量，表示初始加载已经结束
-                initLoadByArea ++;
-            }
-
-            if (data != null && data.length > 0) {
-                var option = "<option value=''>-- 请选择区 --</option>";
-                $(data).each(function () {
-                    var selected = "";
-                    if (county == this.county_id) {
-                        selected = 'selected';
-                    }
-                    option += '<option value="' + this.county_id + '" ' + selected + '>' + this.county_name + '</option>';
-                });
-
-                $(".county").html(option);
-            }
-        }
-
         $.ajax({
             type: "POST",
-            url: "/system-manage/masterComputer/object",
+            url: "/system_role/info",
             data: {id: "${param.id}"},
             success: function (response) {
-                //全局变量：地区数据首次加载，只有首次加载的时候，省市区才需要全部都要有下拉数据，省市区共加载3次，所以初始为1，当值达到或超出3次时，则认定位非初始加载
-                initLoadByArea = 1;
                 if (response.code == "200") {
                     var _this = response.data;
                     $("input[name='name']").val(_this.name);
-                    $("input[name='code']").val(_this.code);
-                    $("input[name='address']").val(_this.address);
-                    $("textarea[name='description']").val(_this.description);
-                    province = _this.province;
-                    city = _this.city;
-                    county = _this.county;
+                    $("textarea[name='remark']").val(_this.remark);
+                    getSystemMenuList(_this.menuId);
                 } else {
                     $("#form-tip").removeClass("hidden alert-warning").addClass("alert-success").show().find("strong").text(response.message);
                     //3秒后自动关闭警告框
                     setTimeout("hideOperatorTip()", 3000);
                 }
-
-                //获取省级数据
-                getArea(getProvinceUrl, null, "setProvince");
-                //获取市级数据
-                getArea(getCityUrl, {provinceId: province}, "setCity");
-                //获取区级数据
-                getArea(getCountyUrl, {cityId: city}, "setCounty");
             }
         });
 
+        //返回
+        $(".back").click(function () {
+            window.history.go(-1);
+        });
+
+        //提交保存
         $(".submit").click(function () {
             $(this).attr('disabled', "true")
 
+            //获取所有被选中的菜单
+            var checkedNodes = menuTree.getCheckedNodes(true);
+            var menuIds = new Array();
+            if (checkedNodes.length > 0) {
+                $(checkedNodes).each(function () {
+                    menuIds.push(this.id);
+                });
+            }
+
+            //异步提交表单
             $.ajax({
                 type: "POST",
-                url: "/system-manage/masterComputer/update",
-                data: $("form").serialize(),
+                url: "/system_role/modify",
+                data: $('form').serialize() + "&menuId=" + menuIds.join(","),
                 success: function (response) {
                     if (response.code == "200") {
                         $("#form-tip").removeClass("hidden alert-warning").addClass("alert-success").show().find("strong").text(response.message);
 
                         setTimeout(function () {
-                            window.location.href = "/system-manage/gotoPage?url=master computer/list";
+                            window.location.href = "/system-manage/gotoPage?url=system role/list";
                         }, 500);
                     } else {
                         $("#form-tip").removeClass("hidden alert-success").addClass("alert-warning").show().find("strong").text(response.message);
@@ -264,20 +128,54 @@
                 }
             });
         });
-
-        $(".back").click(function () {
-            window.history.go(-1);
-        });
     });
 
     /**
-     * 隐藏警告框
+     * 获取系统菜单数据并渲染成树状结构，渲染的同时，如果menuIds存在，则将节点选中
+     *
      */
-    function hideOperatorTip() {
-        $("#form-tip").addClass("hidden")
-        window.history.go(-1);
-    }
+    function getSystemMenuList(menuIds) {
+        var setting = {
+            check: {
+                enable: true
+            },
+            data: {
+                simpleData: {
+                    enable: true,
+                    pIdKey: "parentId",
+                    rootPid: 0,
+                }
+            }
+        };
 
+        //获取菜单数据集合
+        $.ajax({
+            type: "post",
+            url: "/system_menu/list",
+            traditional: true,
+            data: null,
+            success: function (response) {
+                if (response.code != "200" || response.data.length <= 0) {
+                    return false;
+                }
+
+                if (menuIds != null && menuIds.length > 0) {
+                    $(response.data).each(function(){
+                        var _this = this;
+                        $(menuIds).each(function () {
+                            if(_this.id == this){
+                                _this.checked = true;
+                                return true;
+                            }
+                        });
+                    });
+                }
+
+                menuTree = $.fn.zTree.init($("#menuTree"), setting, response.data);
+                menuTree.expandAll(true);
+            }
+        });
+    }
 </script>
 </body>
 

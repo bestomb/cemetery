@@ -45,15 +45,15 @@
                                     </div>
                                     <div class="form-group">
                                         <label>备注</label>
-                                        <textarea class="form-control" rows="3" name="description"></textarea>
+                                        <textarea class="form-control" rows="3" name="remark"></textarea>
                                     </div>
-                                    <div class="control-group">
+                                    <div class="form-group">
                                         <label class="control-label">绑定菜单</label>
                                         <div class="controls">
                                             <ul id="menuTree" class="ztree span6 m-wrap" style="border: 1px solid;overflow-y: scroll;overflow-x: auto;"></ul>
                                         </div>
                                     </div>
-                                    <input type="button" class="btn btn-outline btn-success submit" value="注册">
+                                    <input type="button" class="btn btn-outline btn-success submit" value="保存">
                                     <input type="button" class="btn btn-outline btn-info back" value="返回">
                                 </form>
                             </div>
@@ -98,11 +98,44 @@
             }
         });
 
+        //返回
         $(".back").click(function () {
             window.history.go(-1);
         });
-    });
 
+        //提交保存
+        $(".submit").click(function(){
+            $(this).attr('disabled', "true")
+
+            //获取所有被选中的菜单
+            var checkedNodes = menuTree.getCheckedNodes(true);
+            var menuIds = new Array();
+            if(checkedNodes.length > 0){
+                $(checkedNodes).each(function(){
+                    menuIds.push(this.id);
+                });
+            }
+
+            //异步提交表单
+            $.ajax({
+                type: "POST",
+                url: "/system_role/add",
+                data: $('form').serialize()+"&menuId="+menuIds.join(","),
+                success: function(response){
+                    if (response.code == "200") {
+                        $("#form-tip").removeClass("hidden alert-warning").addClass("alert-success").show().find("strong").text(response.message);
+
+                        setTimeout(function () {
+                            window.location.href = "/system-manage/gotoPage?url=system role/list";
+                        }, 500);
+                    } else {
+                        $("#form-tip").removeClass("hidden alert-success").addClass("alert-warning").show().find("strong").text(response.message);
+                        $(".submit").removeAttr("disabled");
+                    }
+                }
+            });
+        });
+    });
 </script>
 </body>
 

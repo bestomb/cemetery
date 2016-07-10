@@ -11,8 +11,11 @@
     <link href="/css/style.css" rel="stylesheet">
     <link href="/css/view/common.css" rel="stylesheet">
     <link href="/css/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="/css/zTreeStyle/zTreeStyle.css" type="text/css">
     <script src="/js/jquery-1.10.1.min.js"></script>
     <script src="/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="/js/jquery.ztree.core-3.5.js"></script>
+    <script type="text/javascript" src="/js/jquery.ztree.excheck-3.5.js"></script>
 </head>
 
 <body>
@@ -21,7 +24,7 @@
     <div id="page-wrapper">
         <div class="row">
             <div class="col-lg-12">
-                <h1 class="page-header">上位机信息</h1>
+                <h1 class="page-header">管理员角色详细信息</h1>
             </div>
             <!-- /.col-lg-12 -->
         </div>
@@ -35,35 +38,21 @@
                                     <strong></strong>
                                 </div>
                                 <form role="form">
+                                    <!-- 数据序列编号 -->
                                     <div class="form-group">
-                                        <label>设备名称</label>
+                                        <label>角色名称</label>
                                         <input class="form-control" name="name" disabled>
                                     </div>
                                     <div class="form-group">
-                                        <label>设备代码</label>
-                                        <input class="form-control" name="code" disabled>
-                                    </div>
-                                    <div class="row">
-                                        <div class="form-group col-xs-4">
-                                            <label>省</label>
-                                            <select class="form-control province" name="province" disabled></select>
-                                        </div>
-                                        <div class="form-group col-xs-4">
-                                            <label>市</label>
-                                            <select class="form-control city" name="city" disabled></select>
-                                        </div>
-                                        <div class="form-group col-xs-4">
-                                            <label>区</label>
-                                            <select class="form-control county" name="county" disabled></select>
-                                        </div>
+                                        <label>备注</label>
+                                        <textarea class="form-control" rows="3" name="remark" disabled></textarea>
                                     </div>
                                     <div class="form-group">
-                                        <label>设备地址</label>
-                                        <input class="form-control" name="address" disabled>
-                                    </div>
-                                    <div class="form-group">
-                                        <label>设备描述</label>
-                                        <textarea class="form-control" rows="3" name="description" disabled></textarea>
+                                        <label class="control-label">绑定菜单</label>
+                                        <div class="controls">
+                                            <ul id="menuTree" class="ztree span6 m-wrap"
+                                                style="border: 1px solid;overflow-y: scroll;overflow-x: auto;"></ul>
+                                        </div>
                                     </div>
                                     <input type="button" class="btn btn-outline btn-info back" value="返回">
                                 </form>
@@ -84,18 +73,14 @@
     $(function () {
         $.ajax({
             type: "POST",
-            url: "/system-manage/masterComputer/object",
+            url: "/system_role/info",
             data: {id: "${param.id}"},
             success: function (response) {
                 if (response.code == "200") {
                     var _this = response.data;
                     $("input[name='name']").val(_this.name);
-                    $("input[name='code']").val(_this.code);
-                    $("select[name='province']").html('<option>' + _this.province_name + '</option>');
-                    $("select[name='city']").html('<option>' + _this.city_name + '</option>');
-                    $("select[name='county']").html('<option>' + _this.county_name + '</option>');
-                    $("input[name='address']").val(_this.address);
-                    $("textarea[name='description']").val(_this.description);
+                    $("textarea[name='remark']").val(_this.remark);
+                    getSystemMenuList(_this.menuId);
                 } else {
                     $("#form-tip").removeClass("hidden alert-warning").addClass("alert-success").show().find("strong").text(response.message);
                     //3秒后自动关闭警告框
@@ -104,19 +89,57 @@
             }
         });
 
+        //返回
         $(".back").click(function () {
             window.history.go(-1);
         });
     });
 
     /**
-     * 隐藏警告框
+     * 获取系统菜单数据并渲染成树状结构，渲染的同时，如果menuIds存在，则将节点选中
+     *
      */
-    function hideOperatorTip() {
-        $("#form-tip").addClass("hidden")
-        window.history.go(-1);
-    }
+    function getSystemMenuList(menuIds) {
+        var setting = {
+            check: {
+                enable: true
+            },
+            data: {
+                simpleData: {
+                    enable: true,
+                    pIdKey: "parentId",
+                    rootPid: 0,
+                }
+            }
+        };
 
+        //获取菜单数据集合
+        $.ajax({
+            type: "post",
+            url: "/system_menu/list",
+            traditional: true,
+            data: null,
+            success: function (response) {
+                if (response.code != "200" || response.data.length <= 0) {
+                    return false;
+                }
+
+                $(response.data).each(function(){
+                    var _this = this;
+                    $(menuIds).each(function () {
+                        if(_this.id == this){
+                            _this.checked = true;
+                            return true;
+                        }
+                    });
+                    _this.chkDisabled = true;
+                });
+
+                menuTree = $.fn.zTree.init($("#menuTree"), setting, response.data);
+                menuTree.expandAll(true);
+            }
+        });
+    }
 </script>
 </body>
 

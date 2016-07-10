@@ -187,7 +187,7 @@
         $(".confirm").click(function () {
             $.ajax({
                 type: "post",
-                url: "/system-manage/masterComputer/delete",
+                url: "/system_role/delete",
                 traditional: true,
                 data: {"id": ids},
                 success: function (response) {
@@ -220,15 +220,15 @@
 
         //数据修改
         $("#dataTables tbody").on("click", ".update", function () {
-            window.location.href = "/system-manage/gotoPage?url=master computer/update&id=" + $(this).parents("tr").find("input[type='checkbox']").val();
+            window.location.href = "/system-manage/gotoPage?url=system role/update&id=" + $(this).parents("tr").find("input[type='checkbox']").val();
         })
 
         //数据详细信息
         $("#dataTables tbody").on("click", ".detail", function () {
-            window.location.href = "/system-manage/gotoPage?url=master computer/detail&id=" + $(this).parents("tr").find("input[type='checkbox']").val();
+            window.location.href = "/system-manage/gotoPage?url=system role/detail&id=" + $(this).parents("tr").find("input[type='checkbox']").val();
         })
 
-        //注册上位机
+        //添加角色
         $(".add").click(function () {
             window.location.href = "/system-manage/gotoPage?url=system role/add";
         });

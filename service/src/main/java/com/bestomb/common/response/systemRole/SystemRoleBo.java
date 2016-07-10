@@ -1,5 +1,7 @@
 package com.bestomb.common.response.systemRole;
 
+import com.bestomb.entity.SystemMenuBo;
+
 /**
  * 系统角色查询结果返回对象
  * Created by jason on 2016-07-08.
@@ -19,6 +21,11 @@ public class SystemRoleBo {
      * 备注
      */
     private String remark;
+
+    /**
+     * 菜单
+     */
+    private String[] menuId;
 
     public String getId() {
         return id;
@@ -42,5 +49,13 @@ public class SystemRoleBo {
 
     public void setRemark(String remark) {
         this.remark = remark;
+    }
+
+    public String[] getMenuId() {
+        return menuId;
+    }
+
+    public void setMenuId(String[] menuId) {
+        this.menuId = menuId;
     }
 }

@@ -10,18 +10,23 @@
     id, role_id, menu_id
   </sql>
   <insert id="insert">
-    insert into system_role_menu_relate (id, role_id, menu_id
-    )
+    insert into system_role_menu_relate (id, role_id, menu_id)
     values
     <foreach item="item" collection="menu_id" open="" separator="," close="">
       (replace(uuid(),'-',''), #{role_id,jdbcType=VARCHAR}, #{item})
     </foreach>
   </insert>
-  <delete id="deleteBySystemUser" parameterType="java.lang.String">
+  <delete id="deleteBySystemRole" parameterType="java.lang.String">
     delete from system_role_menu_relate
     where role_id in
     <foreach item="item" collection="role_id" open="(" separator="," close=")">
       #{item}
     </foreach>
   </delete>
+  <select id="selectMenuIdBySystemRole" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"/>
+    from system_role_menu_relate
+    where role_id = #{role_id}
+  </select>
 </mapper>

@@ -11,6 +11,7 @@ import com.bestomb.dao.ISystemRoleDao;
 import com.bestomb.dao.ISystemRoleMenuRelateDao;
 import com.bestomb.dao.ISystemUserRoleRelateDao;
 import com.bestomb.entity.SystemRole;
+import com.bestomb.entity.SystemRoleMenuRelate;
 import com.bestomb.service.ISystemRoleService;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -87,6 +88,9 @@ public class SystemRoleServiceImpl implements ISystemRoleService {
 
         //删除用户角色关系
         systemUserRoleRelateDao.deleteBySystemRole(id);
+
+        //删除角色与菜单管理
+        systemRoleMenuRelateDao.deleteBySystemRole(id);
     }
 
     /**
@@ -118,10 +122,12 @@ public class SystemRoleServiceImpl implements ISystemRoleService {
 
         //角色备注内容长度是否超出DB许可长度
         try {
-            if (systemRoleByEditRequest.getRemark().getBytes(SystemConf.PLATFORM_CHARSET.toString()).length > REMARK_MAX_BYTES_BY_DB) {
-                logger.info("add fail , because name [" + systemRoleByEditRequest.getRemark()
-                        + "] bytes greater than" + REMARK_MAX_BYTES_BY_DB);
-                throw new EqianyuanException(ExceptionMsgConstant.SYSTEM_ROLE_REMARK_TO_LONG);
+            if (!StringUtils.isEmpty(systemRoleByEditRequest.getRemark())) {
+                if (systemRoleByEditRequest.getRemark().getBytes(SystemConf.PLATFORM_CHARSET.toString()).length > REMARK_MAX_BYTES_BY_DB) {
+                    logger.info("add fail , because name [" + systemRoleByEditRequest.getRemark()
+                            + "] bytes greater than" + REMARK_MAX_BYTES_BY_DB);
+                    throw new EqianyuanException(ExceptionMsgConstant.SYSTEM_ROLE_REMARK_TO_LONG);
+                }
             }
         } catch (UnsupportedEncodingException e) {
             logger.info("add fail , because name [" + systemRoleByEditRequest.getRemark()
@@ -176,10 +182,12 @@ public class SystemRoleServiceImpl implements ISystemRoleService {
 
         //角色备注内容长度是否超出DB许可长度
         try {
-            if (systemRoleByEditRequest.getRemark().getBytes(SystemConf.PLATFORM_CHARSET.toString()).length > REMARK_MAX_BYTES_BY_DB) {
-                logger.info("modify fail , because name [" + systemRoleByEditRequest.getRemark()
-                        + "] bytes greater than" + REMARK_MAX_BYTES_BY_DB);
-                throw new EqianyuanException(ExceptionMsgConstant.SYSTEM_ROLE_REMARK_TO_LONG);
+            if (!StringUtils.isEmpty(systemRoleByEditRequest.getRemark())) {
+                if (systemRoleByEditRequest.getRemark().getBytes(SystemConf.PLATFORM_CHARSET.toString()).length > REMARK_MAX_BYTES_BY_DB) {
+                    logger.info("modify fail , because name [" + systemRoleByEditRequest.getRemark()
+                            + "] bytes greater than" + REMARK_MAX_BYTES_BY_DB);
+                    throw new EqianyuanException(ExceptionMsgConstant.SYSTEM_ROLE_REMARK_TO_LONG);
+                }
             }
         } catch (UnsupportedEncodingException e) {
             logger.info("modify fail , because name [" + systemRoleByEditRequest.getRemark()
@@ -191,9 +199,10 @@ public class SystemRoleServiceImpl implements ISystemRoleService {
         BeanUtils.copyProperties(systemRoleByEditRequest, systemRole);
         systemRoleDao.updateByPrimaryKeySelective(systemRole);
 
+        //删除角色与菜单关系
+        systemRoleMenuRelateDao.deleteBySystemRole(systemRoleByEditRequest.getId());
+
         if (!ObjectUtils.isEmpty(systemRoleByEditRequest.getMenuId())) {
-            //删除角色与菜单关系
-            systemRoleMenuRelateDao.deleteBySystemUser(systemRoleByEditRequest.getId());
             //添加角色与菜单关系
             systemRoleMenuRelateDao.insert(systemRole.getId(), systemRoleByEditRequest.getMenuId());
         }
@@ -223,6 +232,17 @@ public class SystemRoleServiceImpl implements ISystemRoleService {
 
         SystemRoleBo systemRoleBo = new SystemRoleBo();
         BeanUtils.copyProperties(systemRole, systemRoleBo);
+
+        //查询绑定的菜单编号
+        List<SystemRoleMenuRelate> systemRoleMenuRelates = systemRoleMenuRelateDao.selectMenuIdBySystemRole(id);
+        if (!CollectionUtils.isEmpty(systemRoleMenuRelates)) {
+            List<String> menuIds = new ArrayList<String>();
+            for (SystemRoleMenuRelate systemRoleMenuRelate : systemRoleMenuRelates) {
+                menuIds.add(systemRoleMenuRelate.getMenuId());
+            }
+            systemRoleBo.setMenuId(menuIds.toArray(new String[0]));
+        }
+
         return systemRoleBo;
     }
 

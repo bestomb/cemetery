@@ -1,6 +1,9 @@
 package com.bestomb.dao;
 
+import com.bestomb.entity.SystemRoleMenuRelate;
 import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 public interface ISystemRoleMenuRelateDao {
     /**
@@ -18,5 +21,14 @@ public interface ISystemRoleMenuRelateDao {
      * @param systemRoleId
      * @return
      */
-    int deleteBySystemUser(@Param("role_id") String... systemRoleId);
+    int deleteBySystemRole(@Param("role_id") String... systemRoleId);
+
+    /**
+     * 根据角色编号查询角色绑定的菜单编号
+     *
+     * @param systemRoleId
+     * @return
+     */
+    List<SystemRoleMenuRelate> selectMenuIdBySystemRole(@Param("role_id") String systemRoleId);
+
 }
