@@ -1,7 +1,7 @@
 package com.bestomb.service;
 
 import com.bestomb.common.exception.EqianyuanException;
-import com.bestomb.common.response.systemMenu.SystemMenuByQueryResponse;
+import com.bestomb.common.response.systemMenu.SystemMenuBo;
 
 import java.util.List;
 
@@ -16,12 +16,13 @@ public interface ISystemMenuService {
      *
      * @return
      */
-    List<SystemMenuByQueryResponse> getList() throws EqianyuanException;
+    List<SystemMenuBo> getList() throws EqianyuanException;
 
     /**
-     * 根据用户信息获取数据集合
+     * 根据角色信息获取数据集合
      *
+     * @param roleId
      * @return
      */
-//    List<SystemMenuByQueryResponse> getListBySystemUser();
+    List<SystemMenuBo> getListBySystemRole(String ... roleId);
 }

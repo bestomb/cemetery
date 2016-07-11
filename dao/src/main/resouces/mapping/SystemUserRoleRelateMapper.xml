@@ -31,4 +31,10 @@
       #{item}
     </foreach>
   </delete>
+  <select id="selectMenuIdBySystemUser" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"/>
+    from system_user_role_relate
+    where user_id = #{user_id}
+  </select>
 </mapper>

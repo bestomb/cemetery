@@ -41,7 +41,6 @@
                                     <div class="form-group">
                                         <label>角色名称</label>
                                         <input class="form-control" name="name">
-                                        <p class="help-block tip">tip.</p>
                                     </div>
                                     <div class="form-group">
                                         <label>备注</label>

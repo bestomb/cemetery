@@ -132,7 +132,7 @@
 
                 $.ajax({
                     type: "POST",
-                    url: "/system_user/dataList",
+                    url: "/system_user/paginationList",
                     data: $.extend({}, pagination.data, pagination.page),
                     success: function (response) {
                         //设置分页
@@ -205,7 +205,7 @@
         $(".confirm").click(function () {
             $.ajax({
                 type: "post",
-                url: "/system-manage/masterComputer/delete",
+                url: "/system_user/delete",
                 traditional: true,
                 data: {"id": ids},
                 success: function (response) {
@@ -238,17 +238,17 @@
 
         //数据修改
         $("#dataTables tbody").on("click", ".update", function () {
-            window.location.href = "/system-manage/gotoPage?url=master computer/update&id=" + $(this).parents("tr").find("input[type='checkbox']").val();
+            window.location.href = "/system-manage/gotoPage?url=system user/update&id=" + $(this).parents("tr").find("input[type='checkbox']").val();
         })
 
         //数据详细信息
         $("#dataTables tbody").on("click", ".detail", function () {
-            window.location.href = "/system-manage/gotoPage?url=master computer/detail&id=" + $(this).parents("tr").find("input[type='checkbox']").val();
+            window.location.href = "/system-manage/gotoPage?url=system user/detail&id=" + $(this).parents("tr").find("input[type='checkbox']").val();
         })
 
         //注册上位机
         $(".add").click(function () {
-            window.location.href = "/system-manage/gotoPage?url=master computer/add";
+            window.location.href = "/system-manage/gotoPage?url=system user/add";
         });
     });
 

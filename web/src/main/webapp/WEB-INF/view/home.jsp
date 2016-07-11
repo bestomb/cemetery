@@ -31,7 +31,7 @@
         <ul class="nav navbar-top-links navbar-right">
             <li class="dropdown">
                 <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                    <i class="fa fa-user fa-fw"></i> <i class="fa fa-caret-down"></i>
+                    <i class="fa fa-user fa-fw"></i> ${systemUser.realName }&nbsp;&nbsp;<i class="fa fa-caret-down"></i>
                 </a>
                 <ul class="dropdown-menu dropdown-user">
                     <li><a href="/system-manage/logout"><i class="fa fa-sign-out fa-fw"></i> 退出登录</a>
@@ -45,9 +45,9 @@
                 <ul class="nav" id="side-menu">
                     <li class="sidebar-search">
                         <div class="input-group custom-search-form">
-                            <input type="text" class="form-control" placeholder="菜单查找...">
+                            <input type="text" class="form-control" placeholder="菜单查找..." id="searchByMenuName">
                                 <span class="input-group-btn">
-                                <button class="btn btn-default" type="button">
+                                <button class="btn btn-default" type="button" id="searchByMenuNameBtn">
                                     <i class="fa fa-search"></i>
                                 </button>
                             </span>
@@ -67,6 +67,18 @@
     $(function () {
         $("#side-menu").on("click", ".menu", function () {
             $("#contentIframe").attr("src", "/system-manage/gotoPage?url=" + $(this).attr("ref"));
+        });
+
+        $("#searchByMenuNameBtn").click(function(){
+            var searchMenuName = $("#searchByMenuName").val();
+            $(".menuName").each(function(){
+                var index = $(this).text().indexOf(searchMenuName);
+                if(index == -1){
+                    $(this).parents("li").hide();
+                }else{
+                    $(this).parents("li").show();
+                }
+            });
         });
     });
 </script>

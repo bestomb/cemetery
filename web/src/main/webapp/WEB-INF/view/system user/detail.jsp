@@ -11,8 +11,11 @@
     <link href="/css/style.css" rel="stylesheet">
     <link href="/css/view/common.css" rel="stylesheet">
     <link href="/css/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="/css/zTreeStyle/zTreeStyle.css" type="text/css">
     <script src="/js/jquery-1.10.1.min.js"></script>
     <script src="/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="/js/jquery.ztree.core-3.5.js"></script>
+    <script type="text/javascript" src="/js/jquery.ztree.excheck-3.5.js"></script>
 </head>
 
 <body>
@@ -21,7 +24,7 @@
     <div id="page-wrapper">
         <div class="row">
             <div class="col-lg-12">
-                <h1 class="page-header">上位机信息</h1>
+                <h1 class="page-header">系统管理用户详细信息</h1>
             </div>
             <!-- /.col-lg-12 -->
         </div>
@@ -36,35 +39,25 @@
                                 </div>
                                 <form role="form">
                                     <div class="form-group">
-                                        <label>设备名称</label>
-                                        <input class="form-control" name="name" disabled>
+                                        <label>用户名</label>
+                                        <input class="form-control" name="loginName" disabled>
                                     </div>
                                     <div class="form-group">
-                                        <label>设备代码</label>
-                                        <input class="form-control" name="code" disabled>
-                                    </div>
-                                    <div class="row">
-                                        <div class="form-group col-xs-4">
-                                            <label>省</label>
-                                            <select class="form-control province" name="province" disabled></select>
-                                        </div>
-                                        <div class="form-group col-xs-4">
-                                            <label>市</label>
-                                            <select class="form-control city" name="city" disabled></select>
-                                        </div>
-                                        <div class="form-group col-xs-4">
-                                            <label>区</label>
-                                            <select class="form-control county" name="county" disabled></select>
-                                        </div>
+                                        <label>真实姓名</label>
+                                        <input class="form-control" name="realName" disabled>
                                     </div>
                                     <div class="form-group">
-                                        <label>设备地址</label>
-                                        <input class="form-control" name="address" disabled>
+                                        <label>手机号码</label>
+                                        <input class="form-control" name="mobile" disabled>
                                     </div>
                                     <div class="form-group">
-                                        <label>设备描述</label>
-                                        <textarea class="form-control" rows="3" name="description" disabled></textarea>
+                                        <label class="control-label">绑定管理员角色</label>
+                                        <div class="controls">
+                                            <ul id="roleTree" class="ztree span6 m-wrap"
+                                                style="border: 1px solid;overflow-y: scroll;overflow-x: auto;"></ul>
+                                        </div>
                                     </div>
+                                    <input type="button" class="btn btn-outline btn-success submit" value="注册">
                                     <input type="button" class="btn btn-outline btn-info back" value="返回">
                                 </form>
                             </div>
@@ -84,18 +77,15 @@
     $(function () {
         $.ajax({
             type: "POST",
-            url: "/system-manage/masterComputer/object",
+            url: "/system_user/info",
             data: {id: "${param.id}"},
             success: function (response) {
                 if (response.code == "200") {
                     var _this = response.data;
-                    $("input[name='name']").val(_this.name);
-                    $("input[name='code']").val(_this.code);
-                    $("select[name='province']").html('<option>' + _this.province_name + '</option>');
-                    $("select[name='city']").html('<option>' + _this.city_name + '</option>');
-                    $("select[name='county']").html('<option>' + _this.county_name + '</option>');
-                    $("input[name='address']").val(_this.address);
-                    $("textarea[name='description']").val(_this.description);
+                    $("input[name='loginName']").val(_this.loginName);
+                    $("input[name='realName']").val(_this.loginName);
+                    $("input[name='mobile']").val(_this.mobile);
+                    getSystemRoleList(_this.roleId);
                 } else {
                     $("#form-tip").removeClass("hidden alert-warning").addClass("alert-success").show().find("strong").text(response.message);
                     //3秒后自动关闭警告框
@@ -104,19 +94,57 @@
             }
         });
 
+        //返回
         $(".back").click(function () {
             window.history.go(-1);
         });
     });
 
     /**
-     * 隐藏警告框
+     * 获取系统角色数据并渲染成树状结构，渲染的同时，如果roleIds存在，则将节点选中
+     *
      */
-    function hideOperatorTip() {
-        $("#form-tip").addClass("hidden")
-        window.history.go(-1);
-    }
+    function getSystemRoleList(roleIds) {
+        var setting = {
+            check: {
+                enable: true
+            },
+            data: {
+                simpleData: {
+                    enable: true,
+                    rootPid: 0,
+                }
+            }
+        };
 
+        //获取菜单数据集合
+        $.ajax({
+            type: "post",
+            url: "/system_role/list",
+            traditional: true,
+            data: null,
+            success: function (response) {
+                if (response.code != "200" || response.data.length <= 0) {
+                    return false;
+                }
+
+                $(response.data).each(function(){
+                    var _this = this;
+                    $(roleIds).each(function () {
+                        if(_this.id == this){
+                            _this.checked = true;
+                            return true;
+                        }
+                    });
+
+                    _this.chkDisabled = true;
+                });
+
+                roleTree = $.fn.zTree.init($("#roleTree"), setting, response.data);
+                roleTree.expandAll(true);
+            }
+        });
+    }
 </script>
 </body>
 

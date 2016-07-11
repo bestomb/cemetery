@@ -2,9 +2,7 @@ package com.bestomb.service.impl;
 
 import com.bestomb.common.constant.ExceptionMsgConstant;
 import com.bestomb.common.exception.EqianyuanException;
-import com.bestomb.common.response.systemMenu.SystemMenuByQueryResponse;
-import com.bestomb.common.util.SessionUtil;
-import com.bestomb.common.util.yamlMapper.SystemConf;
+import com.bestomb.common.response.systemMenu.SystemMenuBo;
 import com.bestomb.dao.ISystemMenuDao;
 import com.bestomb.entity.SystemMenu;
 import com.bestomb.service.ISystemMenuService;
@@ -13,8 +11,10 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.ObjectUtils;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -34,29 +34,41 @@ public class SystemMenuServiceImpl implements ISystemMenuService {
      *
      * @return
      */
-    public List<SystemMenuByQueryResponse> getList() throws EqianyuanException {
+    public List<SystemMenuBo> getList() throws EqianyuanException {
         List<SystemMenu> systemMenus = systemMenuDao.selectByList();
         if (CollectionUtils.isEmpty(systemMenus)) {
             logger.info("get List is null");
             throw new EqianyuanException(ExceptionMsgConstant.SYSTEM_MENU_DATA_NOT_EXISTS);
         }
 
-        List<SystemMenuByQueryResponse> systemMenuByQueryResponses = new ArrayList<SystemMenuByQueryResponse>();
+        List<SystemMenuBo> systemMenuBos = new ArrayList<SystemMenuBo>();
         for (SystemMenu systemMenu : systemMenus) {
-            SystemMenuByQueryResponse systemMenuByQueryResponse = new SystemMenuByQueryResponse();
-            BeanUtils.copyProperties(systemMenu, systemMenuByQueryResponse);
-            systemMenuByQueryResponses.add(systemMenuByQueryResponse);
+            SystemMenuBo systemMenuBo = new SystemMenuBo();
+            BeanUtils.copyProperties(systemMenu, systemMenuBo);
+            systemMenuBos.add(systemMenuBo);
         }
-        return systemMenuByQueryResponses;
+        return systemMenuBos;
     }
 
-//    /**
-//     * 根据用户信息获取数据集合
-//     *
-//     * @return
-//     */
-//    public List<SystemMenuByQueryResponse> getListBySystemUser(SystemUser) {
-//        SystemUserVo systemUserVo = (SystemUserVo) SessionUtil.getAttribute(SystemConf.SYSTEM_SESSION_USER.toString());
-//        return null;
-//    }
+    /**
+     * 根据角色信息获取菜单数据集合
+     *
+     * @param roleId
+     * @return
+     */
+    public List<SystemMenuBo> getListBySystemRole(String... roleId) {
+        if (ObjectUtils.isEmpty(roleId)) {
+            return Collections.emptyList();
+        }
+        List<SystemMenu> systemMenus = systemMenuDao.selectByRoleId(roleId);
+
+        List<SystemMenuBo> systemMenuBos = new ArrayList<SystemMenuBo>();
+        for (SystemMenu systemMenu : systemMenus) {
+            SystemMenuBo systemMenuBo = new SystemMenuBo();
+            BeanUtils.copyProperties(systemMenu, systemMenuBo);
+            systemMenuBos.add(systemMenuBo);
+        }
+        return systemMenuBos;
+    }
+
 }

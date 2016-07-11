@@ -1,8 +1,10 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
-<li class="menu" ref="/system user/list">
-  <a href="javascript:;" ><i class="fa fa-sitemap"></i> 用户管理</a>
-</li>
-<li class="menu" ref="/system role/list">
-  <a href="javascript:;" ><i class="fa fa-magnet"></i> 角色管理</a>
-</li>
+<c:if test="${!empty systemUser.systemMenuBos}">
+  <c:forEach var="menu" items="${systemUser.systemMenuBos}">
+    <li ref="${menu.url}">
+      <a href="javascript:;" ><i class="fa fa-sitemap"></i> <span class="menuName">${menu.name}</span></a>
+    </li>
+  </c:forEach>
+</c:if>

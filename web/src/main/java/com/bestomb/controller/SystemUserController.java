@@ -70,7 +70,7 @@ public class SystemUserController extends BaseController {
      * @return
      * @throws EqianyuanException
      */
-    @RequestMapping("/dataList")
+    @RequestMapping("/paginationList")
     @ResponseBody
     public ServerResponse dataList(@RequestParam(value = "pageNo", required = false, defaultValue = "1") int pageNo,
                                    @RequestParam(value = "pageSize", required = false, defaultValue = "10") int pageSize,

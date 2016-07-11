@@ -11,6 +11,11 @@ public class SystemUserBo {
 
     private String createTimeForStr;
 
+    /**
+     * 系统角色
+     */
+    private String[] roleId;
+
     public String getId() {
         return id;
     }
@@ -49,5 +54,13 @@ public class SystemUserBo {
 
     public void setCreateTimeForStr(String createTimeForStr) {
         this.createTimeForStr = createTimeForStr;
+    }
+
+    public String[] getRoleId() {
+        return roleId;
+    }
+
+    public void setRoleId(String[] roleId) {
+        this.roleId = roleId;
     }
 }

@@ -17,4 +17,16 @@
     from system_menu
     order by parent_id asc, sort asc
   </select>
+  <select id="selectByRoleId" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from system_menu
+    where id in (
+    select menu_id from system_role_menu_relate where role_id in
+    <foreach item="item" collection="role_id" open="(" separator="," close=")">
+      #{item}
+    </foreach>
+    )
+    order by parent_id asc, sort asc
+  </select>
 </mapper>

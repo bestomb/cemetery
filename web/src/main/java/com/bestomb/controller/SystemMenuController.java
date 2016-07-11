@@ -2,7 +2,7 @@ package com.bestomb.controller;
 
 import com.bestomb.common.exception.EqianyuanException;
 import com.bestomb.common.response.ServerResponse;
-import com.bestomb.common.response.systemMenu.SystemMenuByQueryResponse;
+import com.bestomb.common.response.systemMenu.SystemMenuBo;
 import com.bestomb.service.ISystemMenuService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -31,7 +31,7 @@ public class SystemMenuController extends BaseController {
     @RequestMapping("/list")
     @ResponseBody
     public ServerResponse getList() throws EqianyuanException {
-        List<SystemMenuByQueryResponse> systemMenuByQueryResponses = systemMenuService.getList();
+        List<SystemMenuBo> systemMenuByQueryResponses = systemMenuService.getList();
         return new ServerResponse.ResponseBuilder().data(systemMenuByQueryResponses).build();
     }
 }

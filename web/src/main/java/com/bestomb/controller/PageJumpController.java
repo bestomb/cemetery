@@ -2,7 +2,7 @@ package com.bestomb.controller;
 
 import com.bestomb.common.constant.ExceptionMsgConstant;
 import com.bestomb.common.exception.EqianyuanException;
-import com.bestomb.common.response.systemMenu.SystemMenuByQueryResponse;
+import com.bestomb.common.response.systemMenu.SystemMenuBo;
 import com.bestomb.common.util.SessionUtil;
 import com.bestomb.common.util.yamlMapper.SystemConf;
 import com.bestomb.service.ISystemMenuService;
@@ -41,7 +41,7 @@ public class PageJumpController extends BaseController {
         }
 
         //获取系统菜单数据集合
-        List<SystemMenuByQueryResponse> systemMenuByQueryResponses = systemMenuService.getList();
+        List<SystemMenuBo> systemMenuByQueryResponses = systemMenuService.getList();
         SessionUtil.setAttribute(SystemConf.SYSTEM_MENU_BY_USER.toString(), systemMenuByQueryResponses);
         return SystemConf.SYSTEM_MANAGE_HOME_BY_PAGE.toString();
     }

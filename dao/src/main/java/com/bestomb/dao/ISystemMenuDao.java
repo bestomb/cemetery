@@ -13,4 +13,11 @@ public interface ISystemMenuDao {
      */
     List<SystemMenu> selectByList();
 
+    /**
+     * 根据用户编号查询数据集合
+     *
+     * @return
+     */
+    List<SystemMenu> selectByRoleId(@Param("role_id") String ... roleId);
+
 }

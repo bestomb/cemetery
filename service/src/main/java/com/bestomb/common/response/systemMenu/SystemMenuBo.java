@@ -4,7 +4,7 @@ package com.bestomb.common.response.systemMenu;
  * 系统菜单查询结果返回对象
  * Created by jason on 2016-07-08.
  */
-public class SystemMenuByQueryResponse {
+public class SystemMenuBo {
     /**
      * 菜单编号
      */

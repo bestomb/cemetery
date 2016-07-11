@@ -5,6 +5,7 @@ import com.bestomb.common.constant.ExceptionMsgConstant;
 import com.bestomb.common.exception.EqianyuanException;
 import com.bestomb.common.request.systemUser.SystemUserByEditRequest;
 import com.bestomb.common.response.PageResponse;
+import com.bestomb.common.response.systemUser.SystemUserBo;
 import com.bestomb.common.util.CalendarUtil;
 import com.bestomb.common.util.Md5Util;
 import com.bestomb.common.util.SessionUtil;
@@ -12,7 +13,7 @@ import com.bestomb.common.util.yamlMapper.SystemConf;
 import com.bestomb.dao.ISystemUserDao;
 import com.bestomb.dao.ISystemUserRoleRelateDao;
 import com.bestomb.entity.SystemUser;
-import com.bestomb.common.response.systemUser.SystemUserBo;
+import com.bestomb.entity.SystemUserRoleRelate;
 import com.bestomb.service.ISystemUserService;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -197,9 +198,10 @@ public class SystemUserServiceImpl implements ISystemUserService {
         BeanUtils.copyProperties(systemUserByEditRequest, systemUser);
         systemUserDao.updateByPrimaryKeySelective(systemUser);
 
+        //删除用户与角色关系
+        systemUserRoleRelateDao.deleteBySystemUser(systemUserByEditRequest.getId());
+
         if (!ObjectUtils.isEmpty(systemUserByEditRequest.getRoleId())) {
-            //删除用户与角色关系
-            systemUserRoleRelateDao.deleteBySystemUser(systemUserByEditRequest.getId());
             //添加用户与角色关系
             systemUserRoleRelateDao.insert(systemUser.getId(), systemUserByEditRequest.getRoleId());
         }
@@ -228,6 +230,17 @@ public class SystemUserServiceImpl implements ISystemUserService {
         SystemUserBo systemUserBo = new SystemUserBo();
         BeanUtils.copyProperties(systemUser, systemUserBo);
         systemUserBo.setCreateTimeForStr(CalendarUtil.secondsTimeToDateTimeString(systemUser.getCreateTime()));
+
+        //查询绑定的角色编号
+        List<SystemUserRoleRelate> systemUserRoleRelates = systemUserRoleRelateDao.selectMenuIdBySystemUser(id);
+        if (!CollectionUtils.isEmpty(systemUserRoleRelates)) {
+            List<String> roleIds = new ArrayList<String>();
+            for (SystemUserRoleRelate systemUserRoleRelate : systemUserRoleRelates) {
+                roleIds.add(systemUserRoleRelate.getRoleId());
+            }
+            systemUserBo.setRoleId(roleIds.toArray(new String[0]));
+        }
+
         return systemUserBo;
     }
 
@@ -321,6 +334,17 @@ public class SystemUserServiceImpl implements ISystemUserService {
 
         SystemUserBo systemUserBo = new SystemUserBo();
         BeanUtils.copyProperties(systemUser, systemUserBo);
+
+        //获取用户角色编号
+        List<SystemUserRoleRelate> systemUserRoleRelates = systemUserRoleRelateDao.selectMenuIdBySystemUser(systemUser.getId());
+        if (!CollectionUtils.isEmpty(systemUserRoleRelates)) {
+            List<String> roleIds = new ArrayList<String>();
+            for (SystemUserRoleRelate systemUserRoleRelate : systemUserRoleRelates) {
+                roleIds.add(systemUserRoleRelate.getRoleId());
+            }
+            systemUserBo.setRoleId(roleIds.toArray(new String[0]));
+        }
+
         return systemUserBo;
     }
 }
