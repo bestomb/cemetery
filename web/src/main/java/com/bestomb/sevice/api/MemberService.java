@@ -1,6 +1,5 @@
 package com.bestomb.sevice.api;
 
-import com.alibaba.fastjson.JSONObject;
 import com.bestomb.common.constant.ExceptionMsgConstant;
 import com.bestomb.common.exception.EqianyuanException;
 import com.bestomb.common.util.*;
@@ -71,7 +70,7 @@ public class MemberService {
         String message = YamlForMapHandleUtil.getValueBykey(ClientConf.getMap(), ClientConf.SMS.SMS.toString(), ClientConf.SMS.BatchSend2_message.toString());
 
         //获取验证码
-        String verifyCode = VerifyCodeUtils.random(verifyCodeLength);
+        String verifyCode = VerifyCodeUtils.random(verifyCodeLength, VerifyCodeUtils.SEEDS_BY_NUMBER);
 
         //替换消息模板内容
         message = StringTemplateReplaceUtil.getStr(message, "\\?", verifyCode);

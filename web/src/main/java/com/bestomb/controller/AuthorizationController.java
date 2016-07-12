@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
@@ -50,23 +49,9 @@ public class AuthorizationController extends BaseController {
             throw new EqianyuanException(ExceptionMsgConstant.VALIDATA_CODE_CONTENT_LENGTH_TO0_LONG);
         }
 
-        String verifyCode = VerifyCodeUtils.random(verifyCodeLength);
+        String verifyCode = VerifyCodeUtils.random(verifyCodeLength, VerifyCodeUtils.SEEDS_BY_NUMBER);
 
-        /**
-         * 将验证码内容写入session
-         */
-        SessionUtil.setAttribute(SystemConf.VERIFY_CODE.toString(), verifyCode);
-
-        // 禁止图像缓存。
-        response.setHeader("Pragma", "no-cache");
-        response.setHeader("Cache-Control", "no-cache");
-        response.setDateHeader("Expires", 0);
-        response.setContentType("image/jpeg");
-
-        // 将图像输出到Servlet输出流中。
-        ServletOutputStream sos = response.getOutputStream();
-        VerifyCodeUtils.render(verifyCode, sos, verifyCodeLength * 30, 30);
-        sos.close();
+        verifyCode(verifyCode, response, 30);
     }
 
     /**

@@ -1,8 +1,9 @@
 package com.bestomb.controller.api;
 
-import com.alibaba.fastjson.JSONObject;
+import com.bestomb.common.constant.ExceptionMsgConstant;
 import com.bestomb.common.exception.EqianyuanException;
 import com.bestomb.common.response.ServerResponse;
+import com.bestomb.common.util.VerifyCodeUtils;
 import com.bestomb.controller.BaseController;
 import com.bestomb.sevice.api.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +36,16 @@ public class MemberController extends BaseController {
     @RequestMapping("/verifyCode")
     public void verifyCode(@RequestParam(name = "verify_code_length", required = false, defaultValue = "4") Integer verifyCodeLength,
                            HttpServletResponse response) throws EqianyuanException, IOException {
-        verifyCode(verifyCodeLength, response, 30);
+        /**
+         * 控制验证码生成数量，避免构建图片时出现内存不足问题
+         */
+        if (verifyCodeLength > 10) {
+            throw new EqianyuanException(ExceptionMsgConstant.VALIDATA_CODE_CONTENT_LENGTH_TO0_LONG);
+        }
+
+        String verifyCode = VerifyCodeUtils.random(verifyCodeLength, VerifyCodeUtils.SEEDS_BY_NUMBER);
+
+        verifyCode(verifyCode, response, 30);
     }
 
     /**
