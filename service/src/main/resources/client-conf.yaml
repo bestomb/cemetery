@@ -1,0 +1,12 @@
+##### 面向客户端配置 #####
+
+###   SMS 短信接口配置 ###
+# CorpID 购买账号
+# Pwd 密码
+# vtpl_id ID
+# show_num 对方手机显示号码
+SMS:
+  CorpID: GZLKJ0005699
+  Pwd: xy@666
+  BatchSend2: http://sdk.zhongguowuxian.com:98/ws/BatchSend2.aspx
+  BatchSend2_message: 欢迎注册百思陵园会员，验证码?，请在10分钟内按页面提示提交验证码，切勿将验证码泄露与他人。
