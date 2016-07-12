@@ -3,11 +3,11 @@ package com.bestomb.common.util.yamlMapper;
 import java.util.Map;
 
 /**
- * 系统数据类型常量YAML配置信息枚举类
+ * 面向客户端YAML配置信息枚举类
  * 主要用于初始加载yaml内容并缓存，定义yaml配置文件key
  * Created by jason on 2016-06-01.
  */
-public class DataMap {
+public class ClientConf {
     private static Map<String, Object> map;
 
     public static Map<String, Object> getMap() {
@@ -21,12 +21,12 @@ public class DataMap {
     /**
      * 利用枚举定义yaml配置文件中的key
      */
-    public enum Key {
-        TYPE("type"), STATUS("status"), DETECTOR("detector"), MASTER_COMPUTER("master computer");
+    public enum SMS {
+        SMS("SMS"), CorpID("CorpID"), Pwd("Pwd"), BatchSend2("BatchSend2"), BatchSend2_message("BatchSend2_message");
 
         private String key;
 
-        Key(String key) {
+        SMS(String key) {
             this.key = key;
         }
 
@@ -35,4 +35,5 @@ public class DataMap {
             return String.valueOf(this.key);
         }
     }
+
 }

@@ -28,6 +28,10 @@ public enum SystemConf {
      */
     VERIFY_CODE("verifyCode"),
     /**
+     * 成功发送短信验证码信息
+     */
+    SEND_SMS_BY_BATCHSEND2("sendSMSByBatchSend2"),
+    /**
      * 平台字符集
      */
     PLATFORM_CHARSET("UTF-8"),
@@ -36,7 +40,7 @@ public enum SystemConf {
      * 系统登录页面位置
      */
     SYSTEM_MANAGE_LOGIN_BY_PAGE("login"),
-    SYSTEM_MANAGE_HOME_BY_PAGE("home");
+    SYSTEM_MANAGE_HOME_BY_PAGE("home"), ;
 
     private Object value;
 

@@ -1,7 +1,5 @@
 package com.bestomb.common.response.systemRole;
 
-import com.bestomb.entity.SystemMenuBo;
-
 /**
  * 系统角色查询结果返回对象
  * Created by jason on 2016-07-08.

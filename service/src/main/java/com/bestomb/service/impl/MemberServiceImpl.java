@@ -1,0 +1,130 @@
+package com.bestomb.service.impl;
+
+import com.bestomb.common.constant.ExceptionMsgConstant;
+import com.bestomb.common.exception.EqianyuanException;
+import com.bestomb.common.util.*;
+import com.bestomb.common.util.yamlMapper.SystemConf;
+import com.bestomb.dao.IMemberAccountDao;
+import com.bestomb.dao.IMemberAccountIdBuildDao;
+import com.bestomb.entity.MemberAccount;
+import com.bestomb.entity.MemberAccountIdBuild;
+import com.bestomb.service.IMemberService;
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+/**
+ * 会员业务逻辑接口实现类
+ * Created by jason on 2016-07-12.
+ */
+@Service
+public class MemberServiceImpl implements IMemberService {
+
+    private Logger logger = Logger.getLogger(this.getClass());
+
+    @Autowired
+    private IMemberAccountDao memberAccountDao;
+
+    @Autowired
+    private IMemberAccountIdBuildDao memberAccountIdBuildDao;
+
+    /**
+     * 会员注册
+     *
+     * @param mobile        手机号码
+     * @param verifyCode    验证码
+     * @param loginPassword 登录密码
+     * @param inviterId     邀请者编号
+     */
+    @Transactional(rollbackFor = Exception.class)
+    public void register(String mobile, String verifyCode, String loginPassword, String inviterId) throws EqianyuanException {
+        //手机号码是否为空
+        if (StringUtils.isEmpty(mobile)) {
+            logger.warn("register fail , because mobile is null.");
+            throw new EqianyuanException(ExceptionMsgConstant.MOBILE_IS_EMPTY);
+        }
+
+        //密码是否为空
+        if (StringUtils.isEmpty(loginPassword)) {
+            logger.warn("register fail , because loginPassword is null.");
+            throw new EqianyuanException(ExceptionMsgConstant.SYSTEM_USER_LOGIN_PASSWORD_IS_EMPTY);
+        }
+
+        //验证码是否为空
+        if (StringUtils.isEmpty(verifyCode)) {
+            logger.warn("register fail , because verifyCode is null");
+            throw new EqianyuanException(ExceptionMsgConstant.VALIDATA_CODE_IS_EMPTY);
+        }
+
+        //正则判断是否为正确手机号
+        if (!RegexUtils.isMobile(mobile)) {
+            logger.warn("register fail , because mobile is not correct ");
+            throw new EqianyuanException(ExceptionMsgConstant.MOBILE_IS_NOT_CORRECT);
+        }
+
+        //从session中获取验证码数据
+        String codeByValidation = (String) SessionUtil.getAttribute(SystemConf.VERIFY_CODE.toString());
+        if (StringUtils.isEmpty(codeByValidation)) {
+            logger.warn("register fail, because there is no verification code in the session attribute.");
+            throw new EqianyuanException(ExceptionMsgConstant.VALIDATA_CODE_VALIDATION_ERROR);
+        }
+
+        //比较用户提交验证码与session中验证码是否一致
+        if (!StringUtils.equalsIgnoreCase(verifyCode, codeByValidation)) {
+            logger.warn("register fail, because session attribute verification code and request param code not consistent.");
+            throw new EqianyuanException(ExceptionMsgConstant.VALIDATA_CODE_VALIDATION_ERROR);
+        }
+
+        //检查手机号是否已经注册过
+        int memberCountByMobile = memberAccountDao.selectByMobile(Long.parseLong(mobile));
+
+        //当会员数量大于0，说明已经被注册，则抛出对应错误提示
+        if (memberCountByMobile > 0) {
+            logger.warn("register fail, because mobile is already register.");
+            throw new EqianyuanException(ExceptionMsgConstant.MOBILE_IS_ALREADY_REGISTER);
+        }
+
+        MemberAccount memberAccount = new MemberAccount();
+        if (!StringUtils.isEmpty(inviterId)) {
+            //根据会员编号获取会员信息，检查邀请者是否存在
+            int memberCountByInviterId = memberAccountDao.selectByInviterId(Integer.parseInt(inviterId));
+            if (memberCountByInviterId > 0) {
+                memberAccount.setInviterId(Integer.parseInt(inviterId));
+            }
+        }
+
+        do {
+            //构建一个编号并设置状态为：1=未使用
+            MemberAccountIdBuild memberAccountIdBuild = new MemberAccountIdBuild();
+            memberAccountIdBuild.setStatus(1);
+
+            //获取会员编号
+            memberAccountIdBuildDao.insertSelective(memberAccountIdBuild);
+            Integer memberId = memberAccountIdBuild.getId();
+
+            //检查编号是否为靓号，如果是靓号，则重新获取编号
+            if (VIPIDFilterUtil.doFilter(String.valueOf(memberId))) {
+                continue;
+            }
+
+            memberAccount.setMemberId(memberId);
+
+            //更新会员账号为：2=已使用
+            memberAccountIdBuild.setStatus(2);
+            memberAccountIdBuildDao.updateByPrimaryKeySelective(memberAccountIdBuild);
+            break;
+        } while (true);
+
+        //密码加密处理
+        String encryptionPwd = Md5Util.MD5By32(StringUtils.lowerCase(loginPassword));
+
+        memberAccount.setMobileNumber(Long.parseLong(mobile));
+        memberAccount.setLoginPassword(encryptionPwd);
+        memberAccount.setCreateTime(CalendarUtil.getSystemSeconds());
+
+        memberAccountDao.insertSelective(memberAccount);
+        SessionUtil.removeAttribute(SystemConf.VERIFY_CODE.toString());
+    }
+}
