@@ -31,7 +31,7 @@ public class SessionContextUtil {
      * K = sessionId
      * V = session对象
      */
-    public Map<String, HttpSession> sessionMap;
+    private Map<String, HttpSession> sessionMap;
 
     /**
      * 获取实例
