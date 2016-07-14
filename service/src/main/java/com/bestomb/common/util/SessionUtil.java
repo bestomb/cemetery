@@ -14,7 +14,8 @@ public class SessionUtil {
     /**
      * 禁止多次构造对象
      */
-    private SessionUtil(){}
+    private SessionUtil() {
+    }
 
     public static Object getAttribute(String name) {
         Object sessionObj = null;
@@ -22,20 +23,24 @@ public class SessionUtil {
             sessionObj = getSession().getAttribute(name);
         } catch (Exception e) {
             sessionObj = null;
-        }finally{
+        } finally {
             return sessionObj;
         }
     }
 
-    public static void setAttribute(String name, Object value){
+    public static Object getAttribute(HttpSession session, String name) {
+        return session.getAttribute(name);
+    }
+
+    public static void setAttribute(String name, Object value) {
         getSession().setAttribute(name, value);
     }
 
-    private static HttpSession getSession(){
+    private static HttpSession getSession() {
         return ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest().getSession();
     }
 
-    public static void removeAttribute(String key){
+    public static void removeAttribute(String key) {
         getSession().removeAttribute(key);
     }
 }

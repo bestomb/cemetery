@@ -20,7 +20,7 @@ import java.io.IOException;
  * Created by jason on 2016-07-11.
  */
 @Controller
-@RequestMapping("/member_api/")
+@RequestMapping("/website/member_api")
 public class MemberController extends BaseController {
 
     @Autowired
@@ -99,6 +99,8 @@ public class MemberController extends BaseController {
      *
      * @return
      */
+    @RequestMapping("test")
+    @ResponseBody
     public ServerResponse getMemberInfo() {
         return new ServerResponse();
     }

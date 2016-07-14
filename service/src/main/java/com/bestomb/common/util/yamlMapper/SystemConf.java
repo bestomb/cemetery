@@ -44,7 +44,11 @@ public enum SystemConf {
      * 系统登录页面位置
      */
     SYSTEM_MANAGE_LOGIN_BY_PAGE("login"),
-    SYSTEM_MANAGE_HOME_BY_PAGE("home"),;
+    SYSTEM_MANAGE_HOME_BY_PAGE("home"),
+    /**
+     * 网站未登录时响应请求地址
+     */
+    WEBSITE_UN_LOGIN("/website/authorization");
 
     private Object value;
 

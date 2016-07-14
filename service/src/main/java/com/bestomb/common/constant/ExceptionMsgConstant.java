@@ -84,6 +84,8 @@ public class ExceptionMsgConstant {
     public static final String LOGIN_ACCOUNT_IS_EMPTY = "20000007";
     //账号或密码错误
     public static final String LOGIN_ACCOUNT_OR_PASSWORD_ERROR = "20000008";
+    //会员未获得登录授权
+    public static final String MEMBER_NO_AUTHORIZATION_BY_LOGIN = "20000009";
     /***** 会员 *****/
 /********** 客户端 **********/
 }
