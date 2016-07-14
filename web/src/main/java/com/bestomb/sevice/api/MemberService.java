@@ -2,12 +2,15 @@ package com.bestomb.sevice.api;
 
 import com.bestomb.common.constant.ExceptionMsgConstant;
 import com.bestomb.common.exception.EqianyuanException;
+import com.bestomb.common.response.member.MemberLoginBo;
+import com.bestomb.common.response.member.MemberLoginVo;
 import com.bestomb.common.util.*;
 import com.bestomb.common.util.yamlMapper.ClientConf;
 import com.bestomb.common.util.yamlMapper.SystemConf;
 import com.bestomb.service.IMemberService;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -101,14 +104,30 @@ public class MemberService {
     /**
      * 会员注册
      *
-     * @param mobile        手机号码
-     * @param verifyCode    验证码
-     * @param loginPassword 登录密码
-     * @param inviterId     邀请者编号
+     * @param mobile          手机号码
+     * @param verifyCode      验证码
+     * @param loginPassword   登录密码
+     * @param confirmPassword 确认密码
+     * @param inviterId       邀请者编号
      * @throws EqianyuanException
      */
-    public void register(String mobile, String verifyCode, String loginPassword, String inviterId) throws EqianyuanException {
-        memberService.register(mobile, verifyCode, loginPassword, inviterId);
+    public void register(String mobile, String verifyCode, String loginPassword, String confirmPassword, String inviterId) throws EqianyuanException {
+        memberService.register(mobile, verifyCode, loginPassword, confirmPassword, inviterId);
+    }
+
+    /**
+     * 会员登录
+     *
+     * @param loginAccount  登录账号
+     * @param loginPassword 登录密码
+     */
+    public MemberLoginVo login(String loginAccount, String loginPassword) throws EqianyuanException {
+        MemberLoginBo memberLoginBo = memberService.login(loginAccount, loginPassword);
+        MemberLoginVo memberLoginVo = new MemberLoginVo();
+        BeanUtils.copyProperties(memberLoginBo, memberLoginVo);
+
+        SessionUtil.setAttribute(SystemConf.WEBSITE_SESSION_MEMBER.toString(), memberLoginVo);
+        return memberLoginVo;
     }
 
     /**

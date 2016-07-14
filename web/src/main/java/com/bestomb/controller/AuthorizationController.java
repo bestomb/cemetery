@@ -66,7 +66,7 @@ public class AuthorizationController extends BaseController {
     @RequestMapping("/login")
     @ResponseBody
     public ServerResponse login(@RequestParam(value = "user_name") String userName,
-                                @RequestParam String password,
+                                String password,
                                 @RequestParam(value = "verify_code") String verifyCode) throws EqianyuanException {
         authorizationService.login(userName, password, verifyCode);
         return new ServerResponse();

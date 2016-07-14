@@ -2,6 +2,7 @@ package com.bestomb.service.impl;
 
 import com.bestomb.common.constant.ExceptionMsgConstant;
 import com.bestomb.common.exception.EqianyuanException;
+import com.bestomb.common.response.member.MemberLoginBo;
 import com.bestomb.common.util.*;
 import com.bestomb.common.util.yamlMapper.SystemConf;
 import com.bestomb.dao.IMemberAccountDao;
@@ -11,9 +12,11 @@ import com.bestomb.entity.MemberAccountIdBuild;
 import com.bestomb.service.IMemberService;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.ObjectUtils;
 
 /**
  * 会员业务逻辑接口实现类
@@ -33,13 +36,14 @@ public class MemberServiceImpl implements IMemberService {
     /**
      * 会员注册
      *
-     * @param mobile        手机号码
-     * @param verifyCode    验证码
-     * @param loginPassword 登录密码
-     * @param inviterId     邀请者编号
+     * @param mobile          手机号码
+     * @param verifyCode      验证码
+     * @param loginPassword   登录密码
+     * @param confirmPassword 确认密码
+     * @param inviterId       邀请者编号
      */
     @Transactional(rollbackFor = Exception.class)
-    public void register(String mobile, String verifyCode, String loginPassword, String inviterId) throws EqianyuanException {
+    public void register(String mobile, String verifyCode, String loginPassword, String confirmPassword, String inviterId) throws EqianyuanException {
         //手机号码是否为空
         if (StringUtils.isEmpty(mobile)) {
             logger.warn("register fail , because mobile is null.");
@@ -49,7 +53,13 @@ public class MemberServiceImpl implements IMemberService {
         //密码是否为空
         if (StringUtils.isEmpty(loginPassword)) {
             logger.warn("register fail , because loginPassword is null.");
-            throw new EqianyuanException(ExceptionMsgConstant.SYSTEM_USER_LOGIN_PASSWORD_IS_EMPTY);
+            throw new EqianyuanException(ExceptionMsgConstant.LOGIN_PASSWORD_IS_EMPTY);
+        }
+
+        //确认密码是否为空
+        if (StringUtils.isEmpty(confirmPassword)) {
+            logger.warn("register fail , because confirmPassword is null.");
+            throw new EqianyuanException(ExceptionMsgConstant.CONFIRM_PASSWORD_IS_EMPTY);
         }
 
         //验证码是否为空
@@ -62,6 +72,12 @@ public class MemberServiceImpl implements IMemberService {
         if (!RegexUtils.isMobile(mobile)) {
             logger.warn("register fail , because mobile is not correct ");
             throw new EqianyuanException(ExceptionMsgConstant.MOBILE_IS_NOT_CORRECT);
+        }
+
+        //判断两次密码是否一致
+        if (StringUtils.equals(loginPassword, confirmPassword)) {
+            logger.warn("register fail , because the two  passwords don't match.");
+            throw new EqianyuanException(ExceptionMsgConstant.TWO_PASSWORD_DO_NOT_MATCH);
         }
 
         //从session中获取验证码数据
@@ -126,5 +142,41 @@ public class MemberServiceImpl implements IMemberService {
 
         memberAccountDao.insertSelective(memberAccount);
         SessionUtil.removeAttribute(SystemConf.VERIFY_CODE.toString());
+    }
+
+    /**
+     * 会员登录
+     *
+     * @param loginAccount  登录账号
+     * @param loginPassword 登录密码
+     */
+    public MemberLoginBo login(String loginAccount, String loginPassword) throws EqianyuanException {
+        //判断登录账号是否为空
+        if (StringUtils.isEmpty(loginAccount)) {
+            logger.warn("login fail , because loginAccount is null");
+            throw new EqianyuanException(ExceptionMsgConstant.LOGIN_ACCOUNT_IS_EMPTY);
+        }
+
+        //判断登录密码是否为空
+        if (StringUtils.isEmpty(loginPassword)) {
+            logger.warn("login fail , because loginPassword is null");
+            throw new EqianyuanException(ExceptionMsgConstant.LOGIN_PASSWORD_IS_EMPTY);
+        }
+
+        //密码加密处理
+        String encryptionPwd = Md5Util.MD5By32(StringUtils.lowerCase(loginPassword));
+        //登录查询
+        MemberAccount memberAccount = memberAccountDao.selectByLogin(loginAccount, encryptionPwd);
+        if (ObjectUtils.isEmpty(memberAccount) ||
+                ObjectUtils.isEmpty(memberAccount.getMemberId())) {
+            logger.warn("login fail , loginAccount [" + loginAccount +
+                    "] , loginPassword [" + loginPassword + "] , encryptionPwd [" + encryptionPwd + "]");
+            throw new EqianyuanException(ExceptionMsgConstant.LOGIN_ACCOUNT_OR_PASSWORD_ERROR);
+        }
+
+        MemberLoginBo memberLoginBo = new MemberLoginBo();
+        BeanUtils.copyProperties(memberAccount, memberLoginBo);
+        memberLoginBo.setCreateTimeForStr(CalendarUtil.secondsTimeToDateTimeString(memberAccount.getCreateTime()));
+        return memberLoginBo;
     }
 }

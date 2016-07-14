@@ -1,4 +1,4 @@
-package com.bestomb.common.response;
+package com.bestomb.common.response.systemUser;
 
 import com.bestomb.common.response.systemMenu.SystemMenuBo;
 

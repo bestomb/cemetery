@@ -1,6 +1,6 @@
 package com.bestomb.common.interceptor;
 
-import com.bestomb.common.response.SystemUserVo;
+import com.bestomb.common.response.systemUser.SystemUserVo;
 import com.bestomb.common.util.SessionUtil;
 import com.bestomb.common.util.yamlMapper.SystemConf;
 import org.springframework.util.ObjectUtils;

@@ -1,7 +1,7 @@
 package com.bestomb.sevice;
 
 import com.bestomb.common.exception.EqianyuanException;
-import com.bestomb.common.response.SystemUserVo;
+import com.bestomb.common.response.systemUser.SystemUserVo;
 import com.bestomb.common.response.systemMenu.SystemMenuBo;
 import com.bestomb.common.response.systemUser.SystemUserBo;
 import com.bestomb.common.util.SessionUtil;

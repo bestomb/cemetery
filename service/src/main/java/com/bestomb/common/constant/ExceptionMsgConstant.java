@@ -74,6 +74,16 @@ public class ExceptionMsgConstant {
     public static final String MOBILE_IS_NOT_CORRECT = "20000002";
     //手机号码已经注册
     public static final String MOBILE_IS_ALREADY_REGISTER = "20000003";
+    //登录密码为空
+    public static final String LOGIN_PASSWORD_IS_EMPTY = "20000004";
+    //确认密码为空
+    public static final String CONFIRM_PASSWORD_IS_EMPTY = "20000005";
+    //两次密码不一致
+    public static final String TWO_PASSWORD_DO_NOT_MATCH = "20000006";
+    //登录账号为空
+    public static final String LOGIN_ACCOUNT_IS_EMPTY = "20000007";
+    //账号或密码错误
+    public static final String LOGIN_ACCOUNT_OR_PASSWORD_ERROR = "20000008";
     /***** 会员 *****/
 /********** 客户端 **********/
 }

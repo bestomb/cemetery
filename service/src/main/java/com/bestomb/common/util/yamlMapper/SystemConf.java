@@ -24,6 +24,10 @@ public enum SystemConf {
      */
     SYSTEM_MENU_BY_USER("systemMenuByUser"),
     /**
+     * 网站会员session对象
+     */
+    WEBSITE_SESSION_MEMBER("websiteMember"),
+    /**
      * 验证码sessionkey
      */
     VERIFY_CODE("verifyCode"),
@@ -40,7 +44,7 @@ public enum SystemConf {
      * 系统登录页面位置
      */
     SYSTEM_MANAGE_LOGIN_BY_PAGE("login"),
-    SYSTEM_MANAGE_HOME_BY_PAGE("home"), ;
+    SYSTEM_MANAGE_HOME_BY_PAGE("home"),;
 
     private Object value;
 
