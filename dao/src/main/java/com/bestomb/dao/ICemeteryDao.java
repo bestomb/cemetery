@@ -1,11 +1,10 @@
 package com.bestomb.dao;
 
 import com.bestomb.entity.Cemetery;
+import org.apache.ibatis.annotations.Param;
 
 public interface ICemeteryDao {
     int deleteByPrimaryKey(String id);
-
-    int insert(Cemetery record);
 
     int insertSelective(Cemetery record);
 
@@ -13,5 +12,10 @@ public interface ICemeteryDao {
 
     int updateByPrimaryKeySelective(Cemetery record);
 
-    int updateByPrimaryKey(Cemetery record);
+    /**
+     * 根据会员编号获取陵园总数
+     *
+     * @return
+     */
+    Long countByMemberId(@Param("member_id") String memberId);
 }

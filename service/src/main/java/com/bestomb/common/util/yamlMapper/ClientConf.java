@@ -40,7 +40,7 @@ public class ClientConf {
      * 利用枚举定义yaml配置文件中的key
      */
     public enum Cemetery {
-        renameCount("renameCount"), init_storage_size("init_storage_size");
+        constructionCount("constructionCount"), renameCount("renameCount"), init_storage_size("init_storage_size");
 
         private String key;
 

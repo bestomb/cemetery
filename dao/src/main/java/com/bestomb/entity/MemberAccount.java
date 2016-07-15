@@ -17,6 +17,8 @@ public class MemberAccount {
 
     private String tradingPassword;
 
+    private Integer constructionCount;
+
     private Integer createTime;
 
     public Integer getMemberId() {
@@ -85,6 +87,14 @@ public class MemberAccount {
 
     public Integer getCreateTime() {
         return createTime;
+    }
+
+    public Integer getConstructionCount() {
+        return constructionCount;
+    }
+
+    public void setConstructionCount(Integer constructionCount) {
+        this.constructionCount = constructionCount;
     }
 
     public void setCreateTime(Integer createTime) {

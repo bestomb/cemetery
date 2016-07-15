@@ -10,11 +10,12 @@
         <result column="integral" property="integral" jdbcType="INTEGER"/>
         <result column="trading_amount" property="tradingAmount" jdbcType="DOUBLE"/>
         <result column="trading_password" property="tradingPassword" jdbcType="VARCHAR"/>
+        <result column="construction_count" property="constructionCount" jdbcType="INTEGER"/>
         <result column="create_time" property="createTime" jdbcType="INTEGER"/>
     </resultMap>
     <sql id="Base_Column_List">
     member_id, mobile_number, login_password, nick_name, inviter_id, integral, trading_amount, 
-    trading_password, create_time
+    trading_password, construction_count,create_time
   </sql>
     <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
         select
@@ -71,6 +72,9 @@
             <if test="tradingPassword != null">
                 trading_password,
             </if>
+            <if test="constructionCount != null">
+                construction_count,
+            </if>
             <if test="createTime != null">
                 create_time,
             </if>
@@ -100,6 +104,9 @@
             <if test="tradingPassword != null">
                 #{tradingPassword,jdbcType=VARCHAR},
             </if>
+            <if test="constructionCount != null">
+                #{constructionCount,jdbcType=INTEGER},
+            </if>
             <if test="createTime != null">
                 #{createTime,jdbcType=INTEGER},
             </if>
@@ -128,6 +135,9 @@
             </if>
             <if test="tradingPassword != null">
                 trading_password = #{tradingPassword,jdbcType=VARCHAR},
+            </if>
+            <if test="constructionCount != null">
+                construction_count = #{constructionCount,jdbcType=INTEGER},
             </if>
             <if test="createTime != null">
                 create_time = #{createTime,jdbcType=INTEGER},

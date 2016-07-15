@@ -37,9 +37,18 @@ public class CemeteryServiceImpl implements ICemeteryService {
     private static final int CEMETERY_NAME_MAX_BYTES_BY_DB = 100;
     //陵园密码DB许可字节长度
     private static final int CEMETERY_PASSWORD_MAX_BYTES_BY_DB = 14;
+    //陵园乡DB许可字节长度
+    private static final int CEMETERY_TOWN_NAME_MAX_BYTES_BY_DB = 64;
+    //陵园村DB许可字节长度
+    private static final int CEMETERY_VILLAGE_NAME_MAX_BYTES_BY_DB = 64;
+    //陵园社DB许可字节长度
+    private static final int CEMETERY_COMMUNITY_NAME_MAX_BYTES_BY_DB = 64;
 
     @Autowired
     private ICemeteryDao cemeteryDao;
+
+    @Autowired
+    private IMemberAccountDao memberAccountDao;
 
     @Autowired
     private IProvinceDao provinceDao;
@@ -67,6 +76,19 @@ public class CemeteryServiceImpl implements ICemeteryService {
      */
     @Transactional(rollbackFor = Exception.class)
     public void add(CemeteryByEditRequest cemeteryByEditRequest) throws EqianyuanException {
+        //根据会员编号查询会员以建设陵园总数
+        Long cemeteryCount = cemeteryDao.countByMemberId(cemeteryByEditRequest.getMemberId());
+
+        //根据会员编号查询会员可建设陵园总数
+        MemberAccount memberAccount = memberAccountDao.selectByPrimaryKey(Integer.parseInt(cemeteryByEditRequest.getMemberId()));
+
+        //检查当前会员已建陵园总数是否超出当前会员可建设总数
+        if (!ObjectUtils.isEmpty(cemeteryCount)
+                && cemeteryCount >= memberAccount.getConstructionCount()) {
+            logger.warn("add fail , because the cemetery count by memberId [" + memberAccount.getMemberId() + "] is beyond allows you to create");
+            throw new EqianyuanException(ExceptionMsgConstant.CEMETERY_CONSTRUCTION_COUNT_TO_LONG);
+        }
+
         //陵园名称是否为空
         if (StringUtils.isEmpty(cemeteryByEditRequest.getName())) {
             logger.warn("add fail , because name is null.");
@@ -117,6 +139,19 @@ public class CemeteryServiceImpl implements ICemeteryService {
                     logger.warn("add fail , because community id is null.");
                     throw new EqianyuanException(ExceptionMsgConstant.CEMETERY_PASSWORD_IS_EMPTY);
                 }
+
+                //陵园密码内容长度是否超出DB许可长度
+                try {
+                    if (cemeteryByEditRequest.getPassword().getBytes(SystemConf.PLATFORM_CHARSET.toString()).length > CEMETERY_PASSWORD_MAX_BYTES_BY_DB) {
+                        logger.info("add fail , because password [" + cemeteryByEditRequest.getPassword()
+                                + "] bytes greater than" + CEMETERY_PASSWORD_MAX_BYTES_BY_DB);
+                        throw new EqianyuanException(ExceptionMsgConstant.CEMETERY_PASSWORD_TO_LONG);
+                    }
+                } catch (UnsupportedEncodingException e) {
+                    logger.info("add fail , because name [" + cemeteryByEditRequest.getName()
+                            + "] getBytes(" + SystemConf.PLATFORM_CHARSET.toString() + ") fail");
+                    throw new EqianyuanException(ExceptionMsgConstant.SYSTEM_GET_BYTE_FAIL);
+                }
             }
         }
 
@@ -126,19 +161,6 @@ public class CemeteryServiceImpl implements ICemeteryService {
                 logger.info("add fail , because name [" + cemeteryByEditRequest.getName()
                         + "] bytes greater than" + CEMETERY_NAME_MAX_BYTES_BY_DB);
                 throw new EqianyuanException(ExceptionMsgConstant.CEMETERY_NAME_TO_LONG);
-            }
-        } catch (UnsupportedEncodingException e) {
-            logger.info("add fail , because name [" + cemeteryByEditRequest.getName()
-                    + "] getBytes(" + SystemConf.PLATFORM_CHARSET.toString() + ") fail");
-            throw new EqianyuanException(ExceptionMsgConstant.SYSTEM_GET_BYTE_FAIL);
-        }
-
-        //陵园密码内容长度是否超出DB许可长度
-        try {
-            if (cemeteryByEditRequest.getPassword().getBytes(SystemConf.PLATFORM_CHARSET.toString()).length > CEMETERY_PASSWORD_MAX_BYTES_BY_DB) {
-                logger.info("add fail , because password [" + cemeteryByEditRequest.getPassword()
-                        + "] bytes greater than" + CEMETERY_PASSWORD_MAX_BYTES_BY_DB);
-                throw new EqianyuanException(ExceptionMsgConstant.CEMETERY_PASSWORD_TO_LONG);
             }
         } catch (UnsupportedEncodingException e) {
             logger.info("add fail , because name [" + cemeteryByEditRequest.getName()
@@ -158,6 +180,45 @@ public class CemeteryServiceImpl implements ICemeteryService {
         if (ObjectUtils.isEmpty(initStorageSize)) {
             logger.warn("batchSend fail , because init_storage_size not exists the client-conf.yaml");
             throw new EqianyuanException(ExceptionMsgConstant.GET_CONFIGURATION_ERROR);
+        }
+
+        //陵园乡内容长度是否超出DB许可长度
+        try {
+            if (cemeteryByEditRequest.getTownName().getBytes(SystemConf.PLATFORM_CHARSET.toString()).length > CEMETERY_TOWN_NAME_MAX_BYTES_BY_DB) {
+                logger.info("add fail , because townName [" + cemeteryByEditRequest.getTownName()
+                        + "] bytes greater than" + CEMETERY_TOWN_NAME_MAX_BYTES_BY_DB);
+                throw new EqianyuanException(ExceptionMsgConstant.CEMETERY_TOWN_NAME_TO_LONG);
+            }
+        } catch (UnsupportedEncodingException e) {
+            logger.info("add fail , because name [" + cemeteryByEditRequest.getTownName()
+                    + "] getBytes(" + SystemConf.PLATFORM_CHARSET.toString() + ") fail");
+            throw new EqianyuanException(ExceptionMsgConstant.SYSTEM_GET_BYTE_FAIL);
+        }
+
+        //陵园村内容长度是否超出DB许可长度
+        try {
+            if (cemeteryByEditRequest.getVillageName().getBytes(SystemConf.PLATFORM_CHARSET.toString()).length > CEMETERY_VILLAGE_NAME_MAX_BYTES_BY_DB) {
+                logger.info("add fail , because villageName [" + cemeteryByEditRequest.getVillageName()
+                        + "] bytes greater than" + CEMETERY_VILLAGE_NAME_MAX_BYTES_BY_DB);
+                throw new EqianyuanException(ExceptionMsgConstant.CEMETERY_VILLAGE_NAME_TO_LONG);
+            }
+        } catch (UnsupportedEncodingException e) {
+            logger.info("add fail , because name [" + cemeteryByEditRequest.getVillageName()
+                    + "] getBytes(" + SystemConf.PLATFORM_CHARSET.toString() + ") fail");
+            throw new EqianyuanException(ExceptionMsgConstant.SYSTEM_GET_BYTE_FAIL);
+        }
+
+        //陵园社内容长度是否超出DB许可长度
+        try {
+            if (cemeteryByEditRequest.getCommunityName().getBytes(SystemConf.PLATFORM_CHARSET.toString()).length > CEMETERY_COMMUNITY_NAME_MAX_BYTES_BY_DB) {
+                logger.info("add fail , because communityName [" + cemeteryByEditRequest.getCommunityName()
+                        + "] bytes greater than" + CEMETERY_COMMUNITY_NAME_MAX_BYTES_BY_DB);
+                throw new EqianyuanException(ExceptionMsgConstant.CEMETERY_COMMUNITY_NAME_TO_LONG);
+            }
+        } catch (UnsupportedEncodingException e) {
+            logger.info("add fail , because name [" + cemeteryByEditRequest.getCommunityName()
+                    + "] getBytes(" + SystemConf.PLATFORM_CHARSET.toString() + ") fail");
+            throw new EqianyuanException(ExceptionMsgConstant.SYSTEM_GET_BYTE_FAIL);
         }
 
         //根据省编号查询省数据，检查编号正确性
@@ -185,86 +246,112 @@ public class CemeteryServiceImpl implements ICemeteryService {
         Cemetery cemetery = new Cemetery();
         BeanUtils.copyProperties(cemeteryByEditRequest, cemetery);
         cemetery.setCreateTime(CalendarUtil.getSystemSeconds());
+        cemetery.setStorageSize(Integer.parseInt(String.valueOf(initStorageSize)));
+        cemetery.setRemainingStorageSize(Integer.parseInt(String.valueOf(initStorageSize)));
 
         //根据区编号和乡名称查询乡数据
         Town town = townDao.selectByName(cemeteryByEditRequest.getCountyId(), cemeteryByEditRequest.getTownName());
-        Village village;
-        Community community;
         //判断是否存在乡数据，如不存在，则插入一条乡数据
         if (ObjectUtils.isEmpty(town)
                 || StringUtils.isEmpty(town.getId())) {
-            town = new Town();
-            town.setCountyId(cemeteryByEditRequest.getCountyId());
-            town.setName(cemeteryByEditRequest.getTownName());
-
-            //增加乡数据
-            townDao.insertSelective(town);
+            town = addTown(cemeteryByEditRequest.getCountyId(), cemeteryByEditRequest.getTownName());
             //乡数据都不存在的话，村和社是肯定不存在，所以，可以直接插入村和社数据
-            village = new Village();
-            village.setTownId(town.getId());
-            village.setName(cemeteryByEditRequest.getVillageName());
-            villageDao.insertSelective(village);
-
-            community = new Community();
-            community.setVillageId(village.getId());
-            community.setName(cemeteryByEditRequest.getCommunityName());
-            community.setRenameCount(Integer.parseInt(String.valueOf(renameCount)));
-            communityDao.insertSelective(community);
-
-            cemetery.setTownId(town.getId());
-            cemetery.setCommunityId(community.getId());
-            cemetery.setStorageSize(Integer.parseInt(String.valueOf(initStorageSize)));
-            cemetery.setRemainingStorageSize(Integer.parseInt(String.valueOf(initStorageSize)));
+            Village village = addVillage(town.getId(), cemeteryByEditRequest.getVillageName());
+            Community community = addCommunity(village.getId(), cemeteryByEditRequest.getCommunityName(), Integer.parseInt(String.valueOf(renameCount)));
+            setAddress(cemetery, town, village, community);
             cemeteryDao.insertSelective(cemetery);
             return;
         }
 
         //根据乡编号和村名称查询村数据
-        village = villageDao.selectByName(town.getId(), cemeteryByEditRequest.getVillageName());
-
+        Village village = villageDao.selectByName(town.getId(), cemeteryByEditRequest.getVillageName());
         //判断是否存在村数据，如不存在，则插入一条村数据
         if (ObjectUtils.isEmpty(village)
                 || StringUtils.isEmpty(village.getId())) {
-            village = new Village();
-            village.setTownId(town.getId());
-            village.setName(cemeteryByEditRequest.getTownName());
-
-            //增加村数据
-            villageDao.insertSelective(village);
+            village = addVillage(town.getId(), cemeteryByEditRequest.getVillageName());
             //村数据都不存在的话，社是肯定不存在，所以，可以直接插入社数据
-            community = new Community();
-            community.setVillageId(village.getId());
-            community.setName(cemeteryByEditRequest.getCommunityName());
-            community.setRenameCount(Integer.parseInt(String.valueOf(renameCount)));
-            communityDao.insertSelective(community);
-
-            cemetery.setTownId(town.getId());
-            cemetery.setCommunityId(community.getId());
-            cemetery.setStorageSize(Integer.parseInt(String.valueOf(initStorageSize)));
-            cemetery.setRemainingStorageSize(Integer.parseInt(String.valueOf(initStorageSize)));
+            Community community = addCommunity(village.getId(), cemeteryByEditRequest.getCommunityName(), Integer.parseInt(String.valueOf(renameCount)));
+            setAddress(cemetery, town, village, community);
             cemeteryDao.insertSelective(cemetery);
             return;
         }
 
         //根据村编号和社名称查询社数据
-        community = communityDao.selectByName(village.getId(), cemeteryByEditRequest.getCommunityName());
-
+        Community community = communityDao.selectByName(village.getId(), cemeteryByEditRequest.getCommunityName());
         //判断是否存在社数据，如不存在，则插入一条社数据
         if (ObjectUtils.isEmpty(community)
                 || StringUtils.isEmpty(community.getId())) {
-            community = new Community();
-            community.setVillageId(village.getId());
-            community.setName(cemeteryByEditRequest.getCommunityName());
-            community.setRenameCount(Integer.parseInt(String.valueOf(renameCount)));
-            communityDao.insertSelective(community);
-
-            cemetery.setTownId(town.getId());
-            cemetery.setCommunityId(community.getId());
-            cemetery.setStorageSize(Integer.parseInt(String.valueOf(initStorageSize)));
-            cemetery.setRemainingStorageSize(Integer.parseInt(String.valueOf(initStorageSize)));
+            community = addCommunity(village.getId(), cemeteryByEditRequest.getCommunityName(), Integer.parseInt(String.valueOf(renameCount)));
+            setAddress(cemetery, town, village, community);
             cemeteryDao.insertSelective(cemetery);
             return;
         }
 
+        setAddress(cemetery, town, village, community);
+        cemeteryDao.insertSelective(cemetery);
     }
+
+    /**
+     * 设置陵园乡村社地址信息
+     *
+     * @param cemetery
+     * @param town
+     * @param village
+     * @param community
+     */
+    private void setAddress(Cemetery cemetery, Town town, Village village, Community community) {
+        cemetery.setTownId(town.getId());
+        cemetery.setVillageId(village.getId());
+        cemetery.setCommunityId(community.getId());
+    }
+
+    /**
+     * 添加乡地址
+     *
+     * @param countyId 区编号
+     * @param townName 乡名称
+     * @return
+     */
+    private Town addTown(String countyId, String townName) {
+        Town town = new Town();
+        town.setCountyId(countyId);
+        town.setName(townName);
+        //增加乡数据
+        townDao.insertSelective(town);
+        return town;
+    }
+
+    /**
+     * 添加村地址
+     *
+     * @param townId      乡编号
+     * @param villageName 村名称
+     * @return
+     */
+    public Village addVillage(String townId, String villageName) {
+        Village village = new Village();
+        village.setTownId(townId);
+        village.setName(villageName);
+        villageDao.insertSelective(village);
+        return village;
+    }
+
+    /**
+     * 添加社区
+     *
+     * @param villageId     归属村编号
+     * @param communityName 社区名称
+     * @param renameCount   社区名允许重命名次数
+     * @return
+     */
+
+    private Community addCommunity(String villageId, String communityName, int renameCount) {
+        Community community = new Community();
+        community.setVillageId(villageId);
+        community.setName(communityName);
+        community.setRenameCount(renameCount);
+        communityDao.insertSelective(community);
+        return community;
+    }
+
 }

@@ -131,6 +131,14 @@ public class ExceptionMsgConstant {
     public static final String CEMETERY_NAME_TO_LONG = "20010009";
     //陵园密码内容太长
     public static final String CEMETERY_PASSWORD_TO_LONG = "20010010";
+    //陵园乡地址内容太长
+    public static final String CEMETERY_TOWN_NAME_TO_LONG = "20010011";
+    //陵园村地址内容太长
+    public static final String CEMETERY_VILLAGE_NAME_TO_LONG = "20010012";
+    //陵园社地址内容太长
+    public static final String CEMETERY_COMMUNITY_NAME_TO_LONG = "20010013";
+    //陵园创建总数超出会员许可总数
+    public static final String CEMETERY_CONSTRUCTION_COUNT_TO_LONG = "20010014";
     /***** 陵园 *****/
 /********** 客户端 **********/
 }

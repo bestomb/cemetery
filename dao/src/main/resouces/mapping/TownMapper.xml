@@ -74,7 +74,7 @@
   <select id="selectByName" parameterType="java.lang.String" resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List"/>
-    from county
+    from town
     where county_id = #{county_id}
     and name = #{name}
   </select>

@@ -4,6 +4,7 @@ import com.bestomb.common.constant.ExceptionMsgConstant;
 import com.bestomb.common.exception.EqianyuanException;
 import com.bestomb.common.response.member.MemberLoginBo;
 import com.bestomb.common.util.*;
+import com.bestomb.common.util.yamlMapper.ClientConf;
 import com.bestomb.common.util.yamlMapper.SystemConf;
 import com.bestomb.dao.IMemberAccountDao;
 import com.bestomb.dao.IMemberAccountIdBuildDao;
@@ -93,6 +94,13 @@ public class MemberServiceImpl implements IMemberService {
             throw new EqianyuanException(ExceptionMsgConstant.VALIDATA_CODE_VALIDATION_ERROR);
         }
 
+        //判断客户端配置默认可建设陵园总数是否存在
+        Object constructionCount = YamlForMapHandleUtil.getMapByKey(ClientConf.getMap(), ClientConf.Cemetery.constructionCount.toString());
+        if (ObjectUtils.isEmpty(constructionCount)) {
+            logger.warn("batchSend fail , because constructionCount not exists the client-conf.yaml");
+            throw new EqianyuanException(ExceptionMsgConstant.GET_CONFIGURATION_ERROR);
+        }
+
         //检查手机号是否已经注册过
         int memberCountByMobile = memberAccountDao.selectByMobile(Long.parseLong(mobile));
 
@@ -138,6 +146,7 @@ public class MemberServiceImpl implements IMemberService {
 
         memberAccount.setMobileNumber(Long.parseLong(mobile));
         memberAccount.setLoginPassword(encryptionPwd);
+        memberAccount.setConstructionCount(Integer.parseInt(String.valueOf(constructionCount)));
         memberAccount.setCreateTime(CalendarUtil.getSystemSeconds());
 
         memberAccountDao.insertSelective(memberAccount);
