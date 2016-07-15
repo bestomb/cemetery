@@ -50,6 +50,7 @@
             <mvc:exclude-mapping path="/website/member_api/login"/>
             <mvc:exclude-mapping path="/website/member_api/logout"/>
             <mvc:exclude-mapping path="/website/authorization"/>
+            <mvc:exclude-mapping path="/website/area_api/*"/>
             <bean class="com.bestomb.common.interceptor.WebsiteAuthorizationInterceptor"/>
         </mvc:interceptor>
     </mvc:interceptors>

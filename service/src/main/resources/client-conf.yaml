@@ -10,3 +10,8 @@ SMS:
   Pwd: xy@666
   BatchSend2: http://sdk.zhongguowuxian.com:98/ws/BatchSend2.aspx
   BatchSend2_message: 欢迎注册百思陵园会员，验证码?，请在10分钟内按页面提示提交验证码，切勿将验证码泄露与他人。
+
+### 陵园社区名称默认可重命名次数 ###
+renameCount: 3
+### 陵园创建初始容量，单位（M） ###
+init_storage_size: 30

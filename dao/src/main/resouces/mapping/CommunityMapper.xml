@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bestomb.dao.ICommunityDao" >
+  <resultMap id="BaseResultMap" type="com.bestomb.entity.Community" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="village_id" property="villageId" jdbcType="VARCHAR" />
+    <result column="rename_count" property="renameCount" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, name, village_id, rename_count
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from community
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from community
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.bestomb.entity.Community" >
+    insert into community (id, name, village_id, 
+      rename_count)
+    values (#{id,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{villageId,jdbcType=VARCHAR}, 
+      #{renameCount,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.bestomb.entity.Community" >
+    <selectKey keyProperty="id" resultType="String" order="BEFORE">
+      select replace(uuid(),'-','') from dual
+    </selectKey>
+    insert into community
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="villageId != null" >
+        village_id,
+      </if>
+      <if test="renameCount != null" >
+        rename_count,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="villageId != null" >
+        #{villageId,jdbcType=VARCHAR},
+      </if>
+      <if test="renameCount != null" >
+        #{renameCount,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.bestomb.entity.Community" >
+    update community
+    <set >
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="villageId != null" >
+        village_id = #{villageId,jdbcType=VARCHAR},
+      </if>
+      <if test="renameCount != null" >
+        rename_count = #{renameCount,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.bestomb.entity.Community" >
+    update community
+    set name = #{name,jdbcType=VARCHAR},
+      village_id = #{villageId,jdbcType=VARCHAR},
+      rename_count = #{renameCount,jdbcType=INTEGER}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <select id="selectByName" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"/>
+    from community
+    where village_id = #{village_id}
+    and name = #{name}
+  </select>
+</mapper>

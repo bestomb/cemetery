@@ -8,7 +8,6 @@ import org.springframework.util.ObjectUtils;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -30,26 +29,7 @@ public class WebsiteAuthorizationInterceptor implements HandlerInterceptor {
      */
     public boolean preHandle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o) throws Exception {
 
-        Cookie[] cookies = httpServletRequest.getCookies();
-
-        if (ObjectUtils.isEmpty(cookies)) {
-            return falseByInterceptor(httpServletRequest, httpServletResponse);
-        }
-
-        //从httpRequest中获取sessionId
-        String sessionId = null;
-        for (Cookie cookie : cookies) {
-            //判断请求header中cookie里是否存在JSESSIONID，如果不为空，则将JSESSIONID返回
-            if (StringUtils.equals(cookie.getName(), "JSESSIONID")) {
-                sessionId = cookie.getValue();
-                //删除cookie
-                cookie.setMaxAge(0);
-                httpServletResponse.addCookie(cookie);
-                break;
-            }
-        }
-
-        //如果请求中不存在sessionId，则直接拦截请求并返回错误信息
+        String sessionId = SessionUtil.getSessionByCookie();
         if (StringUtils.isEmpty(sessionId)) {
             return falseByInterceptor(httpServletRequest, httpServletResponse);
         }

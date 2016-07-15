@@ -36,4 +36,22 @@ public class ClientConf {
         }
     }
 
+    /**
+     * 利用枚举定义yaml配置文件中的key
+     */
+    public enum Cemetery {
+        renameCount("renameCount"), init_storage_size("init_storage_size");
+
+        private String key;
+
+        Cemetery(String key) {
+            this.key = key;
+        }
+
+        @Override
+        public String toString() {
+            return String.valueOf(this.key);
+        }
+    }
+
 }

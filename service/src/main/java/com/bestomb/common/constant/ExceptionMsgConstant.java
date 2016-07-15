@@ -7,7 +7,9 @@ package com.bestomb.common.constant;
 public class ExceptionMsgConstant {
 
 /********** 管理系统 **********/
-    /***** 系统 *****/
+    /*****
+     * 系统
+     *****/
     //系统错误
     public static final String SYSTEM_ERROR = "10000001";
     //缺少请求参数
@@ -24,9 +26,21 @@ public class ExceptionMsgConstant {
     public static final String GET_CONFIGURATION_ERROR = "10000007";
     //验证码发送时间间隔小于60s
     public static final String VALIDATA_CODE_INTERVAL_INSUFFICIENT = "10000008";
+    //地区-省数据不存在
+    public static final String AREA_PROVINCE_DATA_NO_EXISTS = "10000009";
+    //地区-省数据编号为空
+    public static final String AREA_PROVINCE_ID_IS_EMPTY = "10000010";
+    //地区-市数据不存在
+    public static final String AREA_CITY_DATA_NO_EXISTS = "10000011";
+    //地区-市数据编号为空
+    public static final String AREA_CITY_ID_IS_EMPTY = "10000012";
+    //地区-区数据不存在
+    public static final String AREA_COUNTY_DATA_NO_EXISTS = "10000013";
     /***** 系统 *****/
 
-    /***** 系统用户管理 *****/
+    /*****
+     * 系统用户管理
+     *****/
     //系统管理用户编号为空
     public static final String SYSTEM_USER_ID_IS_EMPTY = "10010001";
     //系统管理登录用户名为空
@@ -47,12 +61,16 @@ public class ExceptionMsgConstant {
     public static final String LOGIN_USER_OBJECT_IS_EMPTY = "10010009";
     /***** 系统用户管理 *****/
 
-    /***** 系统菜单管理 *****/
+    /*****
+     * 系统菜单管理
+     *****/
     //系统菜单菜单数据不存在
     public static final String SYSTEM_MENU_DATA_NOT_EXISTS = "10020001";
     /***** 系统菜单管理 *****/
 
-    /***** 系统角色管理 *****/
+    /*****
+     * 系统角色管理
+     *****/
     //系统角色数据不存在
     public static final String SYSTEM_ROLE_DATA_NOT_EXISTS = "10030001";
     //系统角色名不存在
@@ -67,7 +85,9 @@ public class ExceptionMsgConstant {
 /********** 管理系统 **********/
 
 /********** 客户端 **********/
-    /***** 会员 *****/
+    /*****
+     * 会员
+     *****/
     //手机号码为空
     public static final String MOBILE_IS_EMPTY = "20000001";
     //手机号码不是正确号码
@@ -87,5 +107,30 @@ public class ExceptionMsgConstant {
     //会员未获得登录授权
     public static final String MEMBER_NO_AUTHORIZATION_BY_LOGIN = "20000009";
     /***** 会员 *****/
+
+    /*****
+     * 陵园
+     *****/
+    //名称为空
+    public static final String CEMETERY_NAME_IS_EMPTY = "20010001";
+    //省为空
+    public static final String CEMETERY_PROVINCE_IS_EMPTY = "20010002";
+    //市为空
+    public static final String CEMETERY_CITY_IS_EMPTY = "20010003";
+    //区为空
+    public static final String CEMETERY_COUNTY_IS_EMPTY = "20010004";
+    //乡为空
+    public static final String CEMETERY_TOWN_IS_EMPTY = "20010005";
+    //村为空
+    public static final String CEMETERY_VILLAGE_IS_EMPTY = "20010006";
+    //社为空
+    public static final String CEMETERY_COMMUNITY_IS_EMPTY = "20010007";
+    //访问密码为空
+    public static final String CEMETERY_PASSWORD_IS_EMPTY = "20010008";
+    //陵园名称内容太长
+    public static final String CEMETERY_NAME_TO_LONG = "20010009";
+    //陵园密码内容太长
+    public static final String CEMETERY_PASSWORD_TO_LONG = "20010010";
+    /***** 陵园 *****/
 /********** 客户端 **********/
 }

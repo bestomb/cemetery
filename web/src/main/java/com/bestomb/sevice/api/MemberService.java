@@ -72,6 +72,11 @@ public class MemberService {
         //获取消息内容模板
         String message = YamlForMapHandleUtil.getValueBykey(ClientConf.getMap(), ClientConf.SMS.SMS.toString(), ClientConf.SMS.BatchSend2_message.toString());
 
+        if (ObjectUtils.isEmpty(message)) {
+            logger.warn("batchSend fail , because BatchSend2_message not exists the client-conf.yaml");
+            throw new EqianyuanException(ExceptionMsgConstant.GET_CONFIGURATION_ERROR);
+        }
+
         //获取验证码
         String verifyCode = VerifyCodeUtils.random(verifyCodeLength, VerifyCodeUtils.SEEDS_BY_NUMBER);
 
