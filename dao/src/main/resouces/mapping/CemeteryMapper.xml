@@ -210,4 +210,11 @@
           select id from cemetery where community_id = #{community_id} limit ${page.pageNo}, ${page.pageSize}
         ) a
     </select>
+    <select id="selectByMemberId" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from cemetery
+        where member_id = ${member_id}
+        order by create_time asc
+    </select>
 </mapper>

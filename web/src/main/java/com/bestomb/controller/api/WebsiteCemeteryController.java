@@ -5,6 +5,7 @@ import com.bestomb.common.request.cemetery.CemeteryByAreaListRequest;
 import com.bestomb.common.request.cemetery.CemeteryByEditRequest;
 import com.bestomb.common.response.PageResponse;
 import com.bestomb.common.response.ServerResponse;
+import com.bestomb.common.response.cemetery.CemeteryByMineVo;
 import com.bestomb.common.response.member.MemberLoginVo;
 import com.bestomb.common.util.SessionContextUtil;
 import com.bestomb.common.util.SessionUtil;
@@ -16,6 +17,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.util.List;
 
 /**
  * 前台陵园接口控制器
@@ -97,5 +100,17 @@ public class WebsiteCemeteryController extends BaseController {
                                         @RequestParam(value = "pageSize", required = false, defaultValue = "64") int pageSize) throws EqianyuanException {
         PageResponse pageResponse = websiteCemeteryService.arbitraryDoor(cemeteryByAreaListRequest, behavior, pageNo, pageSize);
         return new ServerResponse.ResponseBuilder().data(pageResponse).build();
+    }
+
+    /**
+     * 获取我的陵园集合
+     *
+     * @return
+     */
+    @RequestMapping("/getMineList")
+    @ResponseBody
+    public ServerResponse getMineList() throws EqianyuanException {
+        List<CemeteryByMineVo> cemeteryByMineVos = websiteCemeteryService.getMineList();
+        return new ServerResponse.ResponseBuilder().data(cemeteryByMineVos).build();
     }
 }

@@ -1,9 +1,9 @@
 package com.bestomb.common.response.cemetery;
 
 /**
- * 根据地区查找陵园信息bo对象
+ * 根据地区查找陵园信息vo对象
  */
-public class CemeteryByAreaBo {
+public class CemeteryByAreaVo {
     private String id;
 
     private String name;

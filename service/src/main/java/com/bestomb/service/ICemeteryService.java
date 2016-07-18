@@ -4,6 +4,9 @@ import com.bestomb.common.exception.EqianyuanException;
 import com.bestomb.common.request.cemetery.CemeteryByAreaListRequest;
 import com.bestomb.common.request.cemetery.CemeteryByEditRequest;
 import com.bestomb.common.response.PageResponse;
+import com.bestomb.common.response.cemetery.CemeteryBo;
+
+import java.util.List;
 
 /**
  * 陵园业务接口
@@ -51,4 +54,12 @@ public interface ICemeteryService {
      * @throws EqianyuanException
      */
     PageResponse getListByArbitraryDoor(CemeteryByAreaListRequest cemeteryByAreaListRequest, String behavior, String pageNo, int pageSize) throws EqianyuanException;
+
+    /**
+     * 获取我的陵园集合
+     *
+     * @param memberId 会员编号
+     * @return
+     */
+    List<CemeteryBo> getListByMemberId(Integer memberId) throws EqianyuanException;
 }

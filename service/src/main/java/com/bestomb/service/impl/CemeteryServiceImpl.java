@@ -623,6 +623,30 @@ public class CemeteryServiceImpl implements ICemeteryService {
     }
 
     /**
+     * 获取我的陵园集合
+     *
+     * @param memberId 会员编号
+     * @return
+     */
+    public List<CemeteryBo> getListByMemberId(Integer memberId) throws EqianyuanException {
+        if (ObjectUtils.isEmpty(memberId)) {
+            logger.info("getMineList fail , because memberId is null");
+            throw new EqianyuanException(ExceptionMsgConstant.MEMBER_NO_AUTHORIZATION_BY_LOGIN);
+        }
+
+        //根据会员编号查找陵园集合数据
+        List<Cemetery> cemeteries = cemeteryDao.selectByMemberId(memberId);
+        List<CemeteryBo> cemeteryBos = new ArrayList<CemeteryBo>();
+        for (Cemetery cemetery : cemeteries) {
+            CemeteryBo cemeteryBo = new CemeteryBo();
+            BeanUtils.copyProperties(cemetery, cemeteryBo);
+            cemeteryBo.setCreateTimeForStr(CalendarUtil.secondsTimeToDateTimeString(cemeteryBo.getCreateTime()));
+            cemeteryBos.add(cemeteryBo);
+        }
+        return cemeteryBos;
+    }
+
+    /**
      * 根据Do集合获取Bo集合
      *
      * @param province

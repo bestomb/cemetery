@@ -32,6 +32,7 @@ public interface ICemeteryDao {
 
     /**
      * 根据社区编号及分页条件获取分页后查询结果总数
+     *
      * @param page
      * @param communityId
      * @return
@@ -55,4 +56,12 @@ public interface ICemeteryDao {
      * @return
      */
     Long selectByPositioning(@Param("community_id") String communityId, @Param("id") String cemeteryId);
+
+    /**
+     * 根据会员编号查询陵园集合
+     *
+     * @param memberId
+     * @return
+     */
+    List<Cemetery> selectByMemberId(@Param("member_id") Integer memberId);
 }

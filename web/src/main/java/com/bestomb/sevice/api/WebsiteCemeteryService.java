@@ -5,7 +5,12 @@ import com.bestomb.common.request.cemetery.CemeteryByAreaListRequest;
 import com.bestomb.common.request.cemetery.CemeteryByEditRequest;
 import com.bestomb.common.response.PageResponse;
 import com.bestomb.common.response.cemetery.CemeteryBo;
-import com.bestomb.common.response.cemetery.CemeteryByAreaBo;
+import com.bestomb.common.response.cemetery.CemeteryByAreaVo;
+import com.bestomb.common.response.cemetery.CemeteryByMineVo;
+import com.bestomb.common.response.member.MemberLoginVo;
+import com.bestomb.common.util.SessionContextUtil;
+import com.bestomb.common.util.SessionUtil;
+import com.bestomb.common.util.yamlMapper.SystemConf;
 import com.bestomb.service.ICemeteryService;
 import org.apache.log4j.Logger;
 import org.springframework.beans.BeanUtils;
@@ -91,19 +96,39 @@ public class WebsiteCemeteryService {
     }
 
     /**
+     * 获取我的陵园集合
+     *
+     * @return
+     */
+    public List<CemeteryByMineVo> getMineList() throws EqianyuanException {
+        /**
+         * 从session池中获取系统用户信息
+         */
+        MemberLoginVo memberLoginVo = (MemberLoginVo) SessionUtil.getAttribute(SessionContextUtil.getInstance().getSession(SessionUtil.getSessionByCookie()), SystemConf.WEBSITE_SESSION_MEMBER.toString());
+        List<CemeteryBo> cemeteryBos = cemeteryService.getListByMemberId(memberLoginVo.getMemberId());
+        List<CemeteryByMineVo> cemeteryByMineVos = new ArrayList<CemeteryByMineVo>();
+        for (CemeteryBo cemeteryBo : cemeteryBos) {
+            CemeteryByMineVo cemeteryByMineVo = new CemeteryByMineVo();
+            BeanUtils.copyProperties(cemeteryBo, cemeteryByMineVo);
+            cemeteryByMineVos.add(cemeteryByMineVo);
+        }
+        return cemeteryByMineVos;
+    }
+
+    /**
      * 设置分页返回对象数据
      *
      * @param pageResponse
      * @param cemeteryBos
      */
     private void setListByPageResponse(PageResponse pageResponse, List<CemeteryBo> cemeteryBos) {
-        List<CemeteryByAreaBo> cemeteryByAreaBos = new ArrayList<CemeteryByAreaBo>();
+        List<CemeteryByAreaVo> cemeteryByAreaVos = new ArrayList<CemeteryByAreaVo>();
         for (CemeteryBo cemeteryBo : cemeteryBos) {
-            CemeteryByAreaBo cemeteryByAreaBo = new CemeteryByAreaBo();
-            BeanUtils.copyProperties(cemeteryBo, cemeteryByAreaBo);
-            cemeteryByAreaBos.add(cemeteryByAreaBo);
+            CemeteryByAreaVo cemeteryByAreaVo = new CemeteryByAreaVo();
+            BeanUtils.copyProperties(cemeteryBo, cemeteryByAreaVo);
+            cemeteryByAreaVos.add(cemeteryByAreaVo);
         }
 
-        pageResponse.setList(cemeteryByAreaBos);
+        pageResponse.setList(cemeteryByAreaVos);
     }
 }
