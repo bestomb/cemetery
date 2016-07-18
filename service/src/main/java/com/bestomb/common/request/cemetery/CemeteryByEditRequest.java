@@ -1,5 +1,8 @@
 package com.bestomb.common.request.cemetery;
 
+/**
+ * 陵园添加、修改请求入参对象
+ */
 public class CemeteryByEditRequest {
     private String id;
 

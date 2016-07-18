@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.bestomb.dao.ICemeteryDao">
     <resultMap id="BaseResultMap" type="com.bestomb.entity.Cemetery">
-        <id column="id" property="id" jdbcType="VARCHAR"/>
+        <id column="id" property="id" jdbcType="INTEGER"/>
         <result column="name" property="name" jdbcType="VARCHAR"/>
         <result column="province_id" property="provinceId" jdbcType="VARCHAR"/>
         <result column="county_id" property="countyId" jdbcType="VARCHAR"/>
@@ -25,16 +25,13 @@
         select
         <include refid="Base_Column_List"/>
         from cemetery
-        where id = #{id,jdbcType=VARCHAR}
+        where id = #{id,jdbcType=INTEGER}
     </select>
-    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from cemetery
-    where id = #{id,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
   </delete>
     <insert id="insertSelective" parameterType="com.bestomb.entity.Cemetery">
-        <selectKey keyProperty="id" resultType="String" order="BEFORE">
-            select replace(uuid(),'-','') from dual
-        </selectKey>
         insert into cemetery
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null">
@@ -82,7 +79,7 @@
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null">
-                #{id,jdbcType=VARCHAR},
+                #{id,jdbcType=INTEGER},
             </if>
             <if test="name != null">
                 #{name,jdbcType=VARCHAR},
@@ -168,12 +165,42 @@
                 create_time = #{createTime,jdbcType=INTEGER},
             </if>
         </set>
-        where id = #{id,jdbcType=VARCHAR}
+        where id = #{id,jdbcType=INTEGER}
     </update>
     <select id="countByMemberId" resultType="java.lang.Long">
         select
         count(1)
         from cemetery
         where member_id = #{member_id}
+    </select>
+    <select id="countByPagination" resultType="java.lang.Long">
+        select count(1) from cemetery
+        <where>
+            <if test="community_id != null and community_id != ''">
+                community_id = #{community_id}
+            </if>
+        </where>
+    </select>
+    <select id="selectByPagination" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from cemetery
+        <where>
+            <if test="community_id != null and community_id != ''">
+                community_id = #{community_id}
+            </if>
+        </where>
+        order by create_time asc
+        limit ${page.pageNo}, ${page.pageSize}
+    </select>
+    <select id="selectByPositioning" resultType="java.lang.Long">
+        select
+        count(1)
+        from cemetery
+        where
+        community_id = #{community_id}
+        and
+        id &lt;= #{id}
+        order by create_time asc
     </select>
 </mapper>

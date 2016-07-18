@@ -1,7 +1,7 @@
-package com.bestomb.entity;
+package com.bestomb.common.response.cemetery;
 
-public class Cemetery {
-    private Integer id;
+public class CemeteryBo {
+    private String id;
 
     private String name;
 
@@ -29,12 +29,32 @@ public class Cemetery {
 
     private Integer createTime;
 
-    public Integer getId() {
+    //省地址名称
+    private String provinceName;
+
+    //市地址名称
+    private String cityName;
+
+    //区地址名称
+    private String countyName;
+
+    //乡地址名称
+    private String townName;
+
+    //村地址名称
+    private String villageName;
+
+    //社地址名称
+    private String communityName;
+
+    private String createTimeForStr;
+
+    public String getId() {
         return id;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public void setId(String id) {
+        this.id = id == null ? null : id.trim();
     }
 
     public String getName() {
@@ -139,5 +159,61 @@ public class Cemetery {
 
     public void setCreateTime(Integer createTime) {
         this.createTime = createTime;
+    }
+
+    public String getProvinceName() {
+        return provinceName;
+    }
+
+    public void setProvinceName(String provinceName) {
+        this.provinceName = provinceName;
+    }
+
+    public String getCityName() {
+        return cityName;
+    }
+
+    public void setCityName(String cityName) {
+        this.cityName = cityName;
+    }
+
+    public String getCountyName() {
+        return countyName;
+    }
+
+    public void setCountyName(String countyName) {
+        this.countyName = countyName;
+    }
+
+    public String getTownName() {
+        return townName;
+    }
+
+    public void setTownName(String townName) {
+        this.townName = townName;
+    }
+
+    public String getVillageName() {
+        return villageName;
+    }
+
+    public void setVillageName(String villageName) {
+        this.villageName = villageName;
+    }
+
+    public String getCommunityName() {
+        return communityName;
+    }
+
+    public void setCommunityName(String communityName) {
+        this.communityName = communityName;
+    }
+
+    public String getCreateTimeForStr() {
+        return createTimeForStr;
+    }
+
+    public void setCreateTimeForStr(String createTimeForStr) {
+        this.createTimeForStr = createTimeForStr;
     }
 }

@@ -1,9 +1,14 @@
 package com.bestomb.service.impl;
 
+import com.bestomb.common.Page;
 import com.bestomb.common.constant.ExceptionMsgConstant;
 import com.bestomb.common.exception.EqianyuanException;
+import com.bestomb.common.request.cemetery.CemeteryByAreaListRequest;
 import com.bestomb.common.request.cemetery.CemeteryByEditRequest;
+import com.bestomb.common.response.PageResponse;
+import com.bestomb.common.response.cemetery.CemeteryBo;
 import com.bestomb.common.util.CalendarUtil;
+import com.bestomb.common.util.VIPIDFilterUtil;
 import com.bestomb.common.util.YamlForMapHandleUtil;
 import com.bestomb.common.util.yamlMapper.ClientConf;
 import com.bestomb.common.util.yamlMapper.SystemConf;
@@ -16,9 +21,12 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
 
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 陵园业务逻辑接口实现类
@@ -49,6 +57,9 @@ public class CemeteryServiceImpl implements ICemeteryService {
 
     @Autowired
     private IMemberAccountDao memberAccountDao;
+
+    @Autowired
+    private ICemeteryIdBuildDao cemeteryIdBuildDao;
 
     @Autowired
     private IProvinceDao provinceDao;
@@ -249,6 +260,28 @@ public class CemeteryServiceImpl implements ICemeteryService {
         cemetery.setStorageSize(Integer.parseInt(String.valueOf(initStorageSize)));
         cemetery.setRemainingStorageSize(Integer.parseInt(String.valueOf(initStorageSize)));
 
+        do {
+            //构建一个编号并设置状态为：1=未使用
+            CemeteryIdBuild cemeteryIdBuild = new CemeteryIdBuild();
+            cemeteryIdBuild.setStatus(1);
+
+            //获取陵园编号
+            cemeteryIdBuildDao.insertSelective(cemeteryIdBuild);
+            Integer cemeteryId = cemeteryIdBuild.getId();
+
+            //检查编号是否为靓号，如果是靓号，则重新获取编号
+            if (VIPIDFilterUtil.doFilter(String.valueOf(cemeteryId))) {
+                continue;
+            }
+
+            cemetery.setId(cemeteryId);
+
+            //更新会员账号为：2=已使用
+            cemeteryIdBuild.setStatus(2);
+            cemeteryIdBuildDao.updateByPrimaryKeySelective(cemeteryIdBuild);
+            break;
+        } while (true);
+
         //根据区编号和乡名称查询乡数据
         Town town = townDao.selectByName(cemeteryByEditRequest.getCountyId(), cemeteryByEditRequest.getTownName());
         //判断是否存在乡数据，如不存在，则插入一条乡数据
@@ -289,6 +322,172 @@ public class CemeteryServiceImpl implements ICemeteryService {
 
         setAddress(cemetery, town, village, community);
         cemeteryDao.insertSelective(cemetery);
+    }
+
+    /**
+     * 根据地区及分页信息查询陵园集合
+     *
+     * @param cemeteryByAreaListRequest
+     * @param pageNo
+     * @param pageSize
+     * @return
+     */
+    public PageResponse getListByArea(CemeteryByAreaListRequest cemeteryByAreaListRequest, int pageNo, int pageSize) throws EqianyuanException {
+        //陵园归属（省）是否为空
+        if (StringUtils.isEmpty(cemeteryByAreaListRequest.getProvinceId())) {
+            logger.warn("getListByArea fail , because province id is null.");
+            throw new EqianyuanException(ExceptionMsgConstant.CEMETERY_PROVINCE_IS_EMPTY);
+        }
+
+        //陵园归属（市）是否为空
+        if (StringUtils.isEmpty(cemeteryByAreaListRequest.getCityId())) {
+            logger.warn("getListByArea fail , because city id is null.");
+            throw new EqianyuanException(ExceptionMsgConstant.CEMETERY_CITY_IS_EMPTY);
+        }
+
+        //陵园归属（区）是否为空
+        if (StringUtils.isEmpty(cemeteryByAreaListRequest.getCountyId())) {
+            logger.warn("getListByArea fail , because county id is null.");
+            throw new EqianyuanException(ExceptionMsgConstant.CEMETERY_COUNTY_IS_EMPTY);
+        }
+
+        //陵园归属（乡）是否为空
+        if (StringUtils.isEmpty(cemeteryByAreaListRequest.getTownName())) {
+            logger.warn("getListByArea fail , because town is null.");
+            throw new EqianyuanException(ExceptionMsgConstant.CEMETERY_TOWN_IS_EMPTY);
+        }
+
+        //陵园归属（村）是否为空
+        if (StringUtils.isEmpty(cemeteryByAreaListRequest.getVillageName())) {
+            logger.warn("getListByArea fail , because village is null.");
+            throw new EqianyuanException(ExceptionMsgConstant.CEMETERY_VILLAGE_IS_EMPTY);
+        }
+
+        //陵园归属（社）是否为空
+        if (StringUtils.isEmpty(cemeteryByAreaListRequest.getCommunityName())) {
+            logger.warn("getListByArea fail , because community id is null.");
+            throw new EqianyuanException(ExceptionMsgConstant.CEMETERY_COMMUNITY_IS_EMPTY);
+        }
+
+        //根据省编号查询省数据，检查编号正确性
+        Province province = provinceDao.selectById(cemeteryByAreaListRequest.getProvinceId());
+        if (ObjectUtils.isEmpty(province)) {
+            logger.info("getListByArea fail , because select province by province id [" + cemeteryByAreaListRequest.getProvinceId() + "] result is null");
+            throw new EqianyuanException(ExceptionMsgConstant.AREA_PROVINCE_DATA_NO_EXISTS);
+        }
+
+        //根据市编号查询市数据，检查编号正确性
+        City city = cityDao.selectById(cemeteryByAreaListRequest.getProvinceId(), cemeteryByAreaListRequest.getCityId());
+        if (ObjectUtils.isEmpty(city)) {
+            logger.info("getListByArea fail , because select city by city id [" + cemeteryByAreaListRequest.getCityId() + "] result is null");
+            throw new EqianyuanException(ExceptionMsgConstant.AREA_CITY_DATA_NO_EXISTS);
+        }
+
+        //根据区编号查询区数据，检查编号正确性
+        County county = countyDao.selectById(cemeteryByAreaListRequest.getCityId(), cemeteryByAreaListRequest.getCountyId());
+        if (ObjectUtils.isEmpty(county)) {
+            logger.info("getListByArea fail , because select county by county id [" + cemeteryByAreaListRequest.getCountyId() + "] result is null");
+            throw new EqianyuanException(ExceptionMsgConstant.AREA_COUNTY_DATA_NO_EXISTS);
+        }
+        //根据区编号和乡名称查询乡数据
+        Town town = townDao.selectByName(cemeteryByAreaListRequest.getCountyId(), cemeteryByAreaListRequest.getTownName());
+        if (ObjectUtils.isEmpty(town)) {
+            logger.info("getListByArea fail , because select county by town name [" + cemeteryByAreaListRequest.getTownName() + "] result is null");
+            throw new EqianyuanException(ExceptionMsgConstant.AREA_TOWN_DATA_NO_EXISTS);
+        }
+        //根据乡编号和村名称查询村数据
+        Village village = villageDao.selectByName(town.getId(), cemeteryByAreaListRequest.getVillageName());
+        if (ObjectUtils.isEmpty(village)) {
+            logger.info("getListByArea fail , because select county by town name [" + cemeteryByAreaListRequest.getTownName() + "] result is null");
+            throw new EqianyuanException(ExceptionMsgConstant.AREA_VILLAGE_DATA_NO_EXISTS);
+        }
+        //根据村编号和社名称查询社数据
+        Community community = communityDao.selectByName(village.getId(), cemeteryByAreaListRequest.getCommunityName());
+        if (ObjectUtils.isEmpty(community)) {
+            logger.info("getListByArea fail , because select county by town name [" + cemeteryByAreaListRequest.getTownName() + "] result is null");
+            throw new EqianyuanException(ExceptionMsgConstant.AREA_COMMUNITY_DATA_NO_EXISTS);
+        }
+
+        //根据社区编号获取陵园总数
+        Long dataCount = cemeteryDao.countByPagination(community.getId());
+
+        if (ObjectUtils.isEmpty(dataCount)) {
+            logger.info("communityId [" + community.getId() + "] get total count is null");
+            return new PageResponse(pageNo, pageSize, dataCount, null);
+        }
+
+        Page page = new Page(pageNo, pageSize);
+        List<Cemetery> cemeteries = cemeteryDao.selectByPagination(page, community.getId());
+        if (CollectionUtils.isEmpty(cemeteries)) {
+            logger.info("pageNo [" + pageNo + "], pageSize [" + pageSize + "], communityId [" + community.getId() + "] get List is null");
+            return new PageResponse(pageNo, pageSize, dataCount, null);
+        }
+
+        List<CemeteryBo> cemeteryBos = new ArrayList<CemeteryBo>();
+        for (Cemetery cemetery : cemeteries) {
+            CemeteryBo cemeteryBo = new CemeteryBo();
+            BeanUtils.copyProperties(cemetery, cemeteryBo);
+            cemeteryBo.setProvinceName(province.getProvinceName());
+            cemeteryBo.setCityName(city.getCityName());
+            cemeteryBo.setCountyName(county.getCountyName());
+            cemeteryBo.setTownName(town.getName());
+            cemeteryBo.setVillageName(village.getName());
+            cemeteryBo.setCommunityName(community.getName());
+            cemeteryBo.setCreateTimeForStr(CalendarUtil.secondsTimeToDateTimeString(cemeteryBo.getCreateTime()));
+            cemeteryBos.add(cemeteryBo);
+        }
+        return new PageResponse(pageNo, pageSize, dataCount, cemeteryBos);
+    }
+
+    /**
+     * 根据陵园编号查询陵园归属地陵园分页集合
+     *
+     * @param cemeteryId
+     * @param pageNo
+     * @param pageSize
+     * @return
+     */
+    public PageResponse getListByCemeteryId(String cemeteryId, int pageNo, int pageSize) throws EqianyuanException {
+        if (StringUtils.isEmpty(cemeteryId)) {
+            logger.warn("getListByCemeteryId fail , because cemeteryId is null.");
+            throw new EqianyuanException(ExceptionMsgConstant.CEMETERY_ID_IS_EMPTY);
+        }
+
+        //根据陵园编号获取陵园
+        Cemetery cemetery = cemeteryDao.selectByPrimaryKey(cemeteryId);
+        if (ObjectUtils.isEmpty(cemetery)
+                || ObjectUtils.isEmpty(cemetery.getId())) {
+            logger.info("getListByCemeteryId fail , because cemeteryId [" + cemeteryId + "] query data is empty");
+            throw new EqianyuanException(ExceptionMsgConstant.CEMETERY_DATA_NOT_EXISTS);
+        }
+
+        //根据社区编号获取陵园总数
+        Long dataCount = cemeteryDao.countByPagination(cemetery.getCommunityId());
+
+        if (ObjectUtils.isEmpty(dataCount)) {
+            logger.info("communityId [" + cemetery.getCommunityId() + "] get total count is null");
+            return new PageResponse(pageNo, pageSize, dataCount, null);
+        }
+
+        //根据社区编号及陵园编号定位陵园数据所在数据行数
+        Long positioningRow = cemeteryDao.selectByPositioning(cemetery.getCommunityId(), cemeteryId);
+        //根据陵园定位行数计算pageNo
+        pageNo = (int) (positioningRow % pageSize == 0 ? positioningRow / pageSize : positioningRow / pageSize + 1);
+
+        Page page = new Page(pageNo, pageSize);
+        List<Cemetery> cemeteries = cemeteryDao.selectByPagination(page, cemetery.getCommunityId());
+        if (CollectionUtils.isEmpty(cemeteries)) {
+            logger.info("pageNo [" + pageNo + "], pageSize [" + pageSize + "], communityId [" + cemetery.getCommunityId() + "] get List is null");
+            return new PageResponse(pageNo, pageSize, dataCount, null);
+        }
+
+        List<CemeteryBo> cemeteryBos = new ArrayList<CemeteryBo>();
+        for (Cemetery cemeteryDo : cemeteries) {
+            CemeteryBo cemeteryBo = new CemeteryBo();
+            BeanUtils.copyProperties(cemeteryDo, cemeteryBo);
+            cemeteryBos.add(cemeteryBo);
+        }
+        return new PageResponse(pageNo, pageSize, dataCount, cemeteryBos);
     }
 
     /**
