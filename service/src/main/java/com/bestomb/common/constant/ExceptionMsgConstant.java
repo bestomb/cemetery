@@ -42,6 +42,8 @@ public class ExceptionMsgConstant {
     public static final String AREA_VILLAGE_DATA_NO_EXISTS = "10000015";
     //地区-社数据不存在
     public static final String AREA_COMMUNITY_DATA_NO_EXISTS = "10000016";
+    //分页-页码为空
+    public static final String PAGINATION_PAGE_NO_IS_EMPTY = "10000017";
     /***** 系统 *****/
 
     /*****
@@ -149,6 +151,8 @@ public class ExceptionMsgConstant {
     public static final String CEMETERY_ID_IS_EMPTY = "20010015";
     //陵园数据不存在
     public static final String CEMETERY_DATA_NOT_EXISTS = "20010016";
+    //社区任意门行为方式为空
+    public static final String CEMETERY_BEHAVIOR_IS_EMPTY = "20010017";
     /***** 陵园 *****/
 /********** 客户端 **********/
 }

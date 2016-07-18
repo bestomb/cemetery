@@ -39,4 +39,16 @@ public interface ICemeteryService {
      * @return
      */
     PageResponse getListByCemeteryId(String cemeteryId, int pageNo, int pageSize) throws EqianyuanException;
+
+    /**
+     * 任意门
+     *
+     * @param cemeteryByAreaListRequest
+     * @param behavior
+     * @param pageNo
+     * @param pageSize
+     * @return
+     * @throws EqianyuanException
+     */
+    PageResponse getListByArbitraryDoor(CemeteryByAreaListRequest cemeteryByAreaListRequest, String behavior, String pageNo, int pageSize) throws EqianyuanException;
 }

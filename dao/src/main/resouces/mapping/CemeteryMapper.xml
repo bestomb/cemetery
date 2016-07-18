@@ -203,4 +203,11 @@
         id &lt;= #{id}
         order by create_time asc
     </select>
+    <select id="countyByLimit" resultType="java.lang.Long">
+        select
+        count(1)
+        from (
+          select id from cemetery where community_id = #{community_id} limit ${page.pageNo}, ${page.pageSize}
+        ) a
+    </select>
 </mapper>

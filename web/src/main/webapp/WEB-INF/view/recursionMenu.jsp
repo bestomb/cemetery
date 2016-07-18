@@ -3,7 +3,7 @@
 
 <c:if test="${!empty systemUser.systemMenuBos}">
   <c:forEach var="menu" items="${systemUser.systemMenuBos}">
-    <li ref="${menu.url}">
+    <li class="menu" ref="${menu.url}">
       <a href="javascript:;" ><i class="fa fa-sitemap"></i> <span class="menuName">${menu.name}</span></a>
     </li>
   </c:forEach>

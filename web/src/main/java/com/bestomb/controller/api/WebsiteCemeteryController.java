@@ -79,4 +79,23 @@ public class WebsiteCemeteryController extends BaseController {
         PageResponse pageResponse = websiteCemeteryService.getListByCemetery(cemeteryId, pageNo, pageSize);
         return new ServerResponse.ResponseBuilder().data(pageResponse).build();
     }
+
+    /**
+     * 任意门
+     * 根据社区编号及行为获取左邻右里社区
+     *
+     * @param cemeteryByAreaListRequest 陵园地区查询对象
+     * @param behavior                  行为（上一个=prev、下一个=next）
+     * @param pageNo                    分页页码
+     * @param pageSize                  分页条数    默认64条每页
+     * @return
+     */
+    @RequestMapping("/arbitraryDoor")
+    @ResponseBody
+    public ServerResponse arbitraryDoor(CemeteryByAreaListRequest cemeteryByAreaListRequest, String behavior,
+                                        String pageNo,
+                                        @RequestParam(value = "pageSize", required = false, defaultValue = "64") int pageSize) throws EqianyuanException {
+        PageResponse pageResponse = websiteCemeteryService.arbitraryDoor(cemeteryByAreaListRequest, behavior, pageNo, pageSize);
+        return new ServerResponse.ResponseBuilder().data(pageResponse).build();
+    }
 }

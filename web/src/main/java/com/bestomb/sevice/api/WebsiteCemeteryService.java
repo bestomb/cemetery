@@ -72,7 +72,27 @@ public class WebsiteCemeteryService {
     }
 
     /**
+     * 任意门
+     *
+     * @param cemeteryByAreaListRequest
+     * @param behavior
+     * @param pageNo
+     * @param pageSize
+     * @return
+     * @throws EqianyuanException
+     */
+    public PageResponse arbitraryDoor(CemeteryByAreaListRequest cemeteryByAreaListRequest, String behavior, String pageNo, int pageSize) throws EqianyuanException {
+        PageResponse pageResponse = cemeteryService.getListByArbitraryDoor(cemeteryByAreaListRequest, behavior, pageNo, pageSize);
+        List<CemeteryBo> cemeteryBos = (List<CemeteryBo>) pageResponse.getList();
+        if (!CollectionUtils.isEmpty(cemeteryBos)) {
+            setListByPageResponse(pageResponse, cemeteryBos);
+        }
+        return pageResponse;
+    }
+
+    /**
      * 设置分页返回对象数据
+     *
      * @param pageResponse
      * @param cemeteryBos
      */

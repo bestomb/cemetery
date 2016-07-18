@@ -24,4 +24,22 @@ public interface ICommunityDao {
      * @return
      */
     Community selectByName(@Param("village_id") String villageId, @Param("name") String name);
+
+    /**
+     * 根据村编号及创建时间查找当前村下一个社区
+     *
+     * @param villageId
+     * @param createTime
+     * @return
+     */
+    Community selectByNext(@Param("village_id") String villageId, @Param("create_time") Integer createTime);
+
+    /**
+     * 根据村编号及创建时间查找当前村上一个社区
+     *
+     * @param villageId
+     * @param createTime
+     * @return
+     */
+    Community selectByPrev(@Param("village_id") String villageId, @Param("create_time") Integer createTime);
 }

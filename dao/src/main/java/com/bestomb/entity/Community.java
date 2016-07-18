@@ -9,6 +9,8 @@ public class Community {
 
     private Integer renameCount;
 
+    private Integer createTime;
+
     public String getId() {
         return id;
     }
@@ -39,5 +41,13 @@ public class Community {
 
     public void setRenameCount(Integer renameCount) {
         this.renameCount = renameCount;
+    }
+
+    public Integer getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Integer createTime) {
+        this.createTime = createTime;
     }
 }

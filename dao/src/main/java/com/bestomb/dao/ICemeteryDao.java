@@ -31,6 +31,14 @@ public interface ICemeteryDao {
     Long countByPagination(@Param("community_id") String communityId);
 
     /**
+     * 根据社区编号及分页条件获取分页后查询结果总数
+     * @param page
+     * @param communityId
+     * @return
+     */
+    Long countyByLimit(@Param("page") Page page, @Param("community_id") String communityId);
+
+    /**
      * 根据对象及分页条件获取分页数据集合
      *
      * @param page        分页对象
