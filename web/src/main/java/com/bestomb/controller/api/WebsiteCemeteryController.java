@@ -6,6 +6,7 @@ import com.bestomb.common.request.cemetery.CemeteryByEditRequest;
 import com.bestomb.common.response.PageResponse;
 import com.bestomb.common.response.ServerResponse;
 import com.bestomb.common.response.cemetery.CemeteryByMineVo;
+import com.bestomb.common.response.cemetery.CemeteryVo;
 import com.bestomb.common.response.member.MemberLoginVo;
 import com.bestomb.common.util.SessionContextUtil;
 import com.bestomb.common.util.SessionUtil;
@@ -112,5 +113,18 @@ public class WebsiteCemeteryController extends BaseController {
     public ServerResponse getMineList() throws EqianyuanException {
         List<CemeteryByMineVo> cemeteryByMineVos = websiteCemeteryService.getMineList();
         return new ServerResponse.ResponseBuilder().data(cemeteryByMineVos).build();
+    }
+
+    /**
+     * 根据陵园编号获取陵园信息
+     *
+     * @param cemeteryId
+     * @return
+     */
+    @RequestMapping("/getInfoById")
+    @ResponseBody
+    public ServerResponse getInfoById(String cemeteryId) throws EqianyuanException {
+        CemeteryVo cemeteryVo = websiteCemeteryService.getInfoById(cemeteryId);
+        return new ServerResponse.ResponseBuilder().data(cemeteryVo).build();
     }
 }

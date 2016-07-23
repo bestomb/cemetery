@@ -154,5 +154,20 @@ public class ExceptionMsgConstant {
     //社区任意门行为方式为空
     public static final String CEMETERY_BEHAVIOR_IS_EMPTY = "20010017";
     /***** 陵园 *****/
+
+    /*****
+     * 模型
+     *****/
+    //模型分类编号为空
+    public static final String MODEL_CLASSIFY_ID_IS_EMPTY = "20020001";
+    //模型分类名不存在
+    public static final String MODEL_CLASSIFY_NAME_IS_EMPTY = "20020002";
+    //模型分类名称内容太长
+    public static final String MODEL_CLASSIFY_NAME_TO_LONG = "20020003";
+    //模型分类父分类编号为空
+    public static final String MODEL_CLASSIFY_PARENT_ID_IS_EMPTY = "20020004";
+    //模型分类数据不存在
+    public static final String MODEL_CLASSIFY_DATA_NOT_EXISTS = "20020005";
+    /***** 模型 *****/
 /********** 客户端 **********/
 }

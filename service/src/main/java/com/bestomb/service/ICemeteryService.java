@@ -62,4 +62,13 @@ public interface ICemeteryService {
      * @return
      */
     List<CemeteryBo> getListByMemberId(Integer memberId) throws EqianyuanException;
+
+    /**
+     * 根据陵园编号查找陵园信息
+     *
+     * @param cemeteryId
+     * @return
+     * @throws EqianyuanException
+     */
+    CemeteryBo getInfoById(String cemeteryId) throws EqianyuanException;
 }

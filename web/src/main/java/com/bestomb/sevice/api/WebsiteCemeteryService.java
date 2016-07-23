@@ -7,6 +7,7 @@ import com.bestomb.common.response.PageResponse;
 import com.bestomb.common.response.cemetery.CemeteryBo;
 import com.bestomb.common.response.cemetery.CemeteryByAreaVo;
 import com.bestomb.common.response.cemetery.CemeteryByMineVo;
+import com.bestomb.common.response.cemetery.CemeteryVo;
 import com.bestomb.common.response.member.MemberLoginVo;
 import com.bestomb.common.util.SessionContextUtil;
 import com.bestomb.common.util.SessionUtil;
@@ -113,6 +114,19 @@ public class WebsiteCemeteryService {
             cemeteryByMineVos.add(cemeteryByMineVo);
         }
         return cemeteryByMineVos;
+    }
+
+    /**
+     * 根据陵园编号查找陵园信息
+     *
+     * @param cemeteryId
+     * @return
+     */
+    public CemeteryVo getInfoById(String cemeteryId) throws EqianyuanException {
+        CemeteryBo cemeteryBo = cemeteryService.getInfoById(cemeteryId);
+        CemeteryVo cemeteryVo = new CemeteryVo();
+        BeanUtils.copyProperties(cemeteryBo, cemeteryVo);
+        return cemeteryVo;
     }
 
     /**

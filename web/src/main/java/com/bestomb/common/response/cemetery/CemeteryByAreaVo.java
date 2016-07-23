@@ -4,7 +4,7 @@ package com.bestomb.common.response.cemetery;
  * 根据地区查找陵园信息vo对象
  */
 public class CemeteryByAreaVo {
-    private String id;
+    private Integer id;
 
     private String name;
 
@@ -12,11 +12,11 @@ public class CemeteryByAreaVo {
 
     private Integer isOpen;
 
-    public String getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
