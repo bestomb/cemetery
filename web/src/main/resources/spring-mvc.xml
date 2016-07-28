@@ -22,6 +22,12 @@
         <property name="suffix" value=".jsp"/>
     </bean>
 
+    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <property name="defaultEncoding" value="utf-8"></property>
+        <property name="maxUploadSize" value="10485760000"></property>
+        <property name="maxInMemorySize" value="40960"></property>
+    </bean>
+
     <!-- mvc:resources 定义的mapping 不用通过spring controller分发，可以直接访问 -->
     <mvc:resources mapping="/js/**" location="/js/"/>
     <mvc:resources mapping="/css/**" location="/css/"/>
@@ -36,6 +42,7 @@
             <mvc:mapping path="/system_menu/*"/>
             <mvc:mapping path="/system_role/*"/>
             <mvc:mapping path="/system_user/*"/>
+            <mvc:mapping path="/model/*"/>
             <mvc:exclude-mapping path="/system-manage/verifyCode"/>
             <mvc:exclude-mapping path="/system-manage/log*"/>
             <mvc:exclude-mapping path="/system-manage/home"/>

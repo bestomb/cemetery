@@ -66,7 +66,7 @@ public class SessionUtil {
         getSession().setAttribute(name, value);
     }
 
-    private static HttpSession getSession() {
+    public static HttpSession getSession() {
         return ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest().getSession();
     }
 

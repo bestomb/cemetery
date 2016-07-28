@@ -1,5 +1,6 @@
 package com.bestomb.common.util.yamlMapper;
 
+import java.io.File;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -48,7 +49,15 @@ public enum SystemConf {
     /**
      * 网站未登录时响应请求地址
      */
-    WEBSITE_UN_LOGIN("/website/authorization");
+    WEBSITE_UN_LOGIN("/website/authorization"),
+    /**
+     * 模型附件上传临时目录
+     */
+    MODEL_FILE_UPLOAD_TEMP_DIRECTORY(File.separator + "upload" + File.separator + "temp"),
+    /**
+     * 模型附件上传最终持久目录
+     */
+    MODEL_FILE_UPLOAD_FIXED_DIRECTORY(File.separator + "upload" + File.separator + "fixed");
 
     private Object value;
 

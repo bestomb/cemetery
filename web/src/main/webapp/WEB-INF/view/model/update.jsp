@@ -24,7 +24,7 @@
     <div id="page-wrapper">
         <div class="row">
             <div class="col-lg-12">
-                <h1 class="page-header">系统管理用户详细信息</h1>
+                <h1 class="page-header">修改模型</h1>
             </div>
             <!-- /.col-lg-12 -->
         </div>
@@ -37,26 +37,22 @@
                                 <div id="form-tip" class="alert hidden">
                                     <strong></strong>
                                 </div>
-                                <form role="form">
+                                <form role="form" enctype="multipart/form-data">
+                                    <!-- 数据序列编号 -->
+                                    <input class="form-control hidden" name="id" value="${param.id }">
                                     <div class="form-group">
-                                        <label>用户名</label>
-                                        <input class="form-control" name="loginName" disabled>
+                                        <label>所属模型分类</label>
+                                        <input class="form-control" name="classifyName" disabled>
                                     </div>
                                     <div class="form-group">
-                                        <label>真实姓名</label>
-                                        <input class="form-control" name="realName" disabled>
+                                        <label>模型名称</label>
+                                        <input class="form-control" name="name">
                                     </div>
                                     <div class="form-group">
-                                        <label>手机号码</label>
-                                        <input class="form-control" name="mobile" disabled>
+                                        <label>模型文件</label>
+                                        <input class="form-control" name="file" type="file">
                                     </div>
-                                    <div class="form-group">
-                                        <label class="control-label">绑定管理员角色</label>
-                                        <div class="controls">
-                                            <ul id="roleTree" class="ztree span6 m-wrap"
-                                                style="border: 1px solid;overflow-y: scroll;overflow-x: auto;"></ul>
-                                        </div>
-                                    </div>
+                                    <input type="button" class="btn btn-outline btn-success submit" value="确认">
                                     <input type="button" class="btn btn-outline btn-info back" value="返回">
                                 </form>
                             </div>
@@ -76,15 +72,13 @@
     $(function () {
         $.ajax({
             type: "POST",
-            url: "/system_user/info",
+            url: "/model/info",
             data: {id: "${param.id}"},
             success: function (response) {
                 if (response.code == "200") {
                     var _this = response.data;
-                    $("input[name='loginName']").val(_this.loginName);
-                    $("input[name='realName']").val(_this.loginName);
-                    $("input[name='mobile']").val(_this.mobile);
-                    getSystemRoleList(_this.roleId);
+                    $("input[name='name']").val(_this.name);
+                    $("input[name='classifyName']").val(_this.classifyName);
                 } else {
                     $("#form-tip").removeClass("hidden alert-warning").addClass("alert-success").show().find("strong").text(response.message);
                     //3秒后自动关闭警告框
@@ -97,53 +91,34 @@
         $(".back").click(function () {
             window.history.go(-1);
         });
-    });
 
-    /**
-     * 获取系统角色数据并渲染成树状结构，渲染的同时，如果roleIds存在，则将节点选中
-     *
-     */
-    function getSystemRoleList(roleIds) {
-        var setting = {
-            check: {
-                enable: true
-            },
-            data: {
-                simpleData: {
-                    enable: true,
-                    rootPid: 0,
+        //提交保存
+        $(".submit").click(function () {
+            $(this).attr('disabled', "true")
+
+            //异步提交表单
+            $.ajax({
+                type: "POST",
+                url: "/model/modify",
+                data: new FormData($( "form" )[0]),
+                cache: false,
+                contentType: false, //改变默认文本传输，允许文件传输
+                processData: false, //允许data传递对象
+                success: function (response) {
+                    if (response.code == "200") {
+                        $("#form-tip").removeClass("hidden alert-warning").addClass("alert-success").show().find("strong").text(response.message);
+
+                        setTimeout(function () {
+                            window.location.href = "/system-manage/gotoPage?url=model/list";
+                        }, 500);
+                    } else {
+                        $("#form-tip").removeClass("hidden alert-success").addClass("alert-warning").show().find("strong").text(response.message);
+                        $(".submit").removeAttr("disabled");
+                    }
                 }
-            }
-        };
-
-        //获取菜单数据集合
-        $.ajax({
-            type: "post",
-            url: "/system_role/list",
-            traditional: true,
-            data: null,
-            success: function (response) {
-                if (response.code != "200" || response.data.length <= 0) {
-                    return false;
-                }
-
-                $(response.data).each(function(){
-                    var _this = this;
-                    $(roleIds).each(function () {
-                        if(_this.id == this){
-                            _this.checked = true;
-                            return true;
-                        }
-                    });
-
-                    _this.chkDisabled = true;
-                });
-
-                roleTree = $.fn.zTree.init($("#roleTree"), setting, response.data);
-                roleTree.expandAll(true);
-            }
+            });
         });
-    }
+    });
 </script>
 </body>
 

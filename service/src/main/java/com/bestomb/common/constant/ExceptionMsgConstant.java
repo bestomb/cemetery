@@ -44,6 +44,16 @@ public class ExceptionMsgConstant {
     public static final String AREA_COMMUNITY_DATA_NO_EXISTS = "10000016";
     //分页-页码为空
     public static final String PAGINATION_PAGE_NO_IS_EMPTY = "10000017";
+    //附件名称为空
+    public static final String FILE_NAME_IS_EMPTY = "10000018";
+    //附件移动错误
+    public static final String FILE_MOVE_ERROR = "10000019";
+    //附件不存在
+    public static final String FILE_NO_EXISTS = "10000020";
+    //附件删除错误
+    public static final String FILE_DELETE_ERROR = "10000021";
+    //附件上传失败
+    public static final String FILE_UPDATE_ERROR = "10000022";
     /***** 系统 *****/
 
     /*****
@@ -168,6 +178,19 @@ public class ExceptionMsgConstant {
     public static final String MODEL_CLASSIFY_PARENT_ID_IS_EMPTY = "20020004";
     //模型分类数据不存在
     public static final String MODEL_CLASSIFY_DATA_NOT_EXISTS = "20020005";
+
+    //模型编号为空
+    public static final String MODEL_ID_IS_EMPTY = "20020006";
+    //模型名不存在
+    public static final String MODEL_NAME_IS_EMPTY = "20020007";
+    //模型名称内容太长
+    public static final String MODEL_NAME_TO_LONG = "20020008";
+    //模型文件地址不存在
+    public static final String MODEL_FILE_ADDRESS_IS_EMPTY = "20020009";
+    //模型文件名称不存在
+    public static final String MODEL_FILE_NAME_IS_EMPTY = "20020010";
+    //模型数据不存在
+    public static final String MODEL_DATA_NOT_EXIXTS = "20020011";
     /***** 模型 *****/
 /********** 客户端 **********/
 }
