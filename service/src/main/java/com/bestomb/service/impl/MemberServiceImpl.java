@@ -84,7 +84,7 @@ public class MemberServiceImpl implements IMemberService {
         }
 
         //判断两次密码是否一致
-        if (StringUtils.equals(loginPassword, confirmPassword)) {
+        if (!StringUtils.equals(loginPassword, confirmPassword)) {
             logger.warn("register fail , because the two  passwords don't match.");
             throw new EqianyuanException(ExceptionMsgConstant.TWO_PASSWORD_DO_NOT_MATCH);
         }
