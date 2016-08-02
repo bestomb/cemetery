@@ -1,7 +1,10 @@
 package com.bestomb.dao;
 
+import com.bestomb.common.Page;
 import com.bestomb.entity.MemberAccount;
 import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 public interface IMemberAccountDao {
     int insertSelective(MemberAccount record);
@@ -23,6 +26,16 @@ public interface IMemberAccountDao {
      * @return
      */
     int selectByInviterId(@Param("inviter_id") Integer inviterId);
+
+    /**
+     * 分页查询
+     */
+    List<MemberAccount> selectByPagination( @Param("page") Page page);
+
+    /**
+     * 根据数据对象获取总条数
+     */
+    Long countByPagination();
 
     /**
      * 根据登录信息查询数据对象

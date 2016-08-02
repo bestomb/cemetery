@@ -1,6 +1,9 @@
-package com.bestomb.entity;
+package com.bestomb.common.response.member;
 
-public class MemberAccount {
+/**
+ * Created by asus on 2016/7/29.
+ */
+public class MemberAccountBo {
     private Integer memberId;
 
     private Long mobileNumber;
@@ -19,7 +22,7 @@ public class MemberAccount {
 
     private Integer constructionCount;
 
-    private Integer createTime;
+    private String createTime;
 
     public Integer getMemberId() {
         return memberId;
@@ -42,7 +45,7 @@ public class MemberAccount {
     }
 
     public void setLoginPassword(String loginPassword) {
-        this.loginPassword = loginPassword == null ? null : loginPassword.trim();
+        this.loginPassword = loginPassword;
     }
 
     public String getNickName() {
@@ -50,7 +53,7 @@ public class MemberAccount {
     }
 
     public void setNickName(String nickName) {
-        this.nickName = nickName == null ? null : nickName.trim();
+        this.nickName = nickName;
     }
 
     public Integer getInviterId() {
@@ -82,15 +85,7 @@ public class MemberAccount {
     }
 
     public void setTradingPassword(String tradingPassword) {
-        this.tradingPassword = tradingPassword == null ? null : tradingPassword.trim();
-    }
-
-    public Integer getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Integer createTime) {
-        this.createTime = createTime;
+        this.tradingPassword = tradingPassword;
     }
 
     public Integer getConstructionCount() {
@@ -100,4 +95,13 @@ public class MemberAccount {
     public void setConstructionCount(Integer constructionCount) {
         this.constructionCount = constructionCount;
     }
+
+    public String getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(String createTime) {
+        this.createTime = createTime;
+    }
+
 }

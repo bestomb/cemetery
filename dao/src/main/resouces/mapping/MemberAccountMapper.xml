@@ -19,7 +19,7 @@
   </sql>
     <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
         select
-        <include refid="Base_Column_List"/>
+       <include refid="Base_Column_List"/>
         from member_account
         where member_id = #{memberId,jdbcType=INTEGER}
     </select>
@@ -45,6 +45,18 @@
         or mobile_number = #{login_account}
         )
     </select>
+
+    <!--分页查询-->
+    <select id="selectByPagination" resultMap="BaseResultMap">
+        select * from member_account
+        limit ${page.pageNo}, ${page.pageSize}
+    </select>
+
+    <!--查询数据总条数-->
+    <select id="countByPagination" resultType="java.lang.Long">
+        select count(1) from member_account
+    </select>
+
     <insert id="insertSelective" parameterType="com.bestomb.entity.MemberAccount">
         insert into member_account
         <trim prefix="(" suffix=")" suffixOverrides=",">

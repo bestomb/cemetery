@@ -1,7 +1,11 @@
 package com.bestomb.service;
 
 import com.bestomb.common.exception.EqianyuanException;
+import com.bestomb.common.response.PageResponse;
+import com.bestomb.common.response.member.MemberAccountBo;
 import com.bestomb.common.response.member.MemberLoginBo;
+
+import java.util.List;
 
 /**
  * 会员业务逻辑接口
@@ -27,4 +31,16 @@ public interface IMemberService {
      * @param loginPassword 登录密码
      */
     MemberLoginBo login(String loginAccount, String loginPassword) throws EqianyuanException;
+
+    /**
+     * 根据id查询单条信息
+     * @param memberId 主键ID
+     */
+    MemberAccountBo getInfo(String memberId) throws EqianyuanException;
+
+    /**
+     * 分页查询
+     */
+    PageResponse getList(int pageNo, int pageSize)throws EqianyuanException;
+
 }
