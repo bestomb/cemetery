@@ -54,4 +54,22 @@ public class ClientConf {
         }
     }
 
+    /**
+     * 多人在线SOCKET小配置
+     */
+    public enum SocketByMsg {
+        serverSocketByMsgAddress("serverSocketByMsgAddress"), serverSocketByMsgPort("serverSocketByMsgPort"), serverSocketByMsgBackLog("serverSocketByMsgBackLog");
+
+        private String key;
+
+        SocketByMsg(String key) {
+            this.key = key;
+        }
+
+        @Override
+        public String toString() {
+            return String.valueOf(this.key);
+        }
+    }
+
 }

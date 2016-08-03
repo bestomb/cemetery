@@ -7,10 +7,27 @@
          xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
          id="schedule-console" version="3.0">
 
-    <!-- 监听session -->
+    <!-- 监听spring上下文容器 -->
+    <listener>
+        <listener-class>
+            org.springframework.web.context.ContextLoaderListener
+        </listener-class>
+    </listener>
+
+    <!-- 监听客户端session -->
     <listener>
         <listener-class>com.bestomb.common.listener.WebsiteSessionListener</listener-class>
     </listener>
+
+    <!-- 监听客户端通信socket -->
+    <listener>
+        <listener-class>com.bestomb.common.listener.ServerSocketyByCemeteryListener</listener-class>
+    </listener>
+
+    <context-param>
+        <param-name>contextConfigLocation</param-name>
+        <param-value>classpath*:spring-*.xml;</param-value>
+    </context-param>
 
     <!-- 核心控制器 -->
     <servlet>
@@ -19,7 +36,7 @@
         <!-- 加载SpringMVC的xml到 spring的上下文容器中 -->
         <init-param>
             <param-name>contextConfigLocation</param-name>
-            <param-value>classpath*:spring-*.xml;</param-value>
+            <param-value></param-value>
         </init-param>
         <load-on-startup>1</load-on-startup>
     </servlet>

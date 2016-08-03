@@ -654,8 +654,40 @@ public class CemeteryServiceImpl implements ICemeteryService {
      * @throws EqianyuanException
      */
     public CemeteryBo getInfoById(String cemeteryId) throws EqianyuanException {
+        CemeteryBo cemeteryBo = getBasicInfoById(cemeteryId);
+
+        //根据省编号查询省数据
+        Province province = provinceDao.selectById(cemeteryBo.getProvinceId());
+        //根据市编号查询市数据
+        City city = cityDao.selectById(cemeteryBo.getProvinceId(), cemeteryBo.getCityId());
+        //根据区编号查询区数据
+        County county = countyDao.selectById(cemeteryBo.getCityId(), cemeteryBo.getCountyId());
+        //根据乡编号查询乡数据
+        Town town = townDao.selectByPrimaryKey(cemeteryBo.getTownId());
+        //根据村编号查询村数据
+        Village village = villageDao.selectByPrimaryKey(cemeteryBo.getVillageId());
+        //根据社编号查询社数据
+        Community community = communityDao.selectByPrimaryKey(cemeteryBo.getCommunityId());
+
+        cemeteryBo.setProvinceName(province.getProvinceName());
+        cemeteryBo.setCityName(city.getCityName());
+        cemeteryBo.setCountyName(county.getCountyName());
+        cemeteryBo.setTownName(town.getName());
+        cemeteryBo.setVillageName(village.getName());
+        cemeteryBo.setCommunityName(community.getName());
+        return cemeteryBo;
+    }
+
+    /**
+     * 根据陵园编号获取陵园信息
+     *
+     * @param cemeteryId
+     * @return
+     * @throws EqianyuanException
+     */
+    public CemeteryBo getBasicInfoById(String cemeteryId) throws EqianyuanException {
         if (StringUtils.isEmpty(cemeteryId)) {
-            logger.warn("getInfoById fail , because cemeteryId is null.");
+            logger.warn("getBasicInfoById fail , because cemeteryId is null.");
             throw new EqianyuanException(ExceptionMsgConstant.CEMETERY_ID_IS_EMPTY);
         }
 
@@ -663,31 +695,12 @@ public class CemeteryServiceImpl implements ICemeteryService {
         Cemetery cemetery = cemeteryDao.selectByPrimaryKey(cemeteryId);
         if (ObjectUtils.isEmpty(cemetery)
                 || ObjectUtils.isEmpty(cemetery.getId())) {
-            logger.info("getInfoById fail , because cemeteryId [" + cemeteryId + "] query data is empty");
+            logger.info("getBasicInfoById fail , because cemeteryId [" + cemeteryId + "] query data is empty");
             throw new EqianyuanException(ExceptionMsgConstant.CEMETERY_DATA_NOT_EXISTS);
         }
 
-        //根据省编号查询省数据
-        Province province = provinceDao.selectById(cemetery.getProvinceId());
-        //根据市编号查询市数据
-        City city = cityDao.selectById(cemetery.getProvinceId(), cemetery.getCityId());
-        //根据区编号查询区数据
-        County county = countyDao.selectById(cemetery.getCityId(), cemetery.getCountyId());
-        //根据乡编号查询乡数据
-        Town town = townDao.selectByPrimaryKey(cemetery.getTownId());
-        //根据村编号查询村数据
-        Village village = villageDao.selectByPrimaryKey(cemetery.getVillageId());
-        //根据社编号查询社数据
-        Community community = communityDao.selectByPrimaryKey(cemetery.getCommunityId());
-
         CemeteryBo cemeteryBo = new CemeteryBo();
         BeanUtils.copyProperties(cemetery, cemeteryBo);
-        cemeteryBo.setProvinceName(province.getProvinceName());
-        cemeteryBo.setCityName(city.getCityName());
-        cemeteryBo.setCountyName(county.getCountyName());
-        cemeteryBo.setTownName(town.getName());
-        cemeteryBo.setVillageName(village.getName());
-        cemeteryBo.setCommunityName(community.getName());
         cemeteryBo.setCreateTimeForStr(CalendarUtil.secondsTimeToDateTimeString(cemeteryBo.getCreateTime()));
         return cemeteryBo;
     }
