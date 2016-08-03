@@ -4,8 +4,12 @@ import com.bestomb.common.constant.ExceptionMsgConstant;
 import com.bestomb.common.exception.EqianyuanException;
 import com.bestomb.common.request.model.ModelClassifyByEditRequest;
 import com.bestomb.common.response.model.ModelClassifyBo;
+import com.bestomb.common.util.FileUtilHandle;
+import com.bestomb.common.util.SessionUtil;
 import com.bestomb.common.util.yamlMapper.SystemConf;
 import com.bestomb.dao.IModelClassifyDao;
+import com.bestomb.dao.IModelDao;
+import com.bestomb.entity.Model;
 import com.bestomb.entity.ModelClassify;
 import com.bestomb.service.IModelClassifyService;
 import org.apache.commons.lang.StringUtils;
@@ -33,6 +37,9 @@ public class ModelClassifyServiceImpl implements IModelClassifyService {
     @Autowired
     private IModelClassifyDao modelClassifyDao;
 
+    @Autowired
+    private IModelDao modelDao;
+
     //模型分类是否可编辑-允许用户编辑
     private static final int MODEL_CLASSIFY_CAN_EDIT_BY_TRUE = 2;
     //模型分类名称DB许可字节长度
@@ -54,8 +61,19 @@ public class ModelClassifyServiceImpl implements IModelClassifyService {
         //删除模型分类数据
         modelClassifyDao.deleteByPrimaryKey(id);
 
-        //删除模型分类与模型关系
-//        systemUserRoleRelateDao.deleteBySystemUser(id);
+        //根据主键查询数据
+        List<Model> modelList = modelDao.selectByClassifyId(id);
+        if (CollectionUtils.isEmpty(modelList)) {
+            return;
+        }
+
+        //删除数据
+        modelDao.deleteByClassifyId(id);
+
+        for (Model model : modelList) {
+            //删除对应实体模型
+            FileUtilHandle.deleteFile(SessionUtil.getSession().getServletContext().getRealPath("/") + model.getFileAddress());
+        }
     }
 
     /**
@@ -146,11 +164,10 @@ public class ModelClassifyServiceImpl implements IModelClassifyService {
             throw new EqianyuanException(ExceptionMsgConstant.SYSTEM_GET_BYTE_FAIL);
         }
 
-        //根据父分类编号查询父分类数据对象
-        ModelClassify modelClassifyByParentId = modelClassifyDao.selectByPrimaryKey(modelClassifyByEditRequest.getParentId());
+        ModelClassify modelClassifyByParentId = modelClassifyDao.selectByPrimaryKey(modelClassifyByEditRequest.getId());
         if (ObjectUtils.isEmpty(modelClassifyByParentId)
                 || StringUtils.isEmpty(modelClassifyByParentId.getId())) {
-            logger.info("modify fail , because parent id [" + modelClassifyByEditRequest.getParentId() + "] query data is empty");
+            logger.info("modify fail , because id [" + modelClassifyByEditRequest.getId() + "] query data is empty");
             throw new EqianyuanException(ExceptionMsgConstant.MODEL_CLASSIFY_DATA_NOT_EXISTS);
         }
 

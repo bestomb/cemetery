@@ -23,6 +23,13 @@
             #{item}
         </foreach>
     </delete>
+    <delete id="deleteByClassifyId" parameterType="java.lang.String">
+        delete from model
+        where classify_id IN
+        <foreach item="item" collection="classify_id" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
     <insert id="insertSelective" parameterType="com.bestomb.entity.Model">
         <selectKey keyProperty="id" resultType="String" order="BEFORE">
             select replace(uuid(),'-','') from dual
@@ -78,6 +85,15 @@
         from model
         where id IN
         <foreach item="item" collection="id" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+    <select id="selectByClassifyId" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from model
+        where classify_id IN
+        <foreach item="item" collection="classify_id" open="(" separator="," close=")">
             #{item}
         </foreach>
     </select>

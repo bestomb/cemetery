@@ -9,6 +9,8 @@ import java.util.List;
 public interface IModelDao {
     int deleteByPrimaryKey(@Param("id") String... id);
 
+    int deleteByClassifyId(@Param("classify_id") String... classifyId);
+
     int insertSelective(Model record);
 
     Model selectByPrimaryKey(String id);
@@ -22,6 +24,14 @@ public interface IModelDao {
      * @return
      */
     List<Model> selectById(@Param("id") String... id);
+
+    /**
+     * 根据分类编号查询数据集合
+     *
+     * @param classifyId
+     * @return
+     */
+    List<Model> selectByClassifyId(@Param("classify_id") String... classifyId);
 
     /**
      * 获取数据总条数
