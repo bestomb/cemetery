@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bestomb.dao.INoticeDao" >
+  <resultMap id="BaseResultMap" type="com.bestomb.entity.Notice" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="cemetery_id" property="cemeteryId" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="INTEGER" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.bestomb.entity.Notice" extends="BaseResultMap" >
+    <result column="content" property="content" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, cemetery_id, create_time
+  </sql>
+  <sql id="Blob_Column_List" >
+    content
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from notice
+    where id = #{id}
+  </select>
+  <select id="selectByPrimaryKeys" resultMap="ResultMapWithBLOBs" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from notice
+    where id IN
+    <foreach item="item" collection="ids" open="(" separator="," close=")">
+      #{item}
+    </foreach>
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from notice
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.bestomb.entity.Notice" >
+    <selectKey keyProperty="id" resultType="String" order="BEFORE">
+      select replace(uuid(),'-','') from dual
+    </selectKey>
+    insert into notice (id, cemetery_id, create_time, 
+      content)
+    values (#{id,jdbcType=VARCHAR}, #{cemeteryId,jdbcType=INTEGER}, #{createTime,jdbcType=INTEGER}, 
+      #{content,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.bestomb.entity.Notice" >
+    <selectKey keyProperty="id" resultType="String" order="BEFORE">
+      select replace(uuid(),'-','') from dual
+    </selectKey>
+    insert into notice
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="cemeteryId != null" >
+        cemetery_id,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="content != null" >
+        content,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="cemeteryId != null" >
+        #{cemeteryId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=INTEGER},
+      </if>
+      <if test="content != null" >
+        #{content,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.bestomb.entity.Notice" >
+    update notice
+    <set >
+      <if test="cemeteryId != null" >
+        cemetery_id = #{cemeteryId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=INTEGER},
+      </if>
+      <if test="content != null" >
+        content = #{content,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.bestomb.entity.Notice" >
+    update notice
+    set cemetery_id = #{cemeteryId,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=INTEGER},
+      content = #{content,jdbcType=LONGVARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.bestomb.entity.Notice" >
+    update notice
+    set cemetery_id = #{cemeteryId,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=INTEGER}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <select id="countByPagination" resultType="java.lang.Long">
+    select count(1) from notice
+    <where>
+      <if test="cemetery_id != null and cemetery_id != ''">
+        cemetery_id = #{cemetery_id}
+      </if>
+    </where>
+  </select>
+  <select id="selectByPagination" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"/>
+    from notice
+    <where>
+      <if test="cemetery_id != null and cemetery_id != ''">
+        cemetery_id = #{cemetery_id}
+      </if>
+    </where>
+    limit ${page.pageNo}, ${page.pageSize}
+  </select>
+</mapper>

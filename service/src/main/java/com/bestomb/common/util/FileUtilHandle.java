@@ -2,14 +2,89 @@ package com.bestomb.common.util;
 
 import com.bestomb.common.constant.ExceptionMsgConstant;
 import com.bestomb.common.exception.EqianyuanException;
+import com.bestomb.common.response.FileResponse;
+import com.bestomb.common.util.yamlMapper.SystemConf;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.springframework.util.CollectionUtils;
+import org.springframework.util.MultiValueMap;
+import org.springframework.util.ObjectUtils;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class FileUtilHandle {
 
     private static Logger logger = Logger.getLogger(FileUtilHandle.class);
+
+    /**
+     * 多个附件上传
+     *
+     * @param multiFiles
+     * @return
+     * @throws EqianyuanException
+     */
+    public static List<FileResponse> upload(MultiValueMap<String, MultipartFile> multiFiles) throws EqianyuanException {
+        if (CollectionUtils.isEmpty(multiFiles)) {
+            logger.info("upload fail , because file no exists");
+            throw new EqianyuanException(ExceptionMsgConstant.FILE_NO_EXISTS);
+        }
+
+        List<FileResponse> fileResponses = new ArrayList<FileResponse>();
+        for (String key : multiFiles.keySet()) {
+            MultipartFile file = multiFiles.getFirst(key);
+            FileResponse fileResponse = upload(file);
+            fileResponses.add(fileResponse);
+        }
+
+        return fileResponses;
+    }
+
+    /**
+     * 单个附件上传
+     *
+     * @param multipartFile
+     * @return
+     * @throws EqianyuanException
+     */
+    public static FileResponse upload(MultipartFile multipartFile) throws EqianyuanException {
+        if (ObjectUtils.isEmpty(multipartFile)) {
+            logger.info("upload fail , because file no exists");
+            throw new EqianyuanException(ExceptionMsgConstant.FILE_NO_EXISTS);
+        }
+
+        if (org.springframework.util.StringUtils.isEmpty(multipartFile.getOriginalFilename())) {
+            logger.info("upload fail , because file no exists");
+            throw new EqianyuanException(ExceptionMsgConstant.FILE_NO_EXISTS);
+        }
+
+        //获取附件上传位置
+        String absoluteDirectory = SessionUtil.getSession().getServletContext().getRealPath("/");
+        File f1 = new File(absoluteDirectory + SystemConf.FILE_UPLOAD_TEMP_DIRECTORY.toString());
+
+        if (!f1.exists()) {
+            f1.mkdirs();
+        }
+
+        String fullName = SystemConf.FILE_UPLOAD_TEMP_DIRECTORY.toString() + File.separator + multipartFile.getOriginalFilename();
+        String fullPath = absoluteDirectory + fullName;
+        // 附件处理上传
+        try {
+            multipartFile.transferTo(new File(fullPath));
+        } catch (IOException e) {
+            logger.error("upload fail ", e);
+            throw new EqianyuanException(ExceptionMsgConstant.FILE_UPDATE_ERROR);
+        }
+
+        FileResponse fileResponse = new FileResponse();
+        fileResponse.setFileName(multipartFile.getOriginalFilename());
+        fileResponse.setFilePath(fullPath);
+        fileResponse.setFileSize(String.valueOf(multipartFile.getSize()));
+        return fileResponse;
+    }
 
     /**
      * 附件移动，从临时目录移动到指定目录
@@ -73,7 +148,7 @@ public class FileUtilHandle {
             if (!file.exists()) {
                 logger.info("deleteFile fail , because file no exists");
                 //throw new EqianyuanException(ExceptionMsgConstant.FILE_NO_EXISTS);
-                return ;
+                return;
             }
 
             if (!file.delete()) {

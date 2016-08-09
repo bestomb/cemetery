@@ -1,5 +1,7 @@
 package com.bestomb.common.util;
 
+import com.bestomb.common.constant.ExceptionMsgConstant;
+import com.bestomb.common.exception.EqianyuanException;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -58,12 +60,36 @@ public class SessionUtil {
         return sessionId;
     }
 
+    /**
+     * 获取客户端session
+     *
+     * @return
+     * @throws EqianyuanException
+     */
+    public static HttpSession getClientSession() throws EqianyuanException {
+        String sessionId = getSessionByCookie();
+        if (StringUtils.isEmpty(sessionId)) {
+            throw new EqianyuanException(ExceptionMsgConstant.WEB_SITE_SESSION_ID_IS_EMPTY);
+        }
+
+        //从session维护对象中获取当前sessionId所对应的session对象
+        if (ObjectUtils.isEmpty(SessionContextUtil.getInstance().getSession(sessionId))) {
+            //如果sessionId不存在session
+            throw new EqianyuanException(ExceptionMsgConstant.MEMBER_NO_AUTHORIZATION_BY_LOGIN);
+        }
+        return SessionContextUtil.getInstance().getSession(sessionId);
+    }
+
     public static Object getAttribute(HttpSession session, String name) {
         return session.getAttribute(name);
     }
 
     public static void setAttribute(String name, Object value) {
-        getSession().setAttribute(name, value);
+        setAttribute(getSession(), name, value);
+    }
+
+    public static void setAttribute(HttpSession session, String name, Object value) {
+        session.setAttribute(name, value);
     }
 
     public static HttpSession getSession() {
@@ -71,6 +97,10 @@ public class SessionUtil {
     }
 
     public static void removeAttribute(String key) {
-        getSession().removeAttribute(key);
+        removeAttribute(getSession(), key);
+    }
+
+    public static void removeAttribute(HttpSession session, String key) {
+        session.removeAttribute(key);
     }
 }

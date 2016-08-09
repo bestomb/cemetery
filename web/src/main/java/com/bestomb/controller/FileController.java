@@ -7,6 +7,7 @@ import com.bestomb.service.IFileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
@@ -25,8 +26,9 @@ public class FileController extends BaseController {
 
     @RequestMapping("/file/upload")
     @ResponseBody
-    public ServerResponse upload(HttpServletRequest request) throws EqianyuanException, IOException {
-        List<FileResponse> fileResponses = fileService.upload(request);
+    public ServerResponse upload(HttpServletRequest request,
+                                 @RequestParam(value = "file_type", required = false) String fileType) throws EqianyuanException, IOException {
+        List<FileResponse> fileResponses = fileService.upload(request, fileType);
         return new ServerResponse.ResponseBuilder().data(fileResponses).build();
     }
 

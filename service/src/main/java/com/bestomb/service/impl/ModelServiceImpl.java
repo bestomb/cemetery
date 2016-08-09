@@ -84,7 +84,7 @@ public class ModelServiceImpl implements IModelService {
      * @param modelByEditRequest
      * @throws EqianyuanException
      */
-    public void add(HttpServletRequest request, ModelByEditRequest modelByEditRequest) throws EqianyuanException {
+    public void add(HttpServletRequest request, ModelByEditRequest modelByEditRequest, String fileType) throws EqianyuanException {
 
         //模型名是否为空
         if (StringUtils.isEmpty(modelByEditRequest.getName())) {
@@ -112,7 +112,7 @@ public class ModelServiceImpl implements IModelService {
         }
 
         //模型文件上传
-        List<FileResponse> fileResponses = fileService.upload(request);
+        List<FileResponse> fileResponses = fileService.upload(request, fileType);
 
         if (CollectionUtils.isEmpty(fileResponses)) {
             logger.info("add fail , because file upload error");
@@ -151,7 +151,7 @@ public class ModelServiceImpl implements IModelService {
      * @param modelByEditRequest
      * @throws EqianyuanException
      */
-    public void modify(HttpServletRequest request, ModelByEditRequest modelByEditRequest) throws EqianyuanException {
+    public void modify(HttpServletRequest request, ModelByEditRequest modelByEditRequest, String fileType) throws EqianyuanException {
         //主键是否为空
         if (StringUtils.isEmpty(modelByEditRequest.getId())) {
             logger.info("modify fail , because id is empty");
@@ -177,7 +177,7 @@ public class ModelServiceImpl implements IModelService {
         BeanUtils.copyProperties(modelByEditRequest, model);
 
         //模型文件上传
-        List<FileResponse> fileResponses = fileService.upload(request);
+        List<FileResponse> fileResponses = fileService.upload(request, fileType);
         if (!CollectionUtils.isEmpty(fileResponses)) {
             FileResponse fileResponse = fileResponses.get(0);
 

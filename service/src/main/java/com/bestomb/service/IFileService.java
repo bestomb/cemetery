@@ -16,7 +16,8 @@ public interface IFileService {
      * 附件上传
      *
      * @param request
+     * @param fileType
      * @return
      */
-    List<FileResponse> upload(HttpServletRequest request) throws EqianyuanException;
+    List<FileResponse> upload(HttpServletRequest request, String fileType) throws EqianyuanException;
 }

@@ -25,14 +25,14 @@ public interface IModelService {
      *
      * @param modelByEditRequest
      */
-    void add(HttpServletRequest request, ModelByEditRequest modelByEditRequest) throws EqianyuanException;
+    void add(HttpServletRequest request, ModelByEditRequest modelByEditRequest, String fileType) throws EqianyuanException;
 
     /**
      * 更新对象数据
      *
      * @param modelByEditRequest
      */
-    void modify(HttpServletRequest request, ModelByEditRequest modelByEditRequest) throws EqianyuanException;
+    void modify(HttpServletRequest request, ModelByEditRequest modelByEditRequest, String fileType) throws EqianyuanException;
 
     /**
      * 根据主键编号查询数据对象

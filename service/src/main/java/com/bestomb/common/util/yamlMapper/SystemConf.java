@@ -51,13 +51,13 @@ public enum SystemConf {
      */
     WEBSITE_UN_LOGIN("/website/authorization"),
     /**
-     * 模型附件上传临时目录
+     * 附件上传临时目录
      */
-    MODEL_FILE_UPLOAD_TEMP_DIRECTORY(File.separator + "upload" + File.separator + "temp"),
+    FILE_UPLOAD_TEMP_DIRECTORY(File.separator + "upload" + File.separator + "temp"),
     /**
      * 模型附件上传最终持久目录
      */
-    MODEL_FILE_UPLOAD_FIXED_DIRECTORY(File.separator + "upload" + File.separator + "fixed");
+    MODEL_FILE_UPLOAD_FIXED_DIRECTORY(File.separator + "upload" + File.separator + "fixed" + File.separator + "model");
 
     private Object value;
 

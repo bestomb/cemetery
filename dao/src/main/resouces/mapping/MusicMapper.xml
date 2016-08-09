@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bestomb.dao.IMusicDao">
+    <resultMap id="BaseResultMap" type="com.bestomb.entity.Music">
+        <id column="id" property="id" jdbcType="VARCHAR"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="file_address" property="fileAddress" jdbcType="VARCHAR"/>
+        <result column="file_size" property="fileSize" jdbcType="BIGINT"/>
+        <result column="type" property="type" jdbcType="INTEGER"/>
+        <result column="cemetery_id" property="cemeteryId" jdbcType="VARCHAR"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    id, name, file_address, file_size, type, cemetery_id
+  </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from music
+        where id = #{id,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from music
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+    <insert id="insertSelective" parameterType="com.bestomb.entity.Music">
+        insert into music
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="name != null">
+                name,
+            </if>
+            <if test="fileAddress != null">
+                file_address,
+            </if>
+            <if test="fileSize != null">
+                file_size,
+            </if>
+            <if test="type != null">
+                type,
+            </if>
+            <if test="cemeteryId != null">
+                cemetery_id,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=VARCHAR},
+            </if>
+            <if test="name != null">
+                #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="fileAddress != null">
+                #{fileAddress,jdbcType=VARCHAR},
+            </if>
+            <if test="fileSize != null">
+                #{fileSize,jdbcType=BIGINT},
+            </if>
+            <if test="type != null">
+                #{type,jdbcType=INTEGER},
+            </if>
+            <if test="cemeteryId != null">
+                #{cemeteryId,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.bestomb.entity.Music">
+        update music
+        <set>
+            <if test="name != null">
+                name = #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="fileAddress != null">
+                file_address = #{fileAddress,jdbcType=VARCHAR},
+            </if>
+            <if test="fileSize != null">
+                file_size = #{fileSize,jdbcType=BIGINT},
+            </if>
+            <if test="type != null">
+                type = #{type,jdbcType=INTEGER},
+            </if>
+            <if test="cemeteryId != null">
+                cemetery_id = #{cemeteryId,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=VARCHAR}
+    </update>
+    <select id="countByPagination" resultType="java.lang.Long">
+    select count(1) from music
+      where cemetery_id = #{cemetery_id}
+  </select>
+    <select id="selectByPagination" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from music
+        where cemetery_id = #{cemetery_id}
+        limit ${page.pageNo}, ${page.pageSize}
+    </select>
+</mapper>

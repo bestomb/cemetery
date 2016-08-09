@@ -64,4 +64,11 @@ public interface ICemeteryDao {
      * @return
      */
     List<Cemetery> selectByMemberId(@Param("member_id") Integer memberId);
+
+    /**
+     * 根据陵园编号查询陵园园主编号
+     * @param cemeteryIds
+     * @return
+     */
+    List<Cemetery> selectMemberIdByCemeteryIds(@Param("ids") List<Integer> cemeteryIds);
 }

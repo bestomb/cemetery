@@ -217,4 +217,15 @@
         where member_id = ${member_id}
         order by create_time asc
     </select>
+
+    <select id="selectMemberIdByCemeteryIds" resultMap="BaseResultMap">
+        select
+        id, member_id
+        from cemetery
+        where id IN
+        <foreach item="item" collection="ids" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
 </mapper>

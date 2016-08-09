@@ -706,6 +706,44 @@ public class CemeteryServiceImpl implements ICemeteryService {
     }
 
     /**
+     * 根据陵园编号及访问密码核对陵园是否允许访问
+     *
+     * @param cemeteryId
+     * @param enterPwd
+     * @return
+     * @throws EqianyuanException
+     */
+    public void checkAccessPassword(String cemeteryId, String enterPwd) throws EqianyuanException {
+        if (StringUtils.isEmpty(cemeteryId)) {
+            logger.warn("getInfoByEnter fail , because cemeteryId is null.");
+            throw new EqianyuanException(ExceptionMsgConstant.CEMETERY_ID_IS_EMPTY);
+        }
+
+        //根据陵园编号获取陵园
+        Cemetery cemetery = cemeteryDao.selectByPrimaryKey(cemeteryId);
+
+        if (ObjectUtils.isEmpty(cemetery)
+                || ObjectUtils.isEmpty(cemetery.getId())) {
+            logger.info("getInfoByEnter fail , because cemeteryId [" + cemeteryId + "] query data is empty");
+            throw new EqianyuanException(ExceptionMsgConstant.CEMETERY_DATA_NOT_EXISTS);
+        }
+
+        //如果陵园是公开的，则不需要校验密码，直接返回对象
+        if (cemetery.getIsOpen() == CEMETERY_IS_OPEN_BY_PRIVATE) {
+            //校验访问密码
+            if (StringUtils.isEmpty(enterPwd)) {
+                logger.warn("getInfoByEnter fail , because enterPwd is null.");
+                throw new EqianyuanException(ExceptionMsgConstant.CEMETERY_PASSWORD_IS_EMPTY);
+            }
+
+            if (!StringUtils.equals(cemetery.getPassword(), enterPwd)) {
+                logger.warn("getInfoByEnter fail , because password is null.");
+                throw new EqianyuanException(ExceptionMsgConstant.CEMETERY_ACCESS_PASSWORD_ERROR);
+            }
+        }
+    }
+
+    /**
      * 根据Do集合获取Bo集合
      *
      * @param province

@@ -80,4 +80,14 @@ public interface ICemeteryService {
      * @throws EqianyuanException
      */
     CemeteryBo getBasicInfoById(String cemeteryId) throws EqianyuanException;
+
+    /**
+     * 根据陵园编号及访问密码核对陵园是否允许访问
+     *
+     * @param cemeteryId
+     * @param enterPwd
+     * @return
+     * @throws EqianyuanException
+     */
+    void checkAccessPassword(String cemeteryId, String enterPwd) throws EqianyuanException;
 }

@@ -13,7 +13,6 @@ import com.bestomb.common.util.SessionContextUtil;
 import com.bestomb.common.util.SessionUtil;
 import com.bestomb.common.util.yamlMapper.SystemConf;
 import com.bestomb.service.ICemeteryService;
-import org.apache.log4j.Logger;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,8 +27,6 @@ import java.util.List;
  */
 @Service
 public class WebsiteCemeteryService {
-
-    private Logger logger = Logger.getLogger(this.getClass());
 
     @Autowired
     private ICemeteryService cemeteryService;
@@ -127,6 +124,16 @@ public class WebsiteCemeteryService {
         CemeteryVo cemeteryVo = new CemeteryVo();
         BeanUtils.copyProperties(cemeteryBo, cemeteryVo);
         return cemeteryVo;
+    }
+
+    /**
+     * 进入陵园内部
+     *
+     * @param cemeteryId
+     * @param enterPwd
+     */
+    public void enterCemetery(String cemeteryId, String enterPwd) throws EqianyuanException {
+        cemeteryService.checkAccessPassword(cemeteryId, enterPwd);
     }
 
     /**

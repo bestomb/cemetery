@@ -3,6 +3,7 @@ package com.bestomb.controller.api;
 import com.bestomb.common.exception.EqianyuanException;
 import com.bestomb.common.response.ServerResponse;
 import com.bestomb.common.response.member.MemberLoginVo;
+import com.bestomb.common.util.SessionContextUtil;
 import com.bestomb.common.util.SessionUtil;
 import com.bestomb.common.util.yamlMapper.SystemConf;
 import com.bestomb.controller.BaseController;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 /**
@@ -87,10 +89,14 @@ public class MemberController extends BaseController {
     @RequestMapping("/logout")
     @ResponseBody
     public ServerResponse logout() throws EqianyuanException {
+        //获取客户端session
+        HttpSession session = SessionUtil.getClientSession();
+
         /**
          * 将会员VO对象从session中移除
          */
-        SessionUtil.removeAttribute(SystemConf.WEBSITE_SESSION_MEMBER.toString());
+        SessionUtil.removeAttribute(session, SystemConf.WEBSITE_SESSION_MEMBER.toString());
+        SessionContextUtil.getInstance().delSession(session);
         return new ServerResponse();
     }
 

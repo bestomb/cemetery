@@ -23,8 +23,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
 
+import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -89,8 +89,11 @@ public class MemberServiceImpl implements IMemberService {
             throw new EqianyuanException(ExceptionMsgConstant.TWO_PASSWORD_DO_NOT_MATCH);
         }
 
+        //获取客户端session
+        HttpSession session = SessionUtil.getClientSession();
+
         //从session中获取验证码数据
-        String codeByValidation = (String) SessionUtil.getAttribute(SystemConf.VERIFY_CODE.toString());
+        String codeByValidation = (String) SessionUtil.getAttribute(session, SystemConf.VERIFY_CODE.toString());
         if (StringUtils.isEmpty(codeByValidation)) {
             logger.warn("register fail, because there is no verification code in the session attribute.");
             throw new EqianyuanException(ExceptionMsgConstant.VALIDATA_CODE_VALIDATION_ERROR);
@@ -199,19 +202,20 @@ public class MemberServiceImpl implements IMemberService {
 
     /**
      * 根据主键ID查询信息
+     *
      * @param memberId
      * @return
      * @throws EqianyuanException
      */
     public MemberAccountBo getInfo(String memberId) throws EqianyuanException {
         //主键是否为空
-        if(ObjectUtils.isEmpty(memberId)){
+        if (ObjectUtils.isEmpty(memberId)) {
             logger.info("getInfo fail , because id is empty");
             throw new EqianyuanException(ExceptionMsgConstant.MEMBERSHIP_NUMBER_IS_EMPTY);
         }
         MemberAccount memberAccount = memberAccountDao.selectByPrimaryKey(Integer.parseInt(memberId));
         MemberAccountBo memberAccountBo = new MemberAccountBo();
-        BeanUtils.copyProperties(memberAccount,memberAccountBo);
+        BeanUtils.copyProperties(memberAccount, memberAccountBo);
 
         memberAccountBo.setCreateTime(CalendarUtil.secondsTimeToDateTimeString(memberAccount.getCreateTime()));
         return memberAccountBo;
@@ -219,6 +223,7 @@ public class MemberServiceImpl implements IMemberService {
 
     /**
      * 分页查询
+     *
      * @param pageNo
      * @param pageSize
      * @return
@@ -232,18 +237,18 @@ public class MemberServiceImpl implements IMemberService {
             return new PageResponse(pageNo, pageSize, dataCount, null);
         }
 
-        Page page = new Page(pageNo,pageSize);
+        Page page = new Page(pageNo, pageSize);
         List<MemberAccount> memberAccountList = memberAccountDao.selectByPagination(page);
-        if(CollectionUtils.isEmpty(memberAccountList)){
+        if (CollectionUtils.isEmpty(memberAccountList)) {
             logger.warn("pageNo [" + pageNo + "], pageSize [" + pageSize + "] get List is null");
             return new PageResponse(pageNo, pageSize, dataCount, null);
         }
         List<MemberAccountBo> memberAccountBoList = new ArrayList<MemberAccountBo>();
-        for(MemberAccount memberAccount : memberAccountList){
+        for (MemberAccount memberAccount : memberAccountList) {
             MemberAccountBo memberAccountBo = new MemberAccountBo();
-            BeanUtils.copyProperties(memberAccount,memberAccountBo);
+            BeanUtils.copyProperties(memberAccount, memberAccountBo);
 
-           memberAccountBo.setCreateTime(CalendarUtil.secondsTimeToDateTimeString(memberAccount.getCreateTime()));
+            memberAccountBo.setCreateTime(CalendarUtil.secondsTimeToDateTimeString(memberAccount.getCreateTime()));
             memberAccountBoList.add(memberAccountBo);
         }
         return new PageResponse(pageNo, pageSize, dataCount, memberAccountBoList);

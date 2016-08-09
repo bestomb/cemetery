@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
 
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -50,8 +51,11 @@ public class MemberService {
             throw new EqianyuanException(ExceptionMsgConstant.MOBILE_IS_NOT_CORRECT);
         }
 
+        //获取客户端session
+        HttpSession session = SessionUtil.getClientSession();
+
         //从session中获取最后发送成功短信时间及手机号码
-        Map<String, Map<String, String>> sendByVerificationCodes = getSendByVerificationCodes();
+        Map<String, Map<String, String>> sendByVerificationCodes = getSendByVerificationCodes(session);
 
         //判断是否已经存在成功发送请求session
         if (!CollectionUtils.isEmpty(sendByVerificationCodes)) {
@@ -84,7 +88,7 @@ public class MemberService {
         message = StringTemplateReplaceUtil.getStr(message, "\\?", verifyCode);
 
         //将验证码内容写入session
-        SessionUtil.setAttribute(SystemConf.VERIFY_CODE.toString(), verifyCode);
+        SessionUtil.setAttribute(session, SystemConf.VERIFY_CODE.toString(), verifyCode);
 
         //发送短信
         boolean sendResult = SMSUtils.batchSend2(mobile, message);
@@ -102,7 +106,7 @@ public class MemberService {
         sendByVerificationCodes.put(mobile, sendInfo);
 
         //发送短信成功，保存发送时间
-        SessionUtil.setAttribute(SystemConf.SEND_SMS_BY_BATCHSEND2.toString(), sendByVerificationCodes);
+        SessionUtil.setAttribute(session, SystemConf.SEND_SMS_BY_BATCHSEND2.toString(), sendByVerificationCodes);
 
     }
 
@@ -131,7 +135,15 @@ public class MemberService {
         MemberLoginVo memberLoginVo = new MemberLoginVo();
         BeanUtils.copyProperties(memberLoginBo, memberLoginVo);
 
-        SessionUtil.setAttribute(SystemConf.WEBSITE_SESSION_MEMBER.toString(), memberLoginVo);
+        //获取客户端session
+        HttpSession session;
+        try {
+            session = SessionUtil.getClientSession();
+        } catch (EqianyuanException e) {
+            session = SessionUtil.getSession();
+            SessionContextUtil.getInstance().addSession(session);
+        }
+        SessionUtil.setAttribute(session, SystemConf.WEBSITE_SESSION_MEMBER.toString(), memberLoginVo);
         return memberLoginVo;
     }
 
@@ -140,8 +152,8 @@ public class MemberService {
      *
      * @return
      */
-    private Map<String, Map<String, String>> getSendByVerificationCodes() {
-        Object sendSMSByBatchSend2 = SessionUtil.getAttribute(SystemConf.SEND_SMS_BY_BATCHSEND2.toString());
+    private Map<String, Map<String, String>> getSendByVerificationCodes(HttpSession session) throws EqianyuanException {
+        Object sendSMSByBatchSend2 = SessionUtil.getAttribute(session, SystemConf.SEND_SMS_BY_BATCHSEND2.toString());
         if (ObjectUtils.isEmpty(sendSMSByBatchSend2)) {
             return new HashMap<String, Map<String, String>>();
         }

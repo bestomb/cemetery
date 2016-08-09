@@ -75,16 +75,22 @@ public class ServerSocketByCemetery {
                     Map<String, Object> map = yaml.loadAs(ServerSocketByCemetery.class.getResourceAsStream("/client-conf.yaml"), Map.class);
 
                     try {
+                        String addressByIp = String.valueOf(YamlForMapHandleUtil.getMapByKey(map, ClientConf.SocketByMsg.serverSocketByMsgAddress.toString()));
+
+                        byte[] ipBytes = new byte[4];
+                        String[] addressByIpSplit = addressByIp.split(".");
+                        for (int i = 0; i < addressByIpSplit.length; i++) {
+                            ipBytes[i] = Byte.parseByte(addressByIpSplit[i]);
+                        }
+
                         serverSocket = new ServerSocket(Integer.parseInt(String.valueOf(YamlForMapHandleUtil.getMapByKey(map, ClientConf.SocketByMsg.serverSocketByMsgPort.toString())))
                                 , Integer.parseInt(String.valueOf(YamlForMapHandleUtil.getMapByKey(map, ClientConf.SocketByMsg.serverSocketByMsgBackLog.toString())))
-                                , InetAddress.getByName(String.valueOf(YamlForMapHandleUtil.getMapByKey(map, ClientConf.SocketByMsg.serverSocketByMsgAddress.toString()))));
-
+                                , InetAddress.getByAddress(ipBytes));
+                        logger.info("通信服务创建成功");
                         //开始监听客户端
                         clientAccept();
                     } catch (IOException e) {
-                        logger.error(" 准备通信服务对象时失败，可能出现的原因：" +
-                                "\n * 端口已经被其他服务器进程占用 " +
-                                "\n * 没有以超级用户的身份来运行服务器程序, 没有权限监听 1-1023 之间的端口", e);
+                        logger.error(" 准备通信服务对象时失败", e);
                     }
                 }
             }
@@ -115,7 +121,7 @@ public class ServerSocketByCemetery {
                         //将客户端加入到陵园组中
                         disposeMsg(client);
                     } catch (IOException e) {
-                        logger.warn("监听获取客户端连接失败");
+                        logger.warn("监听获取客户端连接失败", e);
                     }
                 }
             }
@@ -164,6 +170,12 @@ public class ServerSocketByCemetery {
                         return;
                     }
 
+                    osw = new OutputStreamWriter(client.getOutputStream());
+                    bw = new BufferedWriter(osw);
+                    PrintWriter pw = new PrintWriter(osw);
+                    pw.println("协议连接建立成功");
+                    pw.flush();
+
                     ConcurrentLinkedQueue<Socket> clients = clientMapByCemetery.get(cemeteryId);
 
                     //根据陵园编号检查客户端通信集合中，是否已经维护了当前陵园的通信组
@@ -200,7 +212,7 @@ public class ServerSocketByCemetery {
                         for (Socket client : clients) {
                             osw = new OutputStreamWriter(client.getOutputStream());
                             bw = new BufferedWriter(osw);
-                            PrintWriter pw = new PrintWriter(osw);
+                            pw = new PrintWriter(osw);
                             pw.println(String.valueOf(strByline));
                             pw.flush();
                         }

@@ -20,7 +20,7 @@ import javax.servlet.http.HttpServletRequest;
  */
 @Controller
 @RequestMapping("/model")
-public class ModelController extends BaseController{
+public class ModelController extends BaseController {
 
     @Autowired
     private IModelService modelService;
@@ -33,8 +33,8 @@ public class ModelController extends BaseController{
      */
     @RequestMapping("/add")
     @ResponseBody
-    public ServerResponse add(HttpServletRequest request, ModelByEditRequest modelByEditRequest) throws EqianyuanException {
-        modelService.add(request, modelByEditRequest);
+    public ServerResponse add(HttpServletRequest request, ModelByEditRequest modelByEditRequest, @RequestParam(value = "file_type", required = false) String fileType) throws EqianyuanException {
+        modelService.add(request, modelByEditRequest, fileType);
         return new ServerResponse();
     }
 
@@ -59,8 +59,8 @@ public class ModelController extends BaseController{
      */
     @RequestMapping("/modify")
     @ResponseBody
-    public ServerResponse modify(HttpServletRequest request, ModelByEditRequest modelByEditRequest) throws EqianyuanException {
-        modelService.modify(request, modelByEditRequest);
+    public ServerResponse modify(HttpServletRequest request, ModelByEditRequest modelByEditRequest, @RequestParam(value = "file_type", required = false) String fileType) throws EqianyuanException {
+        modelService.modify(request, modelByEditRequest, fileType);
         return new ServerResponse();
     }
 

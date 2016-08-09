@@ -54,6 +54,8 @@ public class ExceptionMsgConstant {
     public static final String FILE_DELETE_ERROR = "10000021";
     //附件上传失败
     public static final String FILE_UPDATE_ERROR = "10000022";
+    //面向前端接口，sessionId为空
+    public static final String WEB_SITE_SESSION_ID_IS_EMPTY = "10000023";
     /***** 系统 *****/
 
     /*****
@@ -165,6 +167,16 @@ public class ExceptionMsgConstant {
     public static final String CEMETERY_DATA_NOT_EXISTS = "20010016";
     //社区任意门行为方式为空
     public static final String CEMETERY_BEHAVIOR_IS_EMPTY = "20010017";
+    //陵园访问密码错误
+    public static final String CEMETERY_ACCESS_PASSWORD_ERROR = "20010018";
+    //陵园公告内容为空
+    public static final String CEMETERY_NOTICE_CONTENT_IS_EMPTY = "20010019";
+    //不是园主
+    public static final String IS_NO_MASTER_BY_CEMETERY = "20010020";
+    //陵园公告编号为空
+    public static final String CEMETERY_NOTICE_ID_IS_EMPTY = "20010021";
+    //陵园公告数据不存在
+    public static final String CEMETERY_NOTICE_DATA_NOT_EXISTS = "20010022";
     /***** 陵园 *****/
 
     /*****

@@ -127,4 +127,32 @@ public class WebsiteCemeteryController extends BaseController {
         CemeteryVo cemeteryVo = websiteCemeteryService.getInfoById(cemeteryId);
         return new ServerResponse.ResponseBuilder().data(cemeteryVo).build();
     }
+
+    /**
+     * 进入陵园
+     *
+     * @param cemeteryId 陵园编号
+     * @param enterPwd   访问密码
+     * @return
+     */
+    @RequestMapping("/enterCemetery")
+    @ResponseBody
+    public ServerResponse enterCemetery(String cemeteryId, String enterPwd) throws EqianyuanException {
+        websiteCemeteryService.enterCemetery(cemeteryId, enterPwd);
+        return new ServerResponse();
+    }
+
+    /**
+     * 已经使用的存储空间
+     *
+     * @param cemeteryId
+     * @return
+     * @throws EqianyuanException
+     */
+    @RequestMapping("/useStorage")
+    @ResponseBody
+    public ServerResponse useStorage(String cemeteryId) throws EqianyuanException {
+        //todo 实现业务
+        return new ServerResponse();
+    }
 }
