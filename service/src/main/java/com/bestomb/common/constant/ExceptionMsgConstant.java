@@ -206,5 +206,20 @@ public class ExceptionMsgConstant {
     //模型数据不存在
     public static final String MODEL_DATA_NOT_EXIXTS = "20020011";
     /***** 模型 *****/
+
+
+    /*****
+     * 商品分类
+     *****/
+    //商品分类父分类编号为空
+    public static final String GOODS_CLASSIFY_PARENT_ID_IS_EMPTY = "30010001";
+    //商品分类数据不存在
+    public static final String GOODS_CLASSIFY_DATA_NOT_EXISTS = "30010002";
+    //商品分类名不存在
+    public static final String GOODS_CLASSIFY_NAME_IS_EMPTY = "30010003";
+    //商品分类名称内容太长
+    public static final String GOODS_CLASSIFY_NAME_TO_LONG = "30010004";
+    //商品分类编号为空
+    public static final String GOODS_CLASSIFY_ID_IS_EMPTY = "30010005";
 /********** 客户端 **********/
 }
