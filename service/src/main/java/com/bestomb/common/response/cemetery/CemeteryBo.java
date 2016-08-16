@@ -19,7 +19,7 @@ public class CemeteryBo {
 
     private String password;
 
-    private String memberId;
+    private Integer memberId;
 
     private Integer isOpen;
 
@@ -47,7 +47,18 @@ public class CemeteryBo {
     //社地址名称
     private String communityName;
 
+    //会员名称
+    private String memberName;
+
     private String createTimeForStr;
+
+    public Integer getMemberId() {
+        return memberId;
+    }
+
+    public void setMemberId(Integer memberId) {
+        this.memberId = memberId;
+    }
 
     public Integer getId() {
         return id;
@@ -119,14 +130,6 @@ public class CemeteryBo {
 
     public void setPassword(String password) {
         this.password = password == null ? null : password.trim();
-    }
-
-    public String getMemberId() {
-        return memberId;
-    }
-
-    public void setMemberId(String memberId) {
-        this.memberId = memberId == null ? null : memberId.trim();
     }
 
     public Integer getIsOpen() {
@@ -215,5 +218,13 @@ public class CemeteryBo {
 
     public void setCreateTimeForStr(String createTimeForStr) {
         this.createTimeForStr = createTimeForStr;
+    }
+
+    public String getMemberName() {
+        return memberName;
+    }
+
+    public void setMemberName(String memberName) {
+        this.memberName = memberName;
     }
 }

@@ -76,7 +76,7 @@ public class NoticeServiceImpl implements INoticeService {
         //遍历园主信息
         for (Cemetery cemetery : cemeteries) {
             //检查陵园是否为当前操作会员所建，仅删除自己所建陵园公告
-            if (StringUtils.equals(cemetery.getMemberId(), String.valueOf(memberId))) {
+            if (cemetery.getMemberId().intValue() == memberId) {
                 cemeteriesByMine.add(cemetery.getId());
             }
         }
@@ -130,7 +130,7 @@ public class NoticeServiceImpl implements INoticeService {
         }
 
         //检查陵园是否为当前操作会员所建
-        if (StringUtils.equals(cemetery.getMemberId(), String.valueOf(memberId))) {
+        if (cemetery.getMemberId().intValue() == memberId) {
             //添加数据信息
             Notice notice = new Notice();
             notice.setCemeteryId(cemetery.getId());
@@ -203,7 +203,7 @@ public class NoticeServiceImpl implements INoticeService {
         }
 
         //检查陵园是否为当前操作会员所建
-        if (StringUtils.equals(cemetery.getMemberId(), String.valueOf(memberId))) {
+        if (cemetery.getMemberId().intValue() == memberId) {
             //修改
             notice.setContent(content);
             noticeDao.updateByPrimaryKeySelective(notice);

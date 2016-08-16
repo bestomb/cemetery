@@ -19,7 +19,7 @@ public class Cemetery {
 
     private String password;
 
-    private String memberId;
+    private Integer memberId;
 
     private Integer isOpen;
 
@@ -28,6 +28,14 @@ public class Cemetery {
     private Integer storageSize;
 
     private Integer createTime;
+
+    public Integer getMemberId() {
+        return memberId;
+    }
+
+    public void setMemberId(Integer memberId) {
+        this.memberId = memberId;
+    }
 
     public Integer getId() {
         return id;
@@ -99,14 +107,6 @@ public class Cemetery {
 
     public void setPassword(String password) {
         this.password = password == null ? null : password.trim();
-    }
-
-    public String getMemberId() {
-        return memberId;
-    }
-
-    public void setMemberId(String memberId) {
-        this.memberId = memberId == null ? null : memberId.trim();
     }
 
     public Integer getIsOpen() {

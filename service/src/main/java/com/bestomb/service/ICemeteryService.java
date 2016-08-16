@@ -90,4 +90,15 @@ public interface ICemeteryService {
      * @throws EqianyuanException
      */
     void checkAccessPassword(String cemeteryId, String enterPwd) throws EqianyuanException;
+
+    /**
+     * 获取陵园分页集合
+     *
+     * @param cemeteryByAreaListRequest
+     * @param pageNo
+     * @param pageSize
+     * @return
+     * @throws EqianyuanException
+     */
+    PageResponse getList(CemeteryByAreaListRequest cemeteryByAreaListRequest, int pageNo, int pageSize) throws EqianyuanException;
 }

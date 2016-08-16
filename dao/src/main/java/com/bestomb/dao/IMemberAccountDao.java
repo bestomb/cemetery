@@ -30,7 +30,7 @@ public interface IMemberAccountDao {
     /**
      * 分页查询
      */
-    List<MemberAccount> selectByPagination( @Param("page") Page page);
+    List<MemberAccount> selectByPagination(@Param("page") Page page);
 
     /**
      * 根据数据对象获取总条数
@@ -47,4 +47,12 @@ public interface IMemberAccountDao {
     MemberAccount selectByLogin(@Param("login_account") String loginAccount, @Param("login_password") String loginPassword);
 
     int updateByPrimaryKeySelective(MemberAccount record);
+
+    /**
+     * 根据会员编号集合查询会员数据集合
+     *
+     * @param memberIds
+     * @return
+     */
+    List<MemberAccount> selectByMemberIds(@Param("member_ids") List<String> memberIds);
 }

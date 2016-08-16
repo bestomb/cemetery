@@ -157,4 +157,13 @@
         </set>
         where member_id = #{memberId,jdbcType=INTEGER}
     </update>
+    <select id="selectByMemberIds" resultMap="BaseResultMap" parameterType="java.util.ArrayList">
+        select
+        <include refid="Base_Column_List"/>
+        from member_account
+        where member_id IN
+        <foreach item="member_id" collection="member_ids" open="(" separator="," close=")">
+            #{member_id}
+        </foreach>
+    </select>
 </mapper>

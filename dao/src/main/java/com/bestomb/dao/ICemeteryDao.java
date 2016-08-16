@@ -31,6 +31,16 @@ public interface ICemeteryDao {
     Long countByPagination(@Param("community_id") String communityId);
 
     /**
+     * 获取数据总条数
+     *
+     * @param provinceId
+     * @param cityId
+     * @param countyId
+     * @return
+     */
+    Long countByAreaPagination(@Param("province_id") String provinceId, @Param("city_id") String cityId, @Param("county_id") String countyId);
+
+    /**
      * 根据社区编号及分页条件获取分页后查询结果总数
      *
      * @param page
@@ -47,6 +57,16 @@ public interface ICemeteryDao {
      * @return
      */
     List<Cemetery> selectByPagination(@Param("page") Page page, @Param("community_id") String communityId);
+
+    /**
+     * 根据对象及分页条件获取分页数据集合
+     * @param page
+     * @param provinceId
+     * @param cityId
+     * @param countyId
+     * @return
+     */
+    List<Cemetery> selectByAreaPagination(@Param("page") Page page, @Param("province_id") String provinceId, @Param("city_id") String cityId, @Param("county_id") String countyId);
 
     /**
      * 根据社区编号及陵园编号查找数据所处同社区位置
@@ -67,6 +87,7 @@ public interface ICemeteryDao {
 
     /**
      * 根据陵园编号查询陵园园主编号
+     *
      * @param cemeteryIds
      * @return
      */

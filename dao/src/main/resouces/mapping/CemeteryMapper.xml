@@ -11,7 +11,9 @@
         <result column="village_id" property="villageId" jdbcType="VARCHAR"/>
         <result column="community_id" property="communityId" jdbcType="VARCHAR"/>
         <result column="password" property="password" jdbcType="VARCHAR"/>
-        <result column="member_id" property="memberId" jdbcType="VARCHAR"/>
+
+        <result column="member_id" property="memberId" jdbcType="INTEGER"/>
+
         <result column="is_open" property="isOpen" jdbcType="INTEGER"/>
         <result column="remaining_storage_size" property="remainingStorageSize" jdbcType="INTEGER"/>
         <result column="storage_size" property="storageSize" jdbcType="INTEGER"/>
@@ -22,11 +24,11 @@
     member_id, is_open, remaining_storage_size, storage_size, create_time
   </sql>
     <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
-        select
-        <include refid="Base_Column_List"/>
-        from cemetery
-        where id = #{id,jdbcType=INTEGER}
-    </select>
+    select
+    <include refid="Base_Column_List"/>
+    from cemetery
+    where id = #{id,jdbcType=INTEGER}
+ </select>
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from cemetery
     where id = #{id,jdbcType=INTEGER}
@@ -105,9 +107,13 @@
             <if test="password != null">
                 #{password,jdbcType=VARCHAR},
             </if>
+
+
             <if test="memberId != null">
-                #{memberId,jdbcType=VARCHAR},
+                #{memberId,jdbcType=INTEGER},
             </if>
+
+
             <if test="isOpen != null">
                 #{isOpen,jdbcType=INTEGER},
             </if>
@@ -150,7 +156,7 @@
                 password = #{password,jdbcType=VARCHAR},
             </if>
             <if test="memberId != null">
-                member_id = #{memberId,jdbcType=VARCHAR},
+                member_id = #{memberId,jdbcType=INTEGER},
             </if>
             <if test="isOpen != null">
                 is_open = #{isOpen,jdbcType=INTEGER},
@@ -181,6 +187,21 @@
             </if>
         </where>
     </select>
+    <select id="countByAreaPagination" resultType="java.lang.Long">
+        select count(1) from cemetery
+        <where>
+            1 = 1
+            <if test="province_id != null and province_id != ''">
+                and province_id = #{province_id}
+            </if>
+            <if test="city_id != null and city_id != ''">
+                and city_id = #{city_id}
+            </if>
+            <if test="county_id != null and county_id != ''">
+                and county_id = #{county_id}
+            </if>
+        </where>
+    </select>
     <select id="selectByPagination" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
@@ -188,6 +209,25 @@
         <where>
             <if test="community_id != null and community_id != ''">
                 community_id = #{community_id}
+            </if>
+        </where>
+        order by create_time asc
+        limit ${page.pageNo}, ${page.pageSize}
+    </select>
+    <select id="selectByAreaPagination" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from cemetery
+        <where>
+            1 = 1
+            <if test="province_id != null and province_id != ''">
+                and province_id = #{province_id}
+            </if>
+            <if test="city_id != null and city_id != ''">
+                and city_id = #{city_id}
+            </if>
+            <if test="county_id != null and county_id != ''">
+                and county_id = #{county_id}
             </if>
         </where>
         order by create_time asc

@@ -702,6 +702,10 @@ public class CemeteryServiceImpl implements ICemeteryService {
         CemeteryBo cemeteryBo = new CemeteryBo();
         BeanUtils.copyProperties(cemetery, cemeteryBo);
         cemeteryBo.setCreateTimeForStr(CalendarUtil.secondsTimeToDateTimeString(cemeteryBo.getCreateTime()));
+
+        //根据会员编号查询会员信息
+        MemberAccount memberAccount = memberAccountDao.selectByPrimaryKey(cemetery.getMemberId());
+        cemeteryBo.setMemberName(memberAccount.getNickName());
         return cemeteryBo;
     }
 
@@ -836,4 +840,56 @@ public class CemeteryServiceImpl implements ICemeteryService {
         return community;
     }
 
+
+    /**
+     * 获取陵园分页集合
+     *
+     * @param cemeteryByAreaListRequest
+     * @param pageNo
+     * @param pageSize
+     * @return
+     */
+    public PageResponse getList(CemeteryByAreaListRequest cemeteryByAreaListRequest, int pageNo, int pageSize) throws EqianyuanException {
+        //根据社区编号获取陵园总数
+        Long dataCount = cemeteryDao.countByAreaPagination(cemeteryByAreaListRequest.getProvinceId(), cemeteryByAreaListRequest.getCityId(), cemeteryByAreaListRequest.getCountyId());
+
+        if (ObjectUtils.isEmpty(dataCount)) {
+            logger.info("countByAreaPagination by provinceId [" + cemeteryByAreaListRequest.getProvinceId() + "] cityId [" + cemeteryByAreaListRequest.getCityId() + "]" +
+                    "countyId [" + cemeteryByAreaListRequest.getCountyId() + "] get total count is null");
+            return new PageResponse(pageNo, pageSize, dataCount, null);
+        }
+
+        Page page = new Page(pageNo, pageSize);
+        List<Cemetery> cemeteries = cemeteryDao.selectByAreaPagination(page, cemeteryByAreaListRequest.getProvinceId(), cemeteryByAreaListRequest.getCityId(), cemeteryByAreaListRequest.getCountyId());
+
+        if (CollectionUtils.isEmpty(cemeteries)) {
+            logger.info("pageNo [" + pageNo + "], pageSize [" + pageSize + "], provinceId [" + cemeteryByAreaListRequest.getProvinceId() + "] cityId [" + cemeteryByAreaListRequest.getCityId() + "]" +
+                    "countyId[" + cemeteryByAreaListRequest.getCountyId() + "]get List is null ");
+            return new PageResponse(pageNo, pageSize, dataCount, null);
+        }
+
+        //遍历陵园集合，获取陵园创建会员编号
+        List<String> memberIds = new ArrayList<String>();
+        for (Cemetery cemetery : cemeteries) {
+            memberIds.add(String.valueOf(cemetery.getMemberId()));
+        }
+        //根据会员编号集合，查询会员数据信息集合
+        List<MemberAccount> memberAccountList = memberAccountDao.selectByMemberIds(memberIds);
+        List<CemeteryBo> cemeteryBos = new ArrayList<CemeteryBo>();
+        for (Cemetery cemetery : cemeteries) {
+            CemeteryBo cemeteryBo = new CemeteryBo();
+            BeanUtils.copyProperties(cemetery, cemeteryBo);
+            cemeteryBo.setCreateTimeForStr(CalendarUtil.secondsTimeToDateTimeString(cemeteryBo.getCreateTime()));
+            cemeteryBos.add(cemeteryBo);
+
+            for (MemberAccount memberAccount : memberAccountList) {
+                //比较陵园中创建者会员编号和会员集合中的会员是否一致
+                if (StringUtils.equals(String.valueOf(cemetery.getMemberId()), String.valueOf(memberAccount.getMemberId()))) {
+                    cemeteryBo.setMemberName(memberAccount.getNickName());
+                    break;
+                }
+            }
+        }
+        return new PageResponse(pageNo, pageSize, dataCount, cemeteryBos);
+    }
 }
