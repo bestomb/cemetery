@@ -221,5 +221,14 @@ public class ExceptionMsgConstant {
     public static final String GOODS_CLASSIFY_NAME_TO_LONG = "30010004";
     //商品分类编号为空
     public static final String GOODS_CLASSIFY_ID_IS_EMPTY = "30010005";
+
+
+    /*****
+     * 特殊节日
+     *****/
+    //特殊节日ID为空
+    public static final String SPECIAL_HOLIDAY_ID_IS_EMPTY = "40010001";
+    //特殊节日推送语内容太长
+    public static final String HOLIDAY_PUSH_LANGUAGE_CONTENT_IS_TOO_LONG = "40010002";
 /********** 客户端 **********/
 }

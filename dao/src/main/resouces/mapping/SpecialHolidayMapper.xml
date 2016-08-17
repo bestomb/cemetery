@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bestomb.dao.ISpecialHolidayDao">
+    <resultMap id="BaseResultMap" type="com.bestomb.entity.SpecialHoliday">
+        <id column="id" property="id" jdbcType="VARCHAR"/>
+        <result column="date_month" property="dateMonth" jdbcType="INTEGER"/>
+        <result column="message" property="message" jdbcType="VARCHAR"/>
+        <result column="type" property="type" jdbcType="INTEGER"/>
+        <result column="date_day" property="dateDay" jdbcType="INTEGER"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    id, date_month, message, type, date_day
+  </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from special_holiday
+        where id = #{id,jdbcType=VARCHAR}
+    </select>
+
+    <!--删除特殊节日-->
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+        delete from special_holiday
+        where id IN
+        <foreach item="item" collection="id" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+
+    <insert id="insert" parameterType="com.bestomb.entity.SpecialHoliday">
+    insert into special_holiday (id, date_month, message, 
+      type, date_day)
+    values (#{id,jdbcType=VARCHAR}, #{dateMonth,jdbcType=INTEGER}, #{message,jdbcType=VARCHAR}, 
+      #{type,jdbcType=INTEGER}, #{dateDay,jdbcType=INTEGER})
+  </insert>
+
+    <!--添加特殊节日-->
+    <insert id="insertSelective" parameterType="com.bestomb.entity.SpecialHoliday">
+        <selectKey keyProperty="id" resultType="String" order="BEFORE">
+            select replace(uuid(),'-','') from dual
+        </selectKey>
+        insert into special_holiday
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="dateMonth != null">
+                date_month,
+            </if>
+            <if test="message != null">
+                message,
+            </if>
+            <if test="type != null">
+                type,
+            </if>
+            <if test="dateDay != null">
+                date_day,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=VARCHAR},
+            </if>
+            <if test="dateMonth != null">
+                #{dateMonth,jdbcType=INTEGER},
+            </if>
+            <if test="message != null">
+                #{message,jdbcType=VARCHAR},
+            </if>
+            <if test="type != null">
+                #{type,jdbcType=INTEGER},
+            </if>
+            <if test="dateDay != null">
+                #{dateDay,jdbcType=INTEGER},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateByPrimaryKeySelective" parameterType="com.bestomb.entity.SpecialHoliday">
+        update special_holiday
+        <set>
+            <if test="dateMonth != null">
+                date_month = #{dateMonth,jdbcType=INTEGER},
+            </if>
+            <if test="message != null">
+                message = #{message,jdbcType=VARCHAR},
+            </if>
+            <if test="type != null">
+                type = #{type,jdbcType=INTEGER},
+            </if>
+            <if test="dateDay != null">
+                date_day = #{dateDay,jdbcType=INTEGER},
+            </if>
+        </set>
+        where id = #{id,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.bestomb.entity.SpecialHoliday">
+    update special_holiday
+    set date_month = #{dateMonth,jdbcType=INTEGER},
+      message = #{message,jdbcType=VARCHAR},
+      type = #{type,jdbcType=INTEGER},
+      date_day = #{dateDay,jdbcType=INTEGER}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+
+    <!--分页查询-->
+    <select id="selectByPagination" resultMap="BaseResultMap">
+    select * from special_holiday
+    limit ${page.pageNo}, ${page.pageSize}
+  </select>
+
+    <!--查询数据总条数-->
+    <select id="countByPagination" resultType="java.lang.Long">
+    select count(1) from special_holiday
+  </select>
+
+</mapper>
