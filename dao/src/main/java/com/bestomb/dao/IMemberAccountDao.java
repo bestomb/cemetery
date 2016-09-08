@@ -47,7 +47,21 @@ public interface IMemberAccountDao {
     MemberAccount selectByLogin(@Param("login_account") String loginAccount, @Param("login_password") String loginPassword);
 
     int updateByPrimaryKeySelective(MemberAccount record);
-
+    
+    /***
+     * 编辑会员资料
+     * @param record
+     * @return
+     */
+    int memberEdit(MemberAccount record);
+    
+    /***
+     * 更新交易币
+     * @param memberId
+     * @return
+     */
+    int updateTradingAmount(MemberAccount record);
+    
     /**
      * 根据会员编号集合查询会员数据集合
      *

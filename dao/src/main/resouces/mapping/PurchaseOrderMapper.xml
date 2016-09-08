@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bestomb.dao.IPurchaseOrderDao" >
+  <resultMap id="BaseResultMap" type="com.bestomb.entity.PurchaseOrder" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="order_number" property="orderNumber" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="member_id" property="memberId" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="INTEGER" />
+    <result column="type" property="type" jdbcType="INTEGER" />
+    <result column="price" property="price" jdbcType="DOUBLE" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, order_number, status, member_id, create_time, type, price
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from purchase_order
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <!-- 根据订单编号查询订单数据 -->
+  <select id="selectByOrderNumber" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from purchase_order
+    where order_number = #{orderNumber,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from purchase_order
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.bestomb.entity.PurchaseOrder" >
+    <selectKey keyProperty="id" resultType="String" order="BEFORE">
+        select replace(uuid(),'-','') from dual
+    </selectKey>
+    insert into purchase_order (id, order_number, status, 
+      member_id, create_time, type, 
+      price)
+    values (#{id,jdbcType=VARCHAR}, #{orderNumber,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}, 
+      #{memberId,jdbcType=INTEGER}, #{createTime,jdbcType=INTEGER}, #{type,jdbcType=INTEGER}, 
+      #{price,jdbcType=DOUBLE})
+  </insert>
+  <insert id="insertSelective" parameterType="com.bestomb.entity.PurchaseOrder" >
+    <selectKey keyProperty="id" resultType="String" order="BEFORE">
+        select replace(uuid(),'-','') from dual
+    </selectKey>
+    insert into purchase_order
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="orderNumber != null" >
+        order_number,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="memberId != null" >
+        member_id,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="type != null" >
+        type,
+      </if>
+      <if test="price != null" >
+        price,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="orderNumber != null" >
+        #{orderNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="memberId != null" >
+        #{memberId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=INTEGER},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=INTEGER},
+      </if>
+      <if test="price != null" >
+        #{price,jdbcType=DOUBLE},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.bestomb.entity.PurchaseOrder" >
+    update purchase_order
+    <set >
+      <if test="orderNumber != null" >
+        order_number = #{orderNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="memberId != null" >
+        member_id = #{memberId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=INTEGER},
+      </if>
+      <if test="type != null" >
+        type = #{type,jdbcType=INTEGER},
+      </if>
+      <if test="price != null" >
+        price = #{price,jdbcType=DOUBLE},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <!-- 根据订单编号修改订单数据 -->
+  <update id="updateByOrderNumber" parameterType="com.bestomb.entity.PurchaseOrder" >
+    update purchase_order
+    <set >
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="type != null" >
+        type = #{type,jdbcType=INTEGER},
+      </if>
+      <if test="price != null" >
+        price = #{price,jdbcType=DOUBLE},
+      </if>
+    </set>
+    where order_number = #{orderNumber,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.bestomb.entity.PurchaseOrder" >
+    update purchase_order
+    set order_number = #{orderNumber,jdbcType=VARCHAR},
+      status = #{status,jdbcType=INTEGER},
+      member_id = #{memberId,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=INTEGER},
+      type = #{type,jdbcType=INTEGER},
+      price = #{price,jdbcType=DOUBLE}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  
+  <!-- 封装查询订单查询条件 -->
+  <sql id="whereCondition">
+    	<where>
+   			<if test="order.orderNumber != null" >
+		        and order_number = #{order.orderNumber,jdbcType=VARCHAR}
+			</if>
+			<if test="order.status != null" >
+			  	and status = #{order.status,jdbcType=INTEGER}
+			</if>
+			<if test="order.memberId != null" >
+			  	and member_id = #{order.memberId,jdbcType=INTEGER}
+			</if>
+   		</where>
+    </sql>
+  
+  	<!-- 获取订单分页列表总数 -->
+    <select id="getPageListCount" resultType="java.lang.Integer">
+    	select count(1) from purchase_order
+   		<include refid="whereCondition" />
+  	</select>
+  	
+  	<!-- 获取订单分页列表 -->
+  	<select id="getPageList" resultMap="BaseResultMap">
+    	select
+    	<include refid="Base_Column_List"/>
+    	from purchase_order
+   		<include refid="whereCondition" />
+    	limit ${page.start}, ${page.pageSize}
+  	</select>
+  	
+  	<!-- 封装会员店铺销售订单查询条件 -->
+  	<sql id="whereConditionByMemberStore">
+    	where order_number in (
+    		select distinct order_id from order_goods where goods_id in (
+    			select goods_id from store where member_id = #{memberId,jdbcType=INTEGER}
+    		)
+    	)
+    </sql>
+  	
+  	<!-- 查询会员店铺销售订单分页列表总数 -->
+  	<select id="getStoreOrdersCount" resultType="java.lang.Integer">
+    	select count(1) from purchase_order
+   		<include refid="whereConditionByMemberStore" />
+  	</select>
+  	
+  	<!-- 查询会员店铺销售订单分页列表 -->
+  	<select id="getStoreOrders" resultMap="BaseResultMap">
+    	select
+    	<include refid="Base_Column_List"/>
+    	from purchase_order
+   		<include refid="whereConditionByMemberStore" />
+    	limit ${page.start}, ${page.pageSize}
+  	</select>
+  	
+</mapper>

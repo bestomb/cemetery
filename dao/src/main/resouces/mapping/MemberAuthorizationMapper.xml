@@ -19,13 +19,13 @@
     delete from member_authorization
     where id = #{id,jdbcType=VARCHAR}
   </delete>
-  <insert id="insert" parameterType="com.bestomb.entity.MemberAuthorization" >
+  <insert id="insert" parameterType="com.bestomb.entity.MemberAuthorization" keyProperty="id" useGeneratedKeys="true">
     insert into member_authorization (id, cemetery_id, member_id
       )
     values (#{id,jdbcType=VARCHAR}, #{cemeteryId,jdbcType=INTEGER}, #{memberId,jdbcType=INTEGER}
       )
   </insert>
-  <insert id="insertSelective" parameterType="com.bestomb.entity.MemberAuthorization" >
+  <insert id="insertSelective" parameterType="com.bestomb.entity.MemberAuthorization" keyProperty="id" useGeneratedKeys="true">
     insert into member_authorization
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -76,5 +76,16 @@
     <foreach item="item" collection="cemetery_ids" open="(" separator="," close=")">
       #{item}
     </foreach>
+  </select>
+  
+  <select id="selectPageListByCemeteryId" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"/>
+    from member_authorization
+    where cemetery_id IN
+    <foreach item="item" collection="cemetery_ids" open="(" separator="," close=")">
+      #{item}
+    </foreach>
+    limit ${page.start}, ${page.pageSize}
   </select>
 </mapper>

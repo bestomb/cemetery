@@ -4,7 +4,8 @@ package com.bestomb.common.response.member;
  * Created by asus on 2016/7/29.
  */
 public class MemberAccountBo {
-    private Integer memberId;
+    
+	private Integer memberId;
 
     private Long mobileNumber;
 

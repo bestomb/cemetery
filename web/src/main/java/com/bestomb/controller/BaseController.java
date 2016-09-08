@@ -1,21 +1,25 @@
 package com.bestomb.controller;
 
+import java.io.IOException;
+import java.util.Map;
+
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.log4j.Logger;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseBody;
+
 import com.bestomb.common.constant.ExceptionMsgConstant;
 import com.bestomb.common.exception.EqianyuanException;
 import com.bestomb.common.response.ServerResponse;
+import com.bestomb.common.response.member.MemberLoginVo;
+import com.bestomb.common.util.SessionContextUtil;
 import com.bestomb.common.util.SessionUtil;
 import com.bestomb.common.util.VerifyCodeUtils;
 import com.bestomb.common.util.YamlForMapHandleUtil;
 import com.bestomb.common.util.yamlMapper.SystemConf;
 import com.bestomb.common.util.yamlMapper.SystemErr;
-import org.apache.log4j.Logger;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseBody;
-
-import javax.servlet.ServletOutputStream;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.util.Map;
 
 /**
  * Created by jason on 2016-05-22.
@@ -43,7 +47,8 @@ public class BaseController {
             logger.warn("BaseController catch exception info is :", ex);
         }
 
-        Map<String, Object> systemErrMap = (Map<String, Object>) YamlForMapHandleUtil.getMapByKey(SystemErr.getMap(), messageCode);
+        @SuppressWarnings("unchecked")
+		Map<String, Object> systemErrMap = (Map<String, Object>) YamlForMapHandleUtil.getMapByKey(SystemErr.getMap(), messageCode);
 
         return new ServerResponse.ResponseBuilder()
                 .code(systemErrMap.get(SystemErr.Key.CODE.toString()).toString())
@@ -78,5 +83,14 @@ public class BaseController {
         ServletOutputStream sos = response.getOutputStream();
         VerifyCodeUtils.render(verifyCode, sos, verifyCode.length() * 30, height);
         sos.close();
+    }
+    
+    /***
+     * 获取当前session中的会员登录信息
+     * @return
+     * @throws EqianyuanException
+     */
+    public MemberLoginVo getLoginMember() throws EqianyuanException{
+    	return (MemberLoginVo) SessionUtil.getAttribute(SessionContextUtil.getInstance().getSession(SessionUtil.getSessionByCookie()), SystemConf.WEBSITE_SESSION_MEMBER.toString());
     }
 }

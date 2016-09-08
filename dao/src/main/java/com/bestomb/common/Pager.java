@@ -5,7 +5,7 @@ public class Pager {
 	private int pageNo = 1; // 当前页
     private int pageSize = 10; // 每页多少行
     private int totalRow;  // 共多少行
-    private int start; // 当前页起始行
+    private int start = 0; // 当前页起始行
     private int end; // 结束行
     private int totalPage;  // 共多少页
     

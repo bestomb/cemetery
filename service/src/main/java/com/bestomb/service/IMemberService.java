@@ -4,8 +4,7 @@ import com.bestomb.common.exception.EqianyuanException;
 import com.bestomb.common.response.PageResponse;
 import com.bestomb.common.response.member.MemberAccountBo;
 import com.bestomb.common.response.member.MemberLoginBo;
-
-import java.util.List;
+import com.bestomb.entity.MemberAccount;
 
 /**
  * 会员业务逻辑接口
@@ -41,6 +40,14 @@ public interface IMemberService {
     /**
      * 分页查询
      */
-    PageResponse getList(int pageNo, int pageSize)throws EqianyuanException;
+    PageResponse getList(int pageNo, int pageSize) throws EqianyuanException;
+    
+    /***
+     * 修改会员资料
+     * @param memberAccount
+     * @return
+     * @throws EqianyuanException
+     */
+    int edit(MemberAccount memberAccount) throws EqianyuanException;
 
 }

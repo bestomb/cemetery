@@ -1,26 +1,40 @@
 package com.bestomb.entity;
 
 public class MemberAccount {
-    private Integer memberId;
+    
+	private Integer memberId; // 会员ID
 
-    private Long mobileNumber;
+    private Long mobileNumber; // 手机号
 
-    private String loginPassword;
+    private String loginPassword; // 密码
 
-    private String nickName;
+    private String nickName; // 昵称
 
-    private Integer inviterId;
+    private Integer inviterId; // 邀请者编号
 
-    private Integer integral;
+    private Integer integral; // 会员积分
 
-    private Double tradingAmount;
+    private Double tradingAmount; // 交易币
 
-    private String tradingPassword;
+    private String tradingPassword; // 支付密码
 
-    private Integer constructionCount;
+    private Integer constructionCount; // 可建设陵园总数
 
-    private Integer createTime;
+    private Integer createTime; // 创建时间
 
+    /***
+     * 判断编辑会员资料的请求参数是否为空
+     * @return
+     */
+    public boolean isEmptyEditRequest(){
+    	if (mobileNumber!=null) { return false; }
+    	if (loginPassword!=null) { return false; }
+    	if (nickName!=null) { return false; }
+    	if (inviterId!=null) { return false; }
+    	if (tradingPassword!=null) { return false; }
+    	return true;
+    }
+    
     public Integer getMemberId() {
         return memberId;
     }

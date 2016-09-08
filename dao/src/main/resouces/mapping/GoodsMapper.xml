@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bestomb.dao.IGoodsDao" >
+  <resultMap id="BaseResultMap" type="com.bestomb.entity.Goods" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="price" property="price" jdbcType="DOUBLE" />
+    <result column="belongs" property="belongs" jdbcType="INTEGER" />
+    <result column="type" property="type" jdbcType="INTEGER" />
+    <result column="model_id" property="modelId" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="INTEGER" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.bestomb.entity.GoodsWithBLOBs" extends="BaseResultMap" >
+    <result column="images" property="images" jdbcType="LONGVARCHAR" />
+    <result column="description" property="description" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    id, name, price, belongs, type, model_id, create_time
+  </sql>
+  <sql id="Blob_Column_List" >
+    images, description
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from goods
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from goods
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.bestomb.entity.GoodsWithBLOBs" >
+    <selectKey keyProperty="id" resultType="String" order="BEFORE">
+        select replace(uuid(),'-','') from dual
+    </selectKey>
+    insert into goods (id, name, price, 
+      belongs, type, model_id, 
+      create_time, images, description
+      )
+    values (#{id,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{price,jdbcType=DOUBLE}, 
+      #{belongs,jdbcType=INTEGER}, #{type,jdbcType=INTEGER}, #{modelId,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=INTEGER}, #{images,jdbcType=LONGVARCHAR}, #{description,jdbcType=LONGVARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.bestomb.entity.GoodsWithBLOBs" >
+    <selectKey keyProperty="id" resultType="String" order="BEFORE">
+        select replace(uuid(),'-','') from dual
+    </selectKey>
+    insert into goods
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="price != null" >
+        price,
+      </if>
+      <if test="belongs != null" >
+        belongs,
+      </if>
+      <if test="type != null" >
+        type,
+      </if>
+      <if test="modelId != null" >
+        model_id,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="images != null" >
+        images,
+      </if>
+      <if test="description != null" >
+        description,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="price != null" >
+        #{price,jdbcType=DOUBLE},
+      </if>
+      <if test="belongs != null" >
+        #{belongs,jdbcType=INTEGER},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=INTEGER},
+      </if>
+      <if test="modelId != null" >
+        #{modelId,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=INTEGER},
+      </if>
+      <if test="images != null" >
+        #{images,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="description != null" >
+        #{description,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.bestomb.entity.GoodsWithBLOBs" >
+    update goods
+    <set >
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="price != null" >
+        price = #{price,jdbcType=DOUBLE},
+      </if>
+      <if test="belongs != null" >
+        belongs = #{belongs,jdbcType=INTEGER},
+      </if>
+      <if test="type != null" >
+        type = #{type,jdbcType=INTEGER},
+      </if>
+      <if test="modelId != null" >
+        model_id = #{modelId,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=INTEGER},
+      </if>
+      <if test="images != null" >
+        images = #{images,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="description != null" >
+        description = #{description,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.bestomb.entity.GoodsWithBLOBs" >
+    update goods
+    set name = #{name,jdbcType=VARCHAR},
+      price = #{price,jdbcType=DOUBLE},
+      belongs = #{belongs,jdbcType=INTEGER},
+      type = #{type,jdbcType=INTEGER},
+      model_id = #{modelId,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=INTEGER},
+      images = #{images,jdbcType=LONGVARCHAR},
+      description = #{description,jdbcType=LONGVARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.bestomb.entity.Goods" >
+    update goods
+    set name = #{name,jdbcType=VARCHAR},
+      price = #{price,jdbcType=DOUBLE},
+      belongs = #{belongs,jdbcType=INTEGER},
+      type = #{type,jdbcType=INTEGER},
+      model_id = #{modelId,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=INTEGER}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  
+  <!-- 封装商城商品查询条件 -->
+  <sql id="whereCondition">
+  	<if test="goods.name != null" >
+       and name like '%${goods.name,jdbcType=VARCHAR}%'
+    </if>
+  	<if test="goods.belongs != null" >
+       and belongs = #{goods.belongs,jdbcType=INTEGER}
+    </if>
+  	<if test="goods.type != null" >
+       and type = #{goods.type,jdbcType=INTEGER}
+    </if>
+  </sql>
+  
+  <!-- 根据条件查询商品分页列表总数 -->
+  <select id="getGoodsPageListCount" resultType="java.lang.Integer">
+    select count(1) from goods
+    <include refid="whereCondition" />
+  </select>
+  <!-- 根据条件查询商品分页列表 -->
+  <select id="getGoodsPageList" resultMap="ResultMapWithBLOBs" >
+    select
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from goods
+    <include refid="whereCondition" />
+    limit ${page.start}, ${page.pageSize}
+  </select>
+  
+</mapper>

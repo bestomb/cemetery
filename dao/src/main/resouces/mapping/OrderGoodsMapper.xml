@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bestomb.dao.IOrderGoodsDao" >
+  <resultMap id="BaseResultMap" type="com.bestomb.entity.OrderGoods" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="goods_id" property="goodsId" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="model_id" property="modelId" jdbcType="VARCHAR" />
+    <result column="price" property="price" jdbcType="DOUBLE" />
+    <result column="order_id" property="orderId" jdbcType="VARCHAR" />
+    <result column="count" property="count" jdbcType="INTEGER" />
+    <result column="type" property="type" jdbcType="INTEGER" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.bestomb.entity.OrderGoodsWithBLOBs" extends="BaseResultMap" >
+    <result column="images" property="images" jdbcType="LONGVARCHAR" />
+    <result column="description" property="description" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, goods_id, name, model_id, price, order_id, count, type
+  </sql>
+  <sql id="Blob_Column_List" >
+    images, description
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from order_goods
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <!-- 根据条件查询订单商品详情 -->
+  <select id="selectByCondition" resultMap="ResultMapWithBLOBs" parameterType="com.bestomb.entity.OrderGoods">
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from order_goods
+    <where>
+		<if test="id != null" >
+			and id = #{id,jdbcType=VARCHAR}
+		</if>
+		<if test="goodsId != null" >
+	        and goods_id = #{goodsId,jdbcType=VARCHAR}
+		</if>
+		<if test="name != null" >
+	        and name like '%${name,jdbcType=VARCHAR}%'
+		</if>
+		<if test="modelId != null" >
+	        and model_id = #{modelId,jdbcType=VARCHAR}
+		</if>
+		<if test="orderId != null" >
+	        and order_id = #{orderId,jdbcType=VARCHAR}
+		</if>
+		<if test="type != null" >
+	        and type = #{type,jdbcType=INTEGER}
+		</if>
+    </where>
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from order_goods
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.bestomb.entity.OrderGoodsWithBLOBs" >
+    insert into order_goods (id, goods_id, name, 
+      model_id, price, order_id, 
+      count, type, images, 
+      description)
+    values (#{id,jdbcType=VARCHAR}, #{goodsId,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, 
+      #{modelId,jdbcType=VARCHAR}, #{price,jdbcType=DOUBLE}, #{orderId,jdbcType=VARCHAR}, 
+      #{count,jdbcType=INTEGER}, #{type,jdbcType=INTEGER}, #{images,jdbcType=LONGVARCHAR}, 
+      #{description,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.bestomb.entity.OrderGoodsWithBLOBs" >
+    insert into order_goods
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="goodsId != null" >
+        goods_id,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="modelId != null" >
+        model_id,
+      </if>
+      <if test="price != null" >
+        price,
+      </if>
+      <if test="orderId != null" >
+        order_id,
+      </if>
+      <if test="count != null" >
+        count,
+      </if>
+      <if test="type != null" >
+        type,
+      </if>
+      <if test="images != null" >
+        images,
+      </if>
+      <if test="description != null" >
+        description,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="goodsId != null" >
+        #{goodsId,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="modelId != null" >
+        #{modelId,jdbcType=VARCHAR},
+      </if>
+      <if test="price != null" >
+        #{price,jdbcType=DOUBLE},
+      </if>
+      <if test="orderId != null" >
+        #{orderId,jdbcType=VARCHAR},
+      </if>
+      <if test="count != null" >
+        #{count,jdbcType=INTEGER},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=INTEGER},
+      </if>
+      <if test="images != null" >
+        #{images,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="description != null" >
+        #{description,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.bestomb.entity.OrderGoodsWithBLOBs" >
+    update order_goods
+    <set >
+      <if test="goodsId != null" >
+        goods_id = #{goodsId,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="modelId != null" >
+        model_id = #{modelId,jdbcType=VARCHAR},
+      </if>
+      <if test="price != null" >
+        price = #{price,jdbcType=DOUBLE},
+      </if>
+      <if test="orderId != null" >
+        order_id = #{orderId,jdbcType=VARCHAR},
+      </if>
+      <if test="count != null" >
+        count = #{count,jdbcType=INTEGER},
+      </if>
+      <if test="type != null" >
+        type = #{type,jdbcType=INTEGER},
+      </if>
+      <if test="images != null" >
+        images = #{images,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="description != null" >
+        description = #{description,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.bestomb.entity.OrderGoodsWithBLOBs" >
+    update order_goods
+    set goods_id = #{goodsId,jdbcType=VARCHAR},
+      name = #{name,jdbcType=VARCHAR},
+      model_id = #{modelId,jdbcType=VARCHAR},
+      price = #{price,jdbcType=DOUBLE},
+      order_id = #{orderId,jdbcType=VARCHAR},
+      count = #{count,jdbcType=INTEGER},
+      type = #{type,jdbcType=INTEGER},
+      images = #{images,jdbcType=LONGVARCHAR},
+      description = #{description,jdbcType=LONGVARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.bestomb.entity.OrderGoods" >
+    update order_goods
+    set goods_id = #{goodsId,jdbcType=VARCHAR},
+      name = #{name,jdbcType=VARCHAR},
+      model_id = #{modelId,jdbcType=VARCHAR},
+      price = #{price,jdbcType=DOUBLE},
+      order_id = #{orderId,jdbcType=VARCHAR},
+      count = #{count,jdbcType=INTEGER},
+      type = #{type,jdbcType=INTEGER}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  
+	
+	<!-- 根据订单编号获取订单商品列表 -->
+  	<select id="getOrderGoodsByOrderId" resultMap="ResultMapWithBLOBs" parameterType="java.lang.String">
+    	select
+    	<include refid="Base_Column_List" />
+	    ,
+	    <include refid="Blob_Column_List" />
+   		from order_goods
+   		where order_id = #{orderId,jdbcType=VARCHAR}
+  	</select>
+  	
+  	<!-- 根据订单编号获取订单商品列表 -->
+  	<select id="getStoreOrdersDetail" resultMap="ResultMapWithBLOBs">
+    	select
+    	<include refid="Base_Column_List" />
+	    ,
+	    <include refid="Blob_Column_List" />
+   		from order_goods
+   		where order_id = #{orderId,jdbcType=VARCHAR}
+   			and goods_id in (
+   				select goods_id from store where member_id = #{memberId,jdbcType=INTEGER}
+   			)
+  	</select>
+  	
+  	<!-- 根据查询条件查询会员背包商品分页列表总数 -->
+	<select id="getBackpackGoodsCount" resultType="java.lang.Integer">
+	    select count(1) from order_goods
+	    where id in (
+	    	select goods_id from backpack where member_id = #{memberId,jdbcType=INTEGER}
+	    )
+		<if test="goods.type != null" >
+		and type = #{goods.type,jdbcType=INTEGER}
+		</if>
+	</select>
+	<!-- 根据查询条件查询会员背包商品分页列表 -->
+	<select id="getBackpackGoods" resultMap="ResultMapWithBLOBs" >
+		select 
+		<include refid="Base_Column_List" />
+    	,
+    	<include refid="Blob_Column_List" />
+    	from order_goods
+	    where id in (
+	    	select goods_id from backpack where member_id = #{memberId,jdbcType=INTEGER}
+	    )
+		<if test="goods.type != null" >
+		and type = #{goods.type,jdbcType=INTEGER}
+		</if>
+	    limit ${page.start}, ${page.pageSize}
+	</select>
+  	
+  	<!-- 购物车转订单插入订单商品表 -->
+	<insert id="insertCartGoods" >
+	    insert into order_goods
+	    	select replace(uuid(),'-','') id, a.id goods_id, a.name,
+	    			a.model_id, a.price , '${order.orderNumber,jdbcType=INTEGER}' order_id, 
+	    			b.count, a.type, a.images, a.description
+			from goods a, shopping_cart b
+			where a.id = b.goods_id and b.member_id = #{order.memberId,jdbcType=INTEGER}
+	</insert>
+</mapper>

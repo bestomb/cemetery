@@ -157,6 +157,33 @@
         </set>
         where member_id = #{memberId,jdbcType=INTEGER}
     </update>
+    <update id="memberEdit" parameterType="com.bestomb.entity.MemberAccount">
+        update member_account
+        <set>
+            <if test="mobileNumber != null">
+                mobile_number = #{mobileNumber,jdbcType=BIGINT},
+            </if>
+            <if test="loginPassword != null">
+                login_password = #{loginPassword,jdbcType=VARCHAR},
+            </if>
+            <if test="nickName != null">
+                nick_name = #{nickName,jdbcType=VARCHAR},
+            </if>
+            <if test="inviterId != null">
+                inviter_id = #{inviterId,jdbcType=INTEGER},
+            </if>
+            <if test="tradingPassword != null">
+                trading_password = #{tradingPassword,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where member_id = #{memberId,jdbcType=INTEGER}
+    </update>
+    <!-- 现金充值成功后修改会员帐号表中交易币总金额 -->
+    <update id="updateTradingAmount" parameterType="com.bestomb.entity.MemberAccount">
+        update member_account
+        set trading_amount = trading_amount + #{tradingAmount,jdbcType=DOUBLE}
+        where member_id = #{memberId,jdbcType=INTEGER}
+    </update>
     <select id="selectByMemberIds" resultMap="BaseResultMap" parameterType="java.util.ArrayList">
         select
         <include refid="Base_Column_List"/>

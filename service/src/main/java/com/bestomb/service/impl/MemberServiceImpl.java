@@ -253,4 +253,33 @@ public class MemberServiceImpl implements IMemberService {
         }
         return new PageResponse(pageNo, pageSize, dataCount, memberAccountBoList);
     }
+    
+    /**
+     * 修改会员资料
+     * 
+     * @param memberAccount
+     * @return
+     * @throws EqianyuanException
+     */
+	public int edit(MemberAccount memberAccount) throws EqianyuanException {
+		// 会员编号是否为空
+        if (ObjectUtils.isEmpty(memberAccount.getMemberId())) {
+            logger.warn("edit fail , because memberId is null");
+            throw new EqianyuanException(ExceptionMsgConstant.MEMBERSHIP_NUMBER_IS_EMPTY);
+        }
+        // 必填请求参数是否为空
+        if ( memberAccount.isEmptyEditRequest() ) {
+        	logger.warn("edit fail , because necessary requestParam is all null");
+        	throw new EqianyuanException(ExceptionMsgConstant.SYSTEM_LACK_OF_REQUEST_PARAMETER);
+		}
+        // 登录密码做MD5加密处理
+        if (!StringUtils.isEmpty(memberAccount.getLoginPassword())) {
+        	memberAccount.setLoginPassword(Md5Util.MD5By32(StringUtils.lowerCase(memberAccount.getLoginPassword())));
+		}
+        // 支付密码做MD5加密处理
+        if (!StringUtils.isEmpty(memberAccount.getTradingPassword())) {
+        	memberAccount.setTradingPassword(Md5Util.MD5By32(StringUtils.lowerCase(memberAccount.getTradingPassword())));
+        }
+		return memberAccountDao.memberEdit(memberAccount);
+	}
 }

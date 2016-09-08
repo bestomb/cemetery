@@ -102,6 +102,17 @@ public class ExceptionMsgConstant {
     //系统角色编号为空
     public static final String SYSTEM_ROLE_ID_IS_EMPTY = "10030005";
     /***** 系统角色管理 *****/
+    
+    /***** 字典 *****/
+    // 字典类型为空
+    public static final String DICTTYPE_IS_EMPTY = "10040001";
+    // 字典代码为空
+    public static final String DICTCODE_IS_EMPTY = "10040002";
+    // 字典数据不存在
+    public static final String DICTDATA_IS_NOT_EXISTS= "10040003";
+    
+    /***** 字典 *****/
+    
 /********** 管理系统 **********/
 
 /********** 客户端 **********/
@@ -128,8 +139,22 @@ public class ExceptionMsgConstant {
     public static final String MEMBER_NO_AUTHORIZATION_BY_LOGIN = "20000009";
     //会员编码为空
     public static final String MEMBERSHIP_NUMBER_IS_EMPTY = "20000010";
+    // 会员交易币为空
+    public static final String TRADING_IS_EMPTY = "20000011";
     /***** 会员 *****/
-
+    
+    /***** 订单 *****/
+    // 订单编号为空
+    public static final String ORDERID_IS_EMPTY = "20001001";
+    // 订单已过期
+    public static final String ORDER_IS_OVERDUE = "20001002";
+    // 订单详情商品数据不存在
+    public static final String ORDER_GOODS_IS_NOT_EXISTS = "20001003";
+    // 订单数据不存在
+    public static final String ORDER_IS_NOT_EXISTS = "20001004";
+    /***** 订单 *****/
+    
+    
     /*****
      * 陵园
      *****/
@@ -178,7 +203,11 @@ public class ExceptionMsgConstant {
     //陵园公告数据不存在
     public static final String CEMETERY_NOTICE_DATA_NOT_EXISTS = "20010022";
     /***** 陵园 *****/
-
+    
+    /***** 留言 *****/
+    public static final String MESSAGEID_IS_EMPTY = "20011001";
+    /***** 留言 *****/
+    
     /*****
      * 模型
      *****/
@@ -206,8 +235,37 @@ public class ExceptionMsgConstant {
     //模型数据不存在
     public static final String MODEL_DATA_NOT_EXIXTS = "20020011";
     /***** 模型 *****/
-
-
+    
+    /******
+     * 商品
+     */
+    // 商品ID为空
+    public static final String GOODSID_IS_EMPTY = "30001001";
+    // 商品数据不存在
+    public static final String GOODS_DATA_NOT_EXISTS = "30001002";
+    // 发布的商品不在背包中
+    public static final String GOODS_IS_NOTIN_BACKPACK = "30001003";
+    // 发布的商品数量为空
+    public static final String GOODS_COUNT_IS_EMPTY = "30001004";
+    // 发布的商品名称为空
+    public static final String GOODS_NAME_IS_EMPTY = "30001005";
+    // 发布的商品价格为空
+    public static final String GOODS_PRICE_IS_EMPTY = "30001006";
+    
+    /***
+     * 店铺
+     */
+    // 店铺主键ID为空
+    public static final String STOREID_IS_EMPTY = "30002001";
+    
+    /***
+     * 购物车
+     */
+    // 购物车主键ID为空
+    public static final String CARTID_IS_EMPTY = "30003001";
+    // 购物车为空
+    public static final String SHOPPINGCART_IS_EMPTY = "30003002";
+    
     /*****
      * 商品分类
      *****/
@@ -221,7 +279,7 @@ public class ExceptionMsgConstant {
     public static final String GOODS_CLASSIFY_NAME_TO_LONG = "30010004";
     //商品分类编号为空
     public static final String GOODS_CLASSIFY_ID_IS_EMPTY = "30010005";
-
+    
 
     /*****
      * 特殊节日

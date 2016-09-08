@@ -97,4 +97,43 @@
         where cemetery_id = #{cemetery_id}
         limit ${page.pageNo}, ${page.pageSize}
     </select>
+    
+    <sql id="whereCondition">
+    	<where>
+   			<if test="music.id != null">
+               	and id = #{music.id, jdbcType=VARCHAR}
+           	</if>
+   			<if test="music.name != null">
+               	and name = #{music.name, jdbcType=VARCHAR}
+           	</if>
+   			<if test="music.fileAddress != null">
+               	and fileAddress = #{music.fileAddress, jdbcType=VARCHAR}
+           	</if>
+   			<if test="music.fileSize != null">
+               	and fileSize = #{music.fileSize, jdbcType=BIGINT}
+           	</if>
+   			<if test="music.type != null">
+               	and type = #{music.type, jdbcType=INTEGER}
+           	</if>
+   			<if test="music.cemeteryId != null">
+               	and cemetery_id = #{music.cemeteryId, jdbcType=VARCHAR}
+           	</if>
+   		</where>
+    </sql>
+    
+    <!-- 根据查询条件查询音乐总数 -->
+    <select id="countByCondition" resultType="java.lang.Integer">
+    	select count(1) from music
+   		<include refid="whereCondition" />
+  	</select>
+  	
+  	<!-- 根据查询条件查询音乐列表 -->
+  	<select id="selectByCondition" resultMap="BaseResultMap">
+    	select
+    	<include refid="Base_Column_List"/>
+    	from music
+   		<include refid="whereCondition" />
+    	limit ${page.start}, ${page.pageSize}
+  	</select>
+  	
 </mapper>

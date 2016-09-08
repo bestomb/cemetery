@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bestomb.dao.IStoreDao" >
+  <resultMap id="BaseResultMap" type="com.bestomb.entity.Store" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="member_id" property="memberId" jdbcType="INTEGER" />
+    <result column="backpack_goods_id" property="backpackGoodsId" jdbcType="VARCHAR" />
+    <result column="goods_id" property="goodsId" jdbcType="VARCHAR" />
+    <result column="count" property="count" jdbcType="INTEGER" />
+  </resultMap>
+  <resultMap id="ResultMapWithGoods" type="com.bestomb.entity.StoreWithGoods" extends="BaseResultMap" >
+    <result column="name" property="name" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, member_id, backpack_goods_id, goods_id, count
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from store
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from store
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.bestomb.entity.Store" >
+    insert into store (id, member_id, backpack_goods_id, 
+      goods_id, count)
+    values (#{id,jdbcType=INTEGER}, #{memberId,jdbcType=INTEGER}, #{backpackGoodsId,jdbcType=VARCHAR}, 
+      #{goodsId,jdbcType=VARCHAR}, #{count,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.bestomb.entity.Store" >
+    insert into store
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="memberId != null" >
+        member_id,
+      </if>
+      <if test="backpackGoodsId != null" >
+        backpack_goods_id,
+      </if>
+      <if test="goodsId != null" >
+        goods_id,
+      </if>
+      <if test="count != null" >
+        count,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="memberId != null" >
+        #{memberId,jdbcType=INTEGER},
+      </if>
+      <if test="backpackGoodsId != null" >
+        #{backpackGoodsId,jdbcType=VARCHAR},
+      </if>
+      <if test="goodsId != null" >
+        #{goodsId,jdbcType=VARCHAR},
+      </if>
+      <if test="count != null" >
+        #{count,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.bestomb.entity.Store" >
+    update store
+    <set >
+      <if test="memberId != null" >
+        member_id = #{memberId,jdbcType=INTEGER},
+      </if>
+      <if test="backpackGoodsId != null" >
+        backpack_goods_id = #{backpackGoodsId,jdbcType=VARCHAR},
+      </if>
+      <if test="goodsId != null" >
+        goods_id = #{goodsId,jdbcType=VARCHAR},
+      </if>
+      <if test="count != null" >
+        count = #{count,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.bestomb.entity.Store" >
+    update store
+    set member_id = #{memberId,jdbcType=INTEGER},
+      backpack_goods_id = #{backpackGoodsId,jdbcType=VARCHAR},
+      goods_id = #{goodsId,jdbcType=VARCHAR},
+      count = #{count,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <!-- 查询我的店铺已发布的商品总数 -->
+  <select id="getPageListCount" resultType="java.lang.Integer">
+    select count(1) from store a, goods b
+    where a.goods_id = b.id
+    	and a.member_id = #{store.memberId,jdbcType=INTEGER}
+    <if test="goods.type != null" >
+       and b.type = #{goods.type,jdbcType=INTEGER}
+    </if>
+  </select>
+  <!-- 查询我的店铺已发布的商品 -->
+  <select id="getPageList" resultMap="ResultMapWithGoods" >
+    select a.*, b.name
+    from store a, goods b
+    where a.goods_id = b.id
+    and a.member_id = #{store.memberId,jdbcType=INTEGER}
+    <if test="goods.type != null" >
+       and b.type = #{goods.type,jdbcType=INTEGER}
+    </if>
+    limit ${page.start}, ${page.pageSize}
+  </select>
+  
+  <!-- 查询会员店铺订单销售总额 -->
+  <select id="getStoreOrdersTotalPrice" resultType="java.lang.Double">
+  	select sum(price) totalPrice from order_goods
+  	where goods_id in (
+  		select goods_id from store where member_id = #{memberId,jdbcType=INTEGER} 
+  	)
+  </select>
+  
+</mapper>

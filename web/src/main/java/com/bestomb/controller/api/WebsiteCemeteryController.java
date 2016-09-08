@@ -1,5 +1,17 @@
 package com.bestomb.controller.api;
 
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.bestomb.common.Pager;
 import com.bestomb.common.exception.EqianyuanException;
 import com.bestomb.common.request.cemetery.CemeteryByAreaListRequest;
 import com.bestomb.common.request.cemetery.CemeteryByEditRequest;
@@ -12,14 +24,8 @@ import com.bestomb.common.util.SessionContextUtil;
 import com.bestomb.common.util.SessionUtil;
 import com.bestomb.common.util.yamlMapper.SystemConf;
 import com.bestomb.controller.BaseController;
+import com.bestomb.entity.MemberAuthorization;
 import com.bestomb.sevice.api.WebsiteCemeteryService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-
-import java.util.List;
 
 /**
  * 前台陵园接口控制器
@@ -155,4 +161,45 @@ public class WebsiteCemeteryController extends BaseController {
         //todo 实现业务
         return new ServerResponse();
     }
+    
+    /***
+     * 授权陵园给他人代管理
+     * @param MemberAuthorization
+     * @return
+     * @throws EqianyuanException
+     */
+    @RequestMapping(value="/authToMember", method=RequestMethod.POST)
+    @ResponseBody
+    public ServerResponse authToMember(@ModelAttribute MemberAuthorization memberAuth) throws EqianyuanException {
+    	boolean flag = websiteCemeteryService.authToMember(memberAuth);
+    	return new ServerResponse.ResponseBuilder().data(flag).build();
+    }
+    
+    /***
+     * 分页查询已授权列表
+     * @param page
+     * @return
+     * @throws EqianyuanException
+     */
+    @RequestMapping(value="/authMembers", method=RequestMethod.GET)
+    @ResponseBody
+    public ServerResponse getAuthMembersPageList(@ModelAttribute Pager page) throws EqianyuanException {
+    	MemberLoginVo memberLoginVo = (MemberLoginVo)SessionUtil.getAttribute(SystemConf.WEBSITE_SESSION_MEMBER.toString());
+    	List<MemberAuthorization> resultList = websiteCemeteryService.getAuthMembersPageList(memberLoginVo.getMemberId(), page);
+    	return new ServerResponse.ResponseBuilder().data(resultList).build();
+    }
+    
+    /***
+     * 权限回收
+     * @param id
+     * @return
+     * @throws EqianyuanException
+     */
+    @RequestMapping(value="/removeAuth/${id}", method=RequestMethod.DELETE)
+    @ResponseBody
+    public ServerResponse removeCemeteryAuthToMember(@PathVariable String id) throws EqianyuanException {
+    	boolean flag = websiteCemeteryService.removeCemeteryAuthToMember(id);
+    	return new ServerResponse.ResponseBuilder().data(flag).build();
+    }
+    
 }

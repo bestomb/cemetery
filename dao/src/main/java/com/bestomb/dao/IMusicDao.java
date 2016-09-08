@@ -1,6 +1,7 @@
 package com.bestomb.dao;
 
 import com.bestomb.common.Page;
+import com.bestomb.common.Pager;
 import com.bestomb.entity.Music;
 import org.apache.ibatis.annotations.Param;
 
@@ -31,4 +32,10 @@ public interface IMusicDao {
      * @return
      */
     List<Music> selectByPagination(@Param("page") Page page, @Param("cemetery_id") String cemeteryId);
+    
+    
+    int countByCondition(@Param("music") Music music, @Param("page") Pager page);
+    
+    List<Music> selectByCondition(@Param("music") Music music, @Param("page") Pager page);
+    
 }

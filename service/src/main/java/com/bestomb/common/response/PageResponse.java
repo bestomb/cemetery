@@ -2,6 +2,8 @@ package com.bestomb.common.response;
 
 import java.util.List;
 
+import com.bestomb.common.Pager;
+
 
 /**
  * PageResponse
@@ -13,12 +15,23 @@ public class PageResponse {
     private int pageSize;
     private int pageNo;
     private List<?> list;
-
+    
+    public PageResponse(Pager page) {
+        this.pageNo = page.getPageNo();
+        this.pageSize = page.getPageSize();
+    }
+    public PageResponse(Pager page, List<?> list ){
+    	this(page);
+    	this.totalCount = page.getTotalRow();
+    	this.pageCount = page.getTotalPage();
+    	this.list = list;
+    }
+    
     public PageResponse(int pageNo, int pageSize) {
         this.pageNo = pageNo;
         this.pageSize = pageSize;
     }
-
+    
     public PageResponse(int pageNo, int pageSize, long totalCount, List<?> list) {
         this(pageNo, pageSize);
         this.totalCount = totalCount;

@@ -1,5 +1,6 @@
 package com.bestomb.dao;
 
+import com.bestomb.common.Pager;
 import com.bestomb.entity.MemberAuthorization;
 import org.apache.ibatis.annotations.Param;
 
@@ -25,4 +26,13 @@ public interface IMemberAuthorizationDao {
      * @return
      */
     List<MemberAuthorization> selectByCemeteryId(@Param("cemetery_ids") List<Integer> cemeteryIds);
+    
+    /***
+     * 根据陵园编号分页查询集合
+     * @param cemeteryIds
+     * @param page
+     * @return
+     */
+    List<MemberAuthorization> selectPageListByCemeteryId(@Param("cemetery_ids") List<Integer> cemeteryIds, @Param("page")  Pager page);
+    
 }
