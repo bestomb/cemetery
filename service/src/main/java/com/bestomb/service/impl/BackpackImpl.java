@@ -22,6 +22,7 @@ import com.bestomb.entity.GoodsWithBLOBs;
 import com.bestomb.entity.OrderGoods;
 import com.bestomb.entity.OrderGoodsWithBLOBs;
 import com.bestomb.service.IBackpackService;
+import com.bestomb.service.IDictService;
 
 /***
  * 背包接口实现类
@@ -35,6 +36,8 @@ public class BackpackImpl implements IBackpackService{
 	
 	@Autowired
 	private IOrderGoodsDao orderGoodsDao;
+	@Autowired
+	private IDictService dictService;
 	
 	/***
 	 * 根据查询条件查询会员背包商品分页列表
@@ -61,7 +64,7 @@ public class BackpackImpl implements IBackpackService{
 		List<GoodsWithBLOBs> list = orderGoodsDao.getBackpackGoods(memberId, goods, page);
 		List<GoodsBo> resultList = new ArrayList<GoodsBo>();
 		for (GoodsWithBLOBs entity : list) {
-			GoodsBo bo = new GoodsBo();
+			GoodsBo bo = new GoodsBo(dictService);
 			BeanUtils.copyProperties(entity, bo);
 			bo.convert(entity); // 转化商品数据
 			resultList.add(bo);
@@ -76,23 +79,33 @@ public class BackpackImpl implements IBackpackService{
 	 * @return
 	 */
 	public GoodsBoWithCount getGoodsById(String id) throws EqianyuanException {
-		// 判断商品ID是否为空
-		if (StringUtils.isEmpty(id)) {
-            logger.warn("getGoodsById fail , because id is null.");
-            throw new EqianyuanException(ExceptionMsgConstant.GOODSID_IS_EMPTY);
-        }
-		OrderGoods goods = new OrderGoods();
-		goods.setGoodsId(id);
-		OrderGoodsWithBLOBs entity = orderGoodsDao.selectByCondition(goods);
+		OrderGoodsWithBLOBs entity = getEntityGoodsById(id);
 		// 商品数据是否存在
 		if (ObjectUtils.isEmpty(entity)) {
             logger.warn("getGoodsById fail , because id is null.");
             throw new EqianyuanException(ExceptionMsgConstant.GOODSID_IS_EMPTY);
         }
-		GoodsBoWithCount bo = new GoodsBoWithCount();
+		GoodsBoWithCount bo = new GoodsBoWithCount(dictService);
 		BeanUtils.copyProperties(entity, bo);
 		bo.convert(entity); // 转化商品数据
 		return bo;
 	}
 
+	/***
+	 * 查看背包商品详情
+	 * @param id
+	 * @return
+	 */
+	public OrderGoodsWithBLOBs getEntityGoodsById(String id) throws EqianyuanException {
+		// 判断商品ID是否为空
+		if (StringUtils.isEmpty(id)) {
+			logger.warn("getGoodsById fail , because id is null.");
+			throw new EqianyuanException(ExceptionMsgConstant.GOODSID_IS_EMPTY);
+		}
+		OrderGoods goods = new OrderGoods();
+		goods.setGoodsId(id);
+		OrderGoodsWithBLOBs entity = orderGoodsDao.selectByCondition(goods);
+		return entity;
+	}
+	
 }

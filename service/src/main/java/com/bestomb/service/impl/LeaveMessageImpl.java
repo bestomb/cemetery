@@ -123,6 +123,11 @@ private Logger logger = Logger.getLogger(this.getClass());
             logger.warn("deleteByPrimaryKey fail , because id is null.");
             throw new EqianyuanException(ExceptionMsgConstant.MESSAGEID_IS_EMPTY);
         }
+		// 留言是否存在
+		if (leaveMessageDao.selectByPrimaryKey(id) == null ) {
+			logger.warn("deleteByPrimaryKey fail , because messageId is not exsit.");
+            throw new EqianyuanException(ExceptionMsgConstant.MESSAGEID_IS_NOT_EXSITS);
+		}
 		return leaveMessageDao.deleteByPrimaryKey(id)>0;
 	}
 

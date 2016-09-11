@@ -9,6 +9,7 @@
     <result column="price" property="price" jdbcType="DOUBLE" />
     <result column="order_id" property="orderId" jdbcType="VARCHAR" />
     <result column="count" property="count" jdbcType="INTEGER" />
+    <result column="belongs" property="belongs" jdbcType="INTEGER" />
     <result column="type" property="type" jdbcType="INTEGER" />
   </resultMap>
   <resultMap id="ResultMapWithBLOBs" type="com.bestomb.entity.OrderGoodsWithBLOBs" extends="BaseResultMap" >
@@ -16,7 +17,7 @@
     <result column="description" property="description" jdbcType="LONGVARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, goods_id, name, model_id, price, order_id, count, type
+    id, goods_id, name, model_id, price, order_id, count, belongs, type
   </sql>
   <sql id="Blob_Column_List" >
     images, description

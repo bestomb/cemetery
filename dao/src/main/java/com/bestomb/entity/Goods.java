@@ -10,6 +10,8 @@ public class Goods implements Cloneable
     private String modelId;
     private Integer createTime;
     
+    public Goods(){}
+    
     public Goods clone(){
     	Goods o = null;
         try{

@@ -13,8 +13,13 @@ public class GoodsBo {
 	
 	private Logger logger = Logger.getLogger(this.getClass());
 	
-	@Autowired
 	protected IDictService dictService;
+	
+	public GoodsBo(IDictService dictService) {
+		this.dictService = dictService;
+	}
+	
+	@Autowired
 	
 	private String id; // 商品ID
     private String name;
@@ -36,7 +41,7 @@ public class GoodsBo {
     // 转化商品所属
     public void convertBelongs(GoodsWithBLOBs entity){
     	try {
-    		this.belongs = dictService.getDictValue(DictType.GOODSBELONGS.getName(), entity.getBelongs()+"");
+    		this.belongs = dictService.getDictValue(DictType.GOODSBELONGS.getName(), entity.getBelongs());
 		} catch (DictException e) {
 			logger.warn("转化商品所属失败！");
 		}
@@ -45,7 +50,7 @@ public class GoodsBo {
     // 转化商品类型
     public void convertType(GoodsWithBLOBs entity){
     	try {
-    		this.type = dictService.getDictValue(DictType.GOODSTYPE.getName(), entity.getType()+"");
+    		this.type = dictService.getDictValue(DictType.GOODSTYPE.getName(), entity.getType());
     	} catch (DictException e) {
     		logger.warn("转化商品类型失败！");
     	}

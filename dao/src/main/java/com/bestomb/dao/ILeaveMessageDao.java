@@ -37,7 +37,7 @@ public interface ILeaveMessageDao {
      * @param page
      * @return
      */
-    List<LeaveMessage> getReceivedMessage(int memberId, @Param("page") Pager page);
+    List<LeaveMessage> getReceivedMessage(@Param("memberId") int memberId, @Param("page") Pager page);
     
     /***
      * 查询我（发出）的留言列表总数
@@ -53,6 +53,6 @@ public interface ILeaveMessageDao {
      * @param page
      * @return
      */
-    List<LeaveMessage> getPushedMessage(int memberId, @Param("page") Pager page);
+    List<LeaveMessage> getPushedMessage(@Param("memberId") int memberId, @Param("page") Pager page);
     
 }

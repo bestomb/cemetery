@@ -3,7 +3,7 @@ package com.bestomb.common.response.member;
 public class LeaveMessageBo {
 	
 	private String id;
-    private String memberId; // 会员ID
+    private Integer memberId; // 会员ID
     private String masterId; // 墓碑主人ID
     private String replyId; // 被回复留言ID
     private String createTime; 
@@ -15,10 +15,10 @@ public class LeaveMessageBo {
 	public void setId(String id) {
 		this.id = id;
 	}
-	public String getMemberId() {
+	public Integer getMemberId() {
 		return memberId;
 	}
-	public void setMemberId(String memberId) {
+	public void setMemberId(Integer memberId) {
 		this.memberId = memberId;
 	}
 	public String getMasterId() {

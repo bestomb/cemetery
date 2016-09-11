@@ -47,4 +47,12 @@ public interface IGoodsService {
 	 */
 	public PageResponse getGoodsPageList(Goods goods, Pager page) throws EqianyuanException;
 	
+	/***
+	 * 删除商品
+	 * @param id
+	 * @return
+	 * @throws EqianyuanException
+	 */
+	public boolean delete(String id) throws EqianyuanException;
+	
 }

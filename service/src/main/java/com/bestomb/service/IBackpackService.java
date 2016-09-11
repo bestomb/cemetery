@@ -5,6 +5,7 @@ import com.bestomb.common.exception.EqianyuanException;
 import com.bestomb.common.response.PageResponse;
 import com.bestomb.common.response.goods.GoodsBoWithCount;
 import com.bestomb.entity.Goods;
+import com.bestomb.entity.OrderGoodsWithBLOBs;
 
 /***
  * 背包接口
@@ -29,5 +30,12 @@ public interface IBackpackService {
 	 * @return
 	 */
 	public GoodsBoWithCount getGoodsById(String id) throws EqianyuanException;
+	
+	/***
+	 * 查看背包商品详情
+	 * @param id
+	 * @return
+	 */
+	public OrderGoodsWithBLOBs getEntityGoodsById(String id) throws EqianyuanException;
 	
 }

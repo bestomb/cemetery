@@ -33,7 +33,7 @@ import com.bestomb.entity.Goods;
 import com.bestomb.entity.MemberAccount;
 import com.bestomb.entity.OrderGoodsWithBLOBs;
 import com.bestomb.entity.PurchaseOrder;
-import com.bestomb.entity.Store;
+import com.bestomb.entity.StoreWithGoods;
 import com.bestomb.entity.TradingDetail;
 import com.bestomb.sevice.api.MemberService;
 
@@ -243,6 +243,21 @@ public class MemberController extends BaseController {
     }
     
     /***
+     * 查看我（发出的）的留言分页列表
+     * @param message
+     * @param page
+     * @return
+     * @throws EqianyuanException
+     */
+    @RequestMapping(value="/pushedMessage", method=RequestMethod.GET)
+    @ResponseBody
+    public ServerResponse getPushedMessage(@ModelAttribute Pager page) throws EqianyuanException{
+    	int memberId = getLoginMember().getMemberId() ;
+    	PageResponse pageResponse = memberService.getPushedMessage(memberId, page);
+    	return new ServerResponse.ResponseBuilder().data(pageResponse).build();
+    }
+    
+    /***
      * 删除（我发出的）留言
      * @param messageId
      * @return
@@ -293,11 +308,11 @@ public class MemberController extends BaseController {
      */
     @RequestMapping(value="/store/sell/{goodsId}", method=RequestMethod.POST)
     @ResponseBody
-    public ServerResponse sellGoods(@PathVariable String goodsId, @RequestBody Store store ,@RequestBody Goods goods) throws EqianyuanException{
+    public ServerResponse sellGoods(@RequestBody StoreWithGoods storeWithGoods, @PathVariable String goodsId) throws EqianyuanException{
     	int memberId = getLoginMember().getMemberId();
-    	store.setMemberId(memberId);
-    	store.setBackpackGoodsId(goodsId);
-    	boolean flag = memberService.sellGoods(store, goods);
+    	storeWithGoods.setMemberId(memberId);
+    	storeWithGoods.setBackpackGoodsId(goodsId);
+    	boolean flag = memberService.sellGoods(storeWithGoods);
     	return new ServerResponse.ResponseBuilder().data(flag).build();
     }
     

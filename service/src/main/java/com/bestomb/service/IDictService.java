@@ -44,7 +44,7 @@ public interface IDictService {
 	 * @return
 	 * @throws DictException
 	 */
-	Dict getDict(String dictType, String dictCode) throws DictException;
+	Dict getDict(String dictType, Integer dictCode) throws DictException;
 	
 	/***
 	 * 根据字典类型和字典代码获取该代码字典值
@@ -53,5 +53,5 @@ public interface IDictService {
 	 * @return
 	 * @throws DictException
 	 */
-	String getDictValue(String dictType, String dictCode) throws DictException;
+	String getDictValue(String dictType, Integer dictCode) throws DictException;
 }

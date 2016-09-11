@@ -7,7 +7,7 @@ import com.bestomb.common.exception.EqianyuanException;
 import com.bestomb.common.response.PageResponse;
 import com.bestomb.entity.Goods;
 import com.bestomb.entity.OrderGoodsWithBLOBs;
-import com.bestomb.entity.Store;
+import com.bestomb.entity.StoreWithGoods;
 
 /***
  * 会员店铺接口
@@ -28,12 +28,11 @@ public interface IStoreService {
 
 	/***
 	 * 店铺发布商品
-	 * @param goods
-	 * @param store
+	 * @param storeWithGoods
 	 * @return
 	 * @throws EqianyuanException
 	 */
-	public boolean sellGoods(Goods goods, Store store) throws EqianyuanException;
+	public boolean sellGoods(StoreWithGoods storeWithGoods) throws EqianyuanException;
 
 	/***
      * 下架商品

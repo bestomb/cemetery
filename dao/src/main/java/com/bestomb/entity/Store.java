@@ -8,11 +8,11 @@ public class Store {
     private String goodsId;
     private Integer count;
     
-    public Store(){};
+    public Store(){}
     
     public Store(Integer memberId){
     	this.memberId = memberId;
-    };
+    }
     
     public Integer getId() {
         return id;

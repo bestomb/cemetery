@@ -205,7 +205,10 @@ public class ExceptionMsgConstant {
     /***** 陵园 *****/
     
     /***** 留言 *****/
+    // 留言ID为空
     public static final String MESSAGEID_IS_EMPTY = "20011001";
+    // 该留言ID数据不存在
+    public static final String MESSAGEID_IS_NOT_EXSITS = "20011002";
     /***** 留言 *****/
     
     /*****
@@ -257,6 +260,8 @@ public class ExceptionMsgConstant {
      */
     // 店铺主键ID为空
     public static final String STOREID_IS_EMPTY = "30002001";
+    // 店铺商品数据不存在
+    public static final String STORE_DOODS_IS_NOT_EXISTS = "30002002";
     
     /***
      * 购物车

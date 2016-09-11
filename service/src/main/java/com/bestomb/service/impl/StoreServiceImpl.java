@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,6 +26,7 @@ import com.bestomb.entity.OrderGoodsWithBLOBs;
 import com.bestomb.entity.PurchaseOrder;
 import com.bestomb.entity.Store;
 import com.bestomb.entity.StoreWithGoods;
+import com.bestomb.service.IBackpackService;
 import com.bestomb.service.IGoodsService;
 import com.bestomb.service.IStoreService;
 
@@ -40,6 +42,9 @@ private Logger logger = Logger.getLogger(this.getClass());
 	
 	@Autowired
 	private IGoodsService goodsService; // 商品接口
+	@Autowired
+	private IBackpackService backpackSerice; // 背包接口
+	
 	@Autowired
 	private IStoreDao storeDao;
 	@Autowired
@@ -79,70 +84,71 @@ private Logger logger = Logger.getLogger(this.getClass());
 
 	/***
 	 * 店铺发布商品
-	 * @param store
+	 * @param storeWithGoods
 	 * @return
 	 * @throws EqianyuanException
 	 */
 	@Transactional
-	public boolean sellGoods(Goods goods, Store store) throws EqianyuanException {
+	public boolean sellGoods(StoreWithGoods storeWithGoods) throws EqianyuanException {
 		// 会员编号是否为空
-		if (ObjectUtils.isEmpty(store.getMemberId())) {
+		if (ObjectUtils.isEmpty(storeWithGoods.getMemberId())) {
 			logger.warn("insert fail , because memberId is null");
 			throw new EqianyuanException(ExceptionMsgConstant.MEMBERSHIP_NUMBER_IS_EMPTY);
 		}
 		// 背包商品是否为空
-		if (StringUtils.isEmpty(store.getBackpackGoodsId())) {
+		if (StringUtils.isEmpty(storeWithGoods.getBackpackGoodsId())) {
             logger.warn("insert fail , because backpackGoodsId is null.");
             throw new EqianyuanException(ExceptionMsgConstant.GOODS_IS_NOTIN_BACKPACK);
         }
-		// 商品ID是否为空
-		if (StringUtils.isEmpty(store.getGoodsId())) {
-            logger.warn("insert fail , because backpackGoodsId is null.");
-            throw new EqianyuanException(ExceptionMsgConstant.GOODSID_IS_EMPTY);
-        }
 		// 商品发布名称为空
-		if (StringUtils.isEmpty(goods.getName())) {
+		if (StringUtils.isEmpty(storeWithGoods.getName())) {
             logger.warn("sellGoods fail , because goodsName is null.");
             throw new EqianyuanException(ExceptionMsgConstant.GOODS_NAME_IS_EMPTY);
         }
 		// 商品发布价格为空
-		if (ObjectUtils.isEmpty(goods.getPrice())) {
+		if (ObjectUtils.isEmpty(storeWithGoods.getPrice())) {
 			logger.warn("sellGoods fail , because goodsPrice is null.");
 			throw new EqianyuanException(ExceptionMsgConstant.GOODS_PRICE_IS_EMPTY);
 		}
+		// 商品发布数量为空
+		if (ObjectUtils.isEmpty(storeWithGoods.getCount())) {
+			logger.warn("sellGoods fail , because count is null.");
+			throw new EqianyuanException(ExceptionMsgConstant.GOODS_COUNT_IS_EMPTY);
+		}
 		// 查询背包商品详情
-		GoodsWithBLOBs goodsWithBLOBs = goodsService.getEntityGoodsById(store.getBackpackGoodsId());
-		if (ObjectUtils.isEmpty(goodsWithBLOBs)) {
+		OrderGoodsWithBLOBs orderGoods = backpackSerice.getEntityGoodsById(storeWithGoods.getBackpackGoodsId());
+		if (ObjectUtils.isEmpty(orderGoods)) {
 			logger.warn("sellGoods fail , because backpackGoods is not exists.");
 			throw new EqianyuanException(ExceptionMsgConstant.GOODS_DATA_NOT_EXISTS);
 		}
-		GoodsWithBLOBs newGoods = goodsWithBLOBs.clone();
+		GoodsWithBLOBs newGoods = new GoodsWithBLOBs();
+		BeanUtils.copyProperties(orderGoods, newGoods);
 		newGoods.setId(null); // 重置为null
-		newGoods.setName(goods.getName());
-		newGoods.setPrice(goods.getPrice());
+		newGoods.setName(storeWithGoods.getName());
+		newGoods.setPrice(storeWithGoods.getPrice());
 		newGoods.setCreateTime(CalendarUtil.getSystemSeconds());
 		// 先插入商品表
 		boolean flag = goodsService.insert(newGoods);
 		if (flag) {
-			store.setGoodsId(newGoods.getId());
+			storeWithGoods.setGoodsId(newGoods.getId());
 			// 再插入会员店铺表
-			flag = storeDao.insert(store)>0;
+			flag = storeDao.insert(storeWithGoods)>0;
 			if (flag) {
 				// 再修正背包中该商品数量
-				store.setCount( 0-store.getCount() ); // 店铺发布商品后，背包数量应减少，将数量变为负值
-				Backpack backpack = new Backpack(store);
+				storeWithGoods.setCount( 0-storeWithGoods.getCount() ); // 店铺发布商品后，背包数量应减少，将数量变为负值
+				Backpack backpack = new Backpack(storeWithGoods);
 				flag = backpackDao.modifyGoodsCount(backpack);
 				if (!flag) {
-					logger.info("会员（"+store.getMemberId()+"） 在店铺发布商品修正背包表backpack商品数量时，商品对象："+newGoods+"； 店铺对象："+store+"； 背包对象："+backpack);
-					logger.error("会员（"+store.getMemberId()+"） 在店铺发布商品时，修正背包表backpack中商品数量失败！");
+					logger.info("会员（"+storeWithGoods.getMemberId()+"） 在店铺发布商品修正背包表backpack商品数量时，商品对象："+newGoods+"； 店铺对象："+storeWithGoods+"； 背包对象："+backpack);
+					logger.error("会员（"+storeWithGoods.getMemberId()+"） 在店铺发布商品时，修正背包表backpack中商品数量失败！");
 				}
 			}else{
-				logger.info("会员（"+store.getMemberId()+"） 在店铺发布商品插入会员店铺表时，商品对象："+newGoods+"； 店铺对象："+store);
-				logger.error("会员（"+store.getMemberId()+"） 在店铺发布商品时，插入会员店铺表store失败！");
+				logger.info("会员（"+storeWithGoods.getMemberId()+"） 在店铺发布商品插入会员店铺表时，商品对象："+newGoods+"； 店铺对象："+storeWithGoods);
+				logger.error("会员（"+storeWithGoods.getMemberId()+"） 在店铺发布商品时，插入会员店铺表store失败！");
 			}
 		}else{
-			logger.info("会员（"+store.getMemberId()+"） 在店铺发布商品插入商品表时，商品对象："+newGoods);
-			logger.error("会员（"+store.getMemberId()+"） 在店铺发布商品时，插入商品表goods失败！");
+			logger.info("会员（"+storeWithGoods.getMemberId()+"） 在店铺发布商品插入商品表时，商品对象："+newGoods);
+			logger.error("会员（"+storeWithGoods.getMemberId()+"） 在店铺发布商品时，插入商品表goods失败！");
 		}
 		return flag;
 	}
@@ -161,19 +167,30 @@ private Logger logger = Logger.getLogger(this.getClass());
             throw new EqianyuanException(ExceptionMsgConstant.STOREID_IS_EMPTY);
         }
 		Store store = storeDao.selectByPrimaryKey(id);
+		if (ObjectUtils.isEmpty(store)) {
+			logger.warn("takebackGoods fail , because storeId is null.");
+            throw new EqianyuanException(ExceptionMsgConstant.STORE_DOODS_IS_NOT_EXISTS);
+		}
 		Backpack backpack = new Backpack(store);
-		// 先删除店铺表商品发布记录
-		boolean flag = storeDao.deleteByPrimaryKey(id)>0;
+		// 先删除商品表记录
+		boolean flag = goodsService.delete(store.getGoodsId());
 		if (flag) {
-			// 再修正背包表商品数量
-			flag = backpackDao.modifyGoodsCount(backpack);
-			if (!flag) {
-				logger.info("会员（"+store.getMemberId()+"） 在店铺下架商品时，店铺对象："+store+"；背包对象："+backpack);
-				logger.error("会员（"+store.getMemberId()+"） 在店铺下架商品时，修正背包表backpack商品数量失败！");
+			// 再删除店铺表商品发布记录
+			flag = storeDao.deleteByPrimaryKey(id)>0;
+			if (flag) {
+				// 再修正背包表商品数量
+				flag = backpackDao.modifyGoodsCount(backpack);
+				if (!flag) {
+					logger.info("会员（"+store.getMemberId()+"） 在店铺下架商品时，店铺对象："+store+"；背包对象："+backpack);
+					logger.error("会员（"+store.getMemberId()+"） 在店铺下架商品时，修正背包表backpack商品数量失败！");
+				}
+			}else {
+				logger.info("会员（"+store.getMemberId()+"） 在店铺下架商品时，店铺对象："+store);
+				logger.error("会员（"+store.getMemberId()+"） 在店铺下架商品时，删除店铺表store商品发布记录失败！");
 			}
 		}else {
 			logger.info("会员（"+store.getMemberId()+"） 在店铺下架商品时，店铺对象："+store);
-			logger.error("会员（"+store.getMemberId()+"） 在店铺下架商品时，删除店铺表store商品发布记录失败！");
+			logger.error("会员（"+store.getMemberId()+"） 在店铺下架商品时，删除商品表goods记录失败！");
 		}
 		return flag;
 	}

@@ -31,7 +31,7 @@ public class DictServiceImpl implements IDictService {
 	private static Map<String, Map<Integer, Dict>> dictCollection = new HashMap<String, Map<Integer,Dict>>();
 	
 	@Autowired
-	private static IDictDao dictDao;
+	private IDictDao dictDao;
 	
 	public List<Dict> getDictList(String dictType) throws DictException {
 		if (dictCollection.isEmpty()) { init(); }
@@ -40,7 +40,7 @@ public class DictServiceImpl implements IDictService {
 			throw new DictException(ExceptionMsgConstant.DICTTYPE_IS_EMPTY);
 		}
 		List<Dict> dictList = new LinkedList<Dict>();
-		if (ObjectUtils.isEmpty(dictList)) {
+		if (!dictCollection.containsKey(dictType)) {
 			throw new DictException(ExceptionMsgConstant.DICTDATA_IS_NOT_EXISTS);
 		}
 		for (Map.Entry<Integer, Dict> entry : getDictMap(dictType).entrySet()) {
@@ -82,13 +82,13 @@ public class DictServiceImpl implements IDictService {
 		}
 	}
 
-	public Dict getDict(String dictType, String dictCode) throws DictException {
+	public Dict getDict(String dictType, Integer dictCode) throws DictException {
 		if (dictCollection.isEmpty()) { init(); }
 		if (StringUtils.isEmpty(dictType)) {
 			logger.warn("获取字典集合数据时，dictType为空");
 			throw new DictException(ExceptionMsgConstant.DICTTYPE_IS_EMPTY);
 		}
-		if (StringUtils.isEmpty(dictCode)) {
+		if (ObjectUtils.isEmpty(dictCode)) {
 			logger.warn("获取字典集合数据时，dictCode为空");
 			throw new DictException(ExceptionMsgConstant.DICTCODE_IS_EMPTY);
 		}
@@ -98,13 +98,13 @@ public class DictServiceImpl implements IDictService {
 		return dictCollection.get(dictType).get(dictCode);
 	}
 
-	public String getDictValue(String dictType, String dictCode) throws DictException {
+	public String getDictValue(String dictType, Integer dictCode) throws DictException {
 		if (dictCollection.isEmpty()) { init(); }
 		if (StringUtils.isEmpty(dictType)) {
 			logger.warn("获取字典集合数据时，dictType为空");
 			throw new DictException(ExceptionMsgConstant.DICTTYPE_IS_EMPTY);
 		}
-		if (StringUtils.isEmpty(dictCode)) {
+		if (ObjectUtils.isEmpty(dictCode)) {
 			logger.warn("获取字典集合数据时，dictCode为空");
 			throw new DictException(ExceptionMsgConstant.DICTCODE_IS_EMPTY);
 		}
@@ -124,10 +124,10 @@ public class DictServiceImpl implements IDictService {
 		}
 		for (Dict dict : dictList) {
 			if (dictCollection.containsKey(dict.getDictType())) {
-				dictCollection.get(dict.getDictType()).put(dict.getpDictCode(), dict);
+				dictCollection.get(dict.getDictType()).put(dict.getDictCode(), dict);
 			}else{
 				Map<Integer, Dict> map = new LinkedHashMap<Integer, Dict>();
-				map.put(dict.getpDictCode(), dict);
+				map.put(dict.getDictCode(), dict);
 				dictCollection.put(dict.getDictType(), map);
 			}
 		}

@@ -40,7 +40,7 @@ import com.bestomb.entity.Goods;
 import com.bestomb.entity.MemberAccount;
 import com.bestomb.entity.OrderGoodsWithBLOBs;
 import com.bestomb.entity.PurchaseOrder;
-import com.bestomb.entity.Store;
+import com.bestomb.entity.StoreWithGoods;
 import com.bestomb.entity.TradingDetail;
 import com.bestomb.service.IBackpackService;
 import com.bestomb.service.IGoodsService;
@@ -375,13 +375,12 @@ public class MemberService {
 
 	/***
 	 * 发布商品
-	 * @param store
-	 * @param goods
+	 * @param storeWithGoods
 	 * @return
 	 * @throws EqianyuanException
 	 */
-	public boolean sellGoods(Store store, Goods goods) throws EqianyuanException{
-		return storeService.sellGoods(goods, store);
+	public boolean sellGoods(StoreWithGoods storeWithGoods) throws EqianyuanException{
+		return storeService.sellGoods(storeWithGoods);
 	}
 
 	/***

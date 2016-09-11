@@ -18,6 +18,7 @@ import com.bestomb.common.response.goods.GoodsBo;
 import com.bestomb.dao.IGoodsDao;
 import com.bestomb.entity.Goods;
 import com.bestomb.entity.GoodsWithBLOBs;
+import com.bestomb.service.IDictService;
 import com.bestomb.service.IGoodsService;
 
 /***
@@ -32,6 +33,8 @@ public class GoodsServiceImpl implements IGoodsService {
 	
 	@Autowired
 	private IGoodsDao goodsDao;
+	@Autowired
+	private IDictService dictService;
 	
 	/***
 	 * 根据id查询商品详情
@@ -49,9 +52,9 @@ public class GoodsServiceImpl implements IGoodsService {
 		// 商品数据是否存在
 		if (ObjectUtils.isEmpty(entity)) {
             logger.warn("getGoodsById fail , because id is null.");
-            throw new EqianyuanException(ExceptionMsgConstant.GOODSID_IS_EMPTY);
+            throw new EqianyuanException(ExceptionMsgConstant.GOODS_DATA_NOT_EXISTS);
         }
-		GoodsBo bo = new GoodsBo();
+		GoodsBo bo = new GoodsBo(dictService);
 		BeanUtils.copyProperties(entity, bo);
 		bo.convert(entity); // 转化商品数据
 		return bo;
@@ -73,7 +76,7 @@ public class GoodsServiceImpl implements IGoodsService {
 		// 商品数据是否存在
 		if (ObjectUtils.isEmpty(entity)) {
             logger.warn("getGoodsById fail , because id is null.");
-            throw new EqianyuanException(ExceptionMsgConstant.GOODSID_IS_EMPTY);
+            throw new EqianyuanException(ExceptionMsgConstant.GOODS_DATA_NOT_EXISTS);
         }
 		return entity;
 	}
@@ -117,13 +120,28 @@ public class GoodsServiceImpl implements IGoodsService {
 		List<GoodsWithBLOBs> list = goodsDao.getGoodsPageList(goods, page);
 		List<GoodsBo> resultList = new ArrayList<GoodsBo>();
 		for (GoodsWithBLOBs entity : list) {
-			GoodsBo bo = new GoodsBo();
+			GoodsBo bo = new GoodsBo(dictService);
 			BeanUtils.copyProperties(entity, bo);
 			bo.convert(entity); // 转化商品数据
 			resultList.add(bo);
 		}
 		
 		return new PageResponse(page,  resultList);
+	}
+	
+	/***
+	 * 删除商品
+	 * @param id
+	 * @return
+	 * @throws EqianyuanException
+	 */
+	public boolean delete(String id) throws EqianyuanException {
+		// 判断商品ID是否为空
+		if (StringUtils.isEmpty(id)) {
+            logger.warn("getGoodsById fail , because id is null.");
+            throw new EqianyuanException(ExceptionMsgConstant.GOODSID_IS_EMPTY);
+        }
+		return goodsDao.deleteByPrimaryKey(id)>0;
 	}
 	
 
