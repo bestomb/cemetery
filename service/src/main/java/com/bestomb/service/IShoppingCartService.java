@@ -1,5 +1,7 @@
 package com.bestomb.service;
 
+import java.util.List;
+
 import com.bestomb.common.exception.EqianyuanException;
 import com.bestomb.entity.ShoppingCart;
 
@@ -17,6 +19,14 @@ public interface IShoppingCartService {
 	 * @throws EqianyuanException
 	 */
 	public boolean join(ShoppingCart cart) throws EqianyuanException;
+	
+	/***
+	 * 查询会员购物车
+	 * @param memberId
+	 * @return
+	 * @throws EqianyuanException
+	 */
+	public List<ShoppingCart> query(Integer memberId) throws EqianyuanException ;
 	
 	/***
 	 * 移出购物车

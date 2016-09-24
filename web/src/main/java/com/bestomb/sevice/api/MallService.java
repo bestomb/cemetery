@@ -1,5 +1,7 @@
 package com.bestomb.sevice.api;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -64,6 +66,16 @@ public class MallService {
 	 */
 	public boolean removeShoppingCart(ShoppingCart cart) throws EqianyuanException{
 		return cartService.remove(cart);
+	}
+	
+	/***
+	 * 查询会员购物车
+	 * @param memberId
+	 * @return
+	 * @throws EqianyuanException
+	 */
+	public List<ShoppingCart> getMyShoppingCart(Integer memberId) throws EqianyuanException{
+		return cartService.query(memberId);
 	}
 	
 	/***

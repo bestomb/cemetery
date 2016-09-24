@@ -1,5 +1,7 @@
 package com.bestomb.service.impl;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
@@ -14,6 +16,7 @@ import com.bestomb.common.Pager;
 import com.bestomb.common.constant.ExceptionMsgConstant;
 import com.bestomb.common.exception.EqianyuanException;
 import com.bestomb.common.response.PageResponse;
+import com.bestomb.common.response.orderGoods.OrderGoodsBo;
 import com.bestomb.common.util.CalendarUtil;
 import com.bestomb.dao.IBackpackDao;
 import com.bestomb.dao.IOrderGoodsDao;
@@ -27,6 +30,7 @@ import com.bestomb.entity.PurchaseOrder;
 import com.bestomb.entity.Store;
 import com.bestomb.entity.StoreWithGoods;
 import com.bestomb.service.IBackpackService;
+import com.bestomb.service.IDictService;
 import com.bestomb.service.IGoodsService;
 import com.bestomb.service.IStoreService;
 
@@ -53,6 +57,8 @@ private Logger logger = Logger.getLogger(this.getClass());
 	private IPurchaseOrderDao purchaseorderDao;
 	@Autowired
     private IOrderGoodsDao orderGoodsDao;
+	@Autowired
+	private IDictService dictService;
 	
 	/***
 	 * 根据查询条件查询会员店铺已发布商品分页列表
@@ -228,7 +234,7 @@ private Logger logger = Logger.getLogger(this.getClass());
 	 * @return
 	 * @throws EqianyuanException 
 	 */
-	public List<OrderGoodsWithBLOBs> getStoreOrdersDetail(String orderId, Integer memberId) throws EqianyuanException {
+	public List<OrderGoodsBo> getStoreOrdersDetail(String orderId, Integer memberId) throws EqianyuanException {
 		// 订单编号是否为空
 		if (StringUtils.isEmpty(orderId)) {
             logger.warn("getStoreOrdersDetail fail , because orderId is null.");
@@ -239,8 +245,20 @@ private Logger logger = Logger.getLogger(this.getClass());
             logger.warn("takebackGoods fail , because id is null.");
             throw new EqianyuanException(ExceptionMsgConstant.MEMBERSHIP_NUMBER_IS_EMPTY);
         }
+		List<OrderGoodsWithBLOBs> entityList = orderGoodsDao.getStoreOrdersDetail(orderId, memberId);
+		List<OrderGoodsBo> resultList = new ArrayList<OrderGoodsBo>();
+		if (ObjectUtils.isEmpty(entityList)) {
+			return Collections.emptyList();
+        }
+		// 数据转化
+		for (OrderGoodsWithBLOBs entity : entityList) {
+			OrderGoodsBo bo = new OrderGoodsBo(dictService);
+			BeanUtils.copyProperties(entity, bo);
+			bo.convert(entity); // 转化商品数据
+			resultList.add(bo);
+		}
 		
-		return orderGoodsDao.getStoreOrdersDetail(orderId, memberId);
+		return resultList;
 	}
 
 	/***

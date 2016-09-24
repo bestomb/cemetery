@@ -25,6 +25,7 @@ import com.bestomb.common.response.goods.GoodsBoWithCount;
 import com.bestomb.common.response.member.MemberAccountVo;
 import com.bestomb.common.response.member.MemberLoginVo;
 import com.bestomb.common.response.member.WalletVo;
+import com.bestomb.common.response.orderGoods.OrderGoodsBo;
 import com.bestomb.common.util.SessionContextUtil;
 import com.bestomb.common.util.SessionUtil;
 import com.bestomb.common.util.yamlMapper.SystemConf;
@@ -352,7 +353,7 @@ public class MemberController extends BaseController {
     @ResponseBody
     public ServerResponse getStoreOrdersDetail(@PathVariable String orderId) throws EqianyuanException{
     	int memberId = getLoginMember().getMemberId();
-    	List<OrderGoodsWithBLOBs> list = memberService.getStoreOrdersDetail(orderId, memberId);
+    	List<OrderGoodsBo> list = memberService.getStoreOrdersDetail(orderId, memberId);
     	return new ServerResponse.ResponseBuilder().data(list).build();
     }
     

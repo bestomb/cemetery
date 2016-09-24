@@ -1,14 +1,17 @@
 package com.bestomb.service.impl;
 
+import java.util.List;
+
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
 import com.bestomb.common.constant.ExceptionMsgConstant;
 import com.bestomb.common.exception.EqianyuanException;
-import com.bestomb.dao.ICommonDao;
+import com.bestomb.dao.CommonDao;
 import com.bestomb.dao.IOrderGoodsDao;
 import com.bestomb.dao.IPurchaseOrderDao;
 import com.bestomb.dao.IShoppingCartDao;
@@ -27,7 +30,7 @@ public class ShoppingCartServiceImpl implements IShoppingCartService {
 	private Logger logger = Logger.getLogger(this.getClass());
 	
 	@Autowired
-	private ICommonDao commonDao;
+	private CommonDao commonDao;
 	@Autowired
 	private IShoppingCartDao shoppingCartDao;
 	@Autowired
@@ -42,17 +45,44 @@ public class ShoppingCartServiceImpl implements IShoppingCartService {
 	 * @throws EqianyuanException
 	 */
 	public boolean join(ShoppingCart cart) throws EqianyuanException {
-		// 会员编号为空
+		// 会员编号是否为空
 		if (StringUtils.isEmpty(cart.getMemberId())) {
             logger.warn("join fail , because memberId is null.");
             throw new EqianyuanException(ExceptionMsgConstant.MEMBERSHIP_NUMBER_IS_EMPTY);
         }
-		// 商品ID为空
+		// 商品编号是否为空
 		if (StringUtils.isEmpty(cart.getGoodsId())) {
 			logger.warn("join fail , because goodsId is null.");
 			throw new EqianyuanException(ExceptionMsgConstant.GOODSID_IS_EMPTY);
 		}
+		// 商品数量是否为空
+		if (ObjectUtils.isEmpty(cart.getCount())) {
+			logger.warn("join fail , because count is null.");
+			throw new EqianyuanException(ExceptionMsgConstant.COUNT_IS_EMPTY);
+		}
+		// 商品价格是否为空
+		if (ObjectUtils.isEmpty(cart.getPrice())) {
+			logger.warn("join fail , because price is null.");
+			throw new EqianyuanException(ExceptionMsgConstant.PRICE_IS_EMPTY);
+		}
 		return shoppingCartDao.insertSelective(cart)>0;
+	}
+	
+	/***
+	 * 查询我的购物车
+	 * @param memberId
+	 * @return
+	 * @throws EqianyuanException
+	 */
+	public List<ShoppingCart> query(Integer memberId) throws EqianyuanException {
+		// 会员编号是否为空
+		if (StringUtils.isEmpty(memberId)) {
+            logger.warn("join fail , because memberId is null.");
+            throw new EqianyuanException(ExceptionMsgConstant.MEMBERSHIP_NUMBER_IS_EMPTY);
+        }
+		List<ShoppingCart> entityList = shoppingCartDao.getMyShoppingCartInfo(memberId);
+		
+		return entityList;
 	}
 	
 	/***

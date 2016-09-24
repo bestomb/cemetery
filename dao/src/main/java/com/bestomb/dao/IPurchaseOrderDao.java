@@ -63,6 +63,6 @@ public interface IPurchaseOrderDao {
      * @param page
      * @return
      */
-    List<PurchaseOrder> getStoreOrders(Integer memberId, @Param("page") Pager page );
+    List<PurchaseOrder> getStoreOrders(@Param("memberId") Integer memberId, @Param("page") Pager page );
     
 }

@@ -225,7 +225,7 @@
   	<!-- 根据查询条件查询会员背包商品分页列表总数 -->
 	<select id="getBackpackGoodsCount" resultType="java.lang.Integer">
 	    select count(1) from order_goods
-	    where id in (
+	    where goods_id in (
 	    	select goods_id from backpack where member_id = #{memberId,jdbcType=INTEGER}
 	    )
 		<if test="goods.type != null" >
@@ -239,7 +239,7 @@
     	,
     	<include refid="Blob_Column_List" />
     	from order_goods
-	    where id in (
+	    where goods_id in (
 	    	select goods_id from backpack where member_id = #{memberId,jdbcType=INTEGER}
 	    )
 		<if test="goods.type != null" >
@@ -249,12 +249,12 @@
 	</select>
   	
   	<!-- 购物车转订单插入订单商品表 -->
-	<insert id="insertCartGoods" >
-	    insert into order_goods
-	    	select replace(uuid(),'-','') id, a.id goods_id, a.name,
-	    			a.model_id, a.price , '${order.orderNumber,jdbcType=INTEGER}' order_id, 
-	    			b.count, a.type, a.images, a.description
+	<insert id="insertCartGoods" parameterType="com.bestomb.entity.PurchaseOrder" >
+	    insert into order_goods(id, order_id, goods_id, name, price, type, belongs, model_id, count, images, description)
+	    	select replace(uuid(),'-','') id, '${orderNumber}' order_id, a.id goods_id, 
+	    			a.name, a.price , a.type, a.belongs, 
+	    			a.model_id, b.count, a.images, a.description
 			from goods a, shopping_cart b
-			where a.id = b.goods_id and b.member_id = #{order.memberId,jdbcType=INTEGER}
+			where a.id = b.goods_id and b.member_id = #{memberId,jdbcType=INTEGER}
 	</insert>
 </mapper>

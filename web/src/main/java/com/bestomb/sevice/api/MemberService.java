@@ -26,6 +26,7 @@ import com.bestomb.common.response.member.MemberAccountVo;
 import com.bestomb.common.response.member.MemberLoginBo;
 import com.bestomb.common.response.member.MemberLoginVo;
 import com.bestomb.common.response.member.WalletVo;
+import com.bestomb.common.response.orderGoods.OrderGoodsBo;
 import com.bestomb.common.util.CalendarUtil;
 import com.bestomb.common.util.RegexUtils;
 import com.bestomb.common.util.SMSUtils;
@@ -411,7 +412,7 @@ public class MemberService {
 	 * @return
 	 * @throws EqianyuanException 
 	 */
-	public List<OrderGoodsWithBLOBs> getStoreOrdersDetail(String orderId, Integer memberId) throws EqianyuanException {
+	public List<OrderGoodsBo> getStoreOrdersDetail(String orderId, Integer memberId) throws EqianyuanException {
 		return storeService.getStoreOrdersDetail(orderId, memberId);
 	}
 	

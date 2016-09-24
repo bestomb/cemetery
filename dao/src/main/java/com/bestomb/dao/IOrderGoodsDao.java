@@ -6,7 +6,6 @@ import org.apache.ibatis.annotations.Param;
 
 import com.bestomb.common.Pager;
 import com.bestomb.entity.Goods;
-import com.bestomb.entity.GoodsWithBLOBs;
 import com.bestomb.entity.OrderGoods;
 import com.bestomb.entity.OrderGoodsWithBLOBs;
 import com.bestomb.entity.PurchaseOrder;
@@ -23,7 +22,7 @@ public interface IOrderGoodsDao {
      * @param order
      * @return
      */
-    int insertCartGoods(@Param("order") PurchaseOrder order);
+    int insertCartGoods(PurchaseOrder order);
 
     OrderGoodsWithBLOBs selectByPrimaryKey(String id);
     
@@ -53,7 +52,7 @@ public interface IOrderGoodsDao {
      * @param memberId
      * @return
      */
-    List<OrderGoodsWithBLOBs> getStoreOrdersDetail(String orderId, Integer memberId);
+    List<OrderGoodsWithBLOBs> getStoreOrdersDetail(@Param("orderId") String orderId, @Param("memberId") Integer memberId);
     
     /***
      * 根据查询条件查询会员背包商品分页列表总数
@@ -62,7 +61,7 @@ public interface IOrderGoodsDao {
      * @param page
      * @return
      */
-	int getBackpackGoodsCount(Integer memberId, @Param("goods") Goods goods);
+	int getBackpackGoodsCount(@Param("memberId") Integer memberId, @Param("goods") Goods goods);
 	
 	/***
 	 * 根据查询条件查询会员背包商品分页列表
@@ -71,6 +70,6 @@ public interface IOrderGoodsDao {
 	 * @param page
 	 * @return
 	 */
-	List<GoodsWithBLOBs> getBackpackGoods(Integer memberId, @Param("goods") Goods goods, @Param("page") Pager page);
+	List<OrderGoodsWithBLOBs> getBackpackGoods(@Param("memberId") Integer memberId, @Param("goods") Goods goods, @Param("page") Pager page);
     
 }

@@ -104,9 +104,17 @@
   </select>
   
   <!-- 清空会员购物车 -->
-  <delete id="removeMemberCart" parameterType="java.lang.String" >
+  <delete id="removeMemberCart" >
     delete from shopping_cart
-    where memberId = #{memberId,jdbcType=VARCHAR}
+    where member_id = #{memberId,jdbcType=INTEGER}
   </delete>
+  
+  <!-- 查询会员购物车 -->
+  <select id="getMyShoppingCartInfo" resultMap="BaseResultMap" >
+    select 
+    <include refid="Base_Column_List" />
+    from shopping_cart
+    where member_id = #{memberId,jdbcType=INTEGER}
+  </select>
   
 </mapper>

@@ -1,43 +1,44 @@
-package com.bestomb.common.response.goods;
+package com.bestomb.common.response.orderGoods;
 
 import org.apache.log4j.Logger;
 
 import com.bestomb.common.Enum.DictType;
 import com.bestomb.common.exception.DictException;
-import com.bestomb.common.util.CalendarUtil;
-import com.bestomb.entity.GoodsWithBLOBs;
+import com.bestomb.entity.OrderGoodsWithBLOBs;
 import com.bestomb.service.IDictService;
 
-public class GoodsBo {
+public class OrderGoodsBo {
 	
 	private Logger logger = Logger.getLogger(this.getClass());
 	
 	protected IDictService dictService;
 	
 	// 必须通过构造函数将dictService对象初始化
-	public GoodsBo(IDictService dictService) {
+	public OrderGoodsBo(IDictService dictService) {
 		this.dictService = dictService;
 	}
 	
-	private String id; // 商品ID
-    private String name;
-    private Double price;
+	private String id; // 主键ID
+	private String goodsId; // 商品编号
+	private String orderId;  // 订单编号
+    private String name; // 商品名称
+    private Double price; // 商品价格
     private String belongs; // 商品所属 （1：会员商品、2：系统商品）
     private String type; // 商品类型 （1：陵园装饰主题、2：陵园、3：陵园存储、4：交易币、5：动物、6：植物）
     private String modelId; // 商品模型ID
-    private String createTime;
+    private Integer count; // 商品数量
     private String images; // 图片json信息
     private String description; // 详细描述
     
+    
     // 转化商品数据
-    public void convert(GoodsWithBLOBs entity){
+    public void convert(OrderGoodsWithBLOBs entity){
 		convertBelongs(entity); // 转化商品所属
 		convertType(entity); // // 转化商品类型
-		convertCreateTime(entity); // 转化创建时间
     }
     
     // 转化商品所属
-    public void convertBelongs(GoodsWithBLOBs entity){
+    public void convertBelongs(OrderGoodsWithBLOBs entity){
     	try {
     		this.belongs = dictService.getDictValue(DictType.GOODSBELONGS.getName(), entity.getBelongs());
 		} catch (DictException e) {
@@ -46,7 +47,7 @@ public class GoodsBo {
     }
     
     // 转化商品类型
-    public void convertType(GoodsWithBLOBs entity){
+    public void convertType(OrderGoodsWithBLOBs entity){
     	try {
     		this.type = dictService.getDictValue(DictType.GOODSTYPE.getName(), entity.getType());
     	} catch (DictException e) {
@@ -54,20 +55,30 @@ public class GoodsBo {
     	}
     }
     
-    // 转化创建时间
-    public void convertCreateTime(GoodsWithBLOBs entity){
-    	try {
-			this.createTime = CalendarUtil.secondsTimeToDateTimeString(entity.getCreateTime());
-		} catch (Exception e) {
-			// TODO: handle exception
-		}
-    }
     
 	public String getId() {
 		return id;
 	}
 	public void setId(String id) {
 		this.id = id;
+	}
+	public String getGoodsId() {
+		return goodsId;
+	}
+	public void setGoodsId(String goodsId) {
+		this.goodsId = goodsId;
+	}
+	public String getOrderId() {
+		return orderId;
+	}
+	public void setOrderId(String orderId) {
+		this.orderId = orderId;
+	}
+	public Integer getCount() {
+		return count;
+	}
+	public void setCount(Integer count) {
+		this.count = count;
 	}
 	public String getName() {
 		return name;
@@ -98,12 +109,6 @@ public class GoodsBo {
 	}
 	public void setModelId(String modelId) {
 		this.modelId = modelId;
-	}
-	public String getCreateTime() {
-		return createTime;
-	}
-	public void setCreateTime(String createTime) {
-		this.createTime = createTime;
 	}
 	public String getImages() {
 		return images;

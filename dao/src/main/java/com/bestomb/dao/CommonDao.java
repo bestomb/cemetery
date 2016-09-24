@@ -5,7 +5,7 @@ package com.bestomb.dao;
  * @author qfzhang
  *
  */
-public interface ICommonDao {
+public interface CommonDao {
 	
 	/***
 	 * 获取UUID编号

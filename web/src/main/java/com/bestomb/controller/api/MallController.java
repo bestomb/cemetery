@@ -1,9 +1,12 @@
 package com.bestomb.controller.api;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -59,13 +62,13 @@ public class MallController extends BaseController {
     
     /***
      * 加入购物车
-     * @param cart 其中goodsId必填
+     * @param cart 其中goodsId、count必填
      * @return
      * @throws EqianyuanException
      */
     @RequestMapping(value="/joinCart", method=RequestMethod.POST)
     @ResponseBody
-    public ServerResponse joinShoppingCart(@ModelAttribute ShoppingCart cart) throws EqianyuanException{
+    public ServerResponse joinShoppingCart(@RequestBody ShoppingCart cart) throws EqianyuanException{
     	int memberId = getLoginMember().getMemberId();
     	cart.setMemberId(memberId);
     	boolean flag = mallService.joinShoppingCart(cart);
@@ -73,14 +76,28 @@ public class MallController extends BaseController {
     }
     
     /***
+     * 查询我的购物车
+     * @param cart
+     * @return
+     * @throws EqianyuanException
+     */
+    @RequestMapping(value="/myCart", method=RequestMethod.GET)
+    @ResponseBody
+    public ServerResponse queryShoppingCart() throws EqianyuanException{
+    	int memberId = getLoginMember().getMemberId();
+    	List<ShoppingCart> resultList = mallService.getMyShoppingCart(memberId);
+    	return new ServerResponse.ResponseBuilder().data(resultList).build();
+    }
+    
+    /***
      * 移出购物车
-     * @param cart 其中id必填
+     * @param cart 其中id（主键）必填
      * @return
      * @throws EqianyuanException
      */
     @RequestMapping(value="/removeCart", method=RequestMethod.DELETE)
     @ResponseBody
-    public ServerResponse removeShoppingCart(@ModelAttribute ShoppingCart cart) throws EqianyuanException{
+    public ServerResponse removeShoppingCart(@RequestBody ShoppingCart cart) throws EqianyuanException{
     	int memberId = getLoginMember().getMemberId();
     	cart.setMemberId(memberId);
     	boolean flag = mallService.removeShoppingCart(cart);

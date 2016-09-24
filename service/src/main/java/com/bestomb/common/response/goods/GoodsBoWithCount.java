@@ -13,6 +13,7 @@ public class GoodsBoWithCount extends GoodsBo {
 	
 	private Integer count;
 	
+	// 必须通过构造函数将dictService对象初始化
 	public GoodsBoWithCount(IDictService dictService) {
 		super(dictService);
 	}

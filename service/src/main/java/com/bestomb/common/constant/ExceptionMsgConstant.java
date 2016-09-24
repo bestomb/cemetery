@@ -270,6 +270,10 @@ public class ExceptionMsgConstant {
     public static final String CARTID_IS_EMPTY = "30003001";
     // 购物车为空
     public static final String SHOPPINGCART_IS_EMPTY = "30003002";
+    // 加入购物车时商品数量为空
+    public static final String COUNT_IS_EMPTY = "30003003";
+    // 加入购物车时商品总价格为空
+    public static final String PRICE_IS_EMPTY = "30003004";
     
     /*****
      * 商品分类

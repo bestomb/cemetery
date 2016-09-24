@@ -5,8 +5,8 @@ import java.util.List;
 import com.bestomb.common.Pager;
 import com.bestomb.common.exception.EqianyuanException;
 import com.bestomb.common.response.PageResponse;
+import com.bestomb.common.response.orderGoods.OrderGoodsBo;
 import com.bestomb.entity.Goods;
-import com.bestomb.entity.OrderGoodsWithBLOBs;
 import com.bestomb.entity.StoreWithGoods;
 
 /***
@@ -57,7 +57,7 @@ public interface IStoreService {
 	 * @return
 	 * @throws EqianyuanException 
 	 */
-	public List<OrderGoodsWithBLOBs> getStoreOrdersDetail(String orderId, Integer memberId) throws EqianyuanException;
+	public List<OrderGoodsBo> getStoreOrdersDetail(String orderId, Integer memberId) throws EqianyuanException;
 
 	/***
 	 * 查询会员店铺订单销售总额

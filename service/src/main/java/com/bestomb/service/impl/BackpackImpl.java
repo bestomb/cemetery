@@ -14,11 +14,10 @@ import com.bestomb.common.Pager;
 import com.bestomb.common.constant.ExceptionMsgConstant;
 import com.bestomb.common.exception.EqianyuanException;
 import com.bestomb.common.response.PageResponse;
-import com.bestomb.common.response.goods.GoodsBo;
 import com.bestomb.common.response.goods.GoodsBoWithCount;
+import com.bestomb.common.response.orderGoods.OrderGoodsBo;
 import com.bestomb.dao.IOrderGoodsDao;
 import com.bestomb.entity.Goods;
-import com.bestomb.entity.GoodsWithBLOBs;
 import com.bestomb.entity.OrderGoods;
 import com.bestomb.entity.OrderGoodsWithBLOBs;
 import com.bestomb.service.IBackpackService;
@@ -61,10 +60,10 @@ public class BackpackImpl implements IBackpackService{
         }
 		page.setTotalRow(dataCount);
 		// 再查询分页数据
-		List<GoodsWithBLOBs> list = orderGoodsDao.getBackpackGoods(memberId, goods, page);
-		List<GoodsBo> resultList = new ArrayList<GoodsBo>();
-		for (GoodsWithBLOBs entity : list) {
-			GoodsBo bo = new GoodsBo(dictService);
+		List<OrderGoodsWithBLOBs> list = orderGoodsDao.getBackpackGoods(memberId, goods, page);
+		List<OrderGoodsBo> resultList = new ArrayList<OrderGoodsBo>();
+		for (OrderGoodsWithBLOBs entity : list) {
+			OrderGoodsBo bo = new OrderGoodsBo(dictService);
 			BeanUtils.copyProperties(entity, bo);
 			bo.convert(entity); // 转化商品数据
 			resultList.add(bo);

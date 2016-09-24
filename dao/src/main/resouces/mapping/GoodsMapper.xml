@@ -165,15 +165,17 @@
   
   <!-- 封装商城商品查询条件 -->
   <sql id="whereCondition">
-  	<if test="goods.name != null" >
-       and name like '%${goods.name,jdbcType=VARCHAR}%'
-    </if>
-  	<if test="goods.belongs != null" >
-       and belongs = #{goods.belongs,jdbcType=INTEGER}
-    </if>
-  	<if test="goods.type != null" >
-       and type = #{goods.type,jdbcType=INTEGER}
-    </if>
+  	<where>
+	  	<if test="goods.name != null" >
+	       and name like '%${goods.name,jdbcType=VARCHAR}%'
+	    </if>
+	  	<if test="goods.belongs != null" >
+	       and belongs = #{goods.belongs,jdbcType=INTEGER}
+	    </if>
+	  	<if test="goods.type != null" >
+	       and type = #{goods.type,jdbcType=INTEGER}
+	    </if>
+  	</where>
   </sql>
   
   <!-- 根据条件查询商品分页列表总数 -->

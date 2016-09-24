@@ -1,5 +1,7 @@
 package com.bestomb.dao;
 
+import java.util.List;
+
 import com.bestomb.entity.ShoppingCart;
 
 public interface IShoppingCartDao {
@@ -28,5 +30,12 @@ public interface IShoppingCartDao {
      * @return
      */
 	boolean removeMemberCart(Integer memberId);
+	
+	/***
+	 * 查询会员购物车
+	 * @param memberId
+	 * @return
+	 */
+	List<ShoppingCart> getMyShoppingCartInfo(Integer memberId);
     
 }
