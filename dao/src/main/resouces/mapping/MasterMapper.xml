@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bestomb.dao.IMasterDao">
+    <resultMap id="BaseResultMap" type="com.bestomb.entity.Master">
+        <id column="id" property="id" jdbcType="VARCHAR"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="portrait" property="portrait" jdbcType="VARCHAR"/>
+        <result column="tombstone_id" property="tombstoneId" jdbcType="VARCHAR"/>
+        <result column="birthday" property="birthday" jdbcType="INTEGER"/>
+        <result column="death_time" property="deathTime" jdbcType="INTEGER"/>
+        <result column="sort" property="sort" jdbcType="INTEGER"/>
+    </resultMap>
+    <resultMap id="ResultMapWithBLOBs" type="com.bestomb.entity.MasterWithBLOBs" extends="BaseResultMap">
+        <result column="life_introduce" property="lifeIntroduce" jdbcType="LONGVARCHAR"/>
+        <result column="last_wish" property="lastWish" jdbcType="LONGVARCHAR"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    id, name, portrait, tombstone_id, birthday, death_time, sort
+  </sql>
+    <sql id="Blob_Column_List">
+    life_introduce, last_wish
+  </sql>
+
+    <!--详细信息查询-->
+    <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        ,
+        <include refid="Blob_Column_List"/>
+        from master
+        where id = #{id,jdbcType=VARCHAR}
+    </select>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from master
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+    <insert id="insert" parameterType="com.bestomb.entity.MasterWithBLOBs">
+    insert into master (id, name, portrait, 
+      tombstone_id, birthday, death_time, 
+      sort, life_introduce, last_wish
+      )
+    values (#{id,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{portrait,jdbcType=VARCHAR}, 
+      #{tombstoneId,jdbcType=VARCHAR}, #{birthday,jdbcType=INTEGER}, #{deathTime,jdbcType=INTEGER}, 
+      #{sort,jdbcType=INTEGER}, #{lifeIntroduce,jdbcType=LONGVARCHAR}, #{lastWish,jdbcType=LONGVARCHAR}
+      )
+  </insert>
+    <insert id="insertSelective" parameterType="com.bestomb.entity.MasterWithBLOBs">
+        insert into master
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="name != null">
+                name,
+            </if>
+            <if test="portrait != null">
+                portrait,
+            </if>
+            <if test="tombstoneId != null">
+                tombstone_id,
+            </if>
+            <if test="birthday != null">
+                birthday,
+            </if>
+            <if test="deathTime != null">
+                death_time,
+            </if>
+            <if test="sort != null">
+                sort,
+            </if>
+            <if test="lifeIntroduce != null">
+                life_introduce,
+            </if>
+            <if test="lastWish != null">
+                last_wish,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=VARCHAR},
+            </if>
+            <if test="name != null">
+                #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="portrait != null">
+                #{portrait,jdbcType=VARCHAR},
+            </if>
+            <if test="tombstoneId != null">
+                #{tombstoneId,jdbcType=VARCHAR},
+            </if>
+            <if test="birthday != null">
+                #{birthday,jdbcType=INTEGER},
+            </if>
+            <if test="deathTime != null">
+                #{deathTime,jdbcType=INTEGER},
+            </if>
+            <if test="sort != null">
+                #{sort,jdbcType=INTEGER},
+            </if>
+            <if test="lifeIntroduce != null">
+                #{lifeIntroduce,jdbcType=LONGVARCHAR},
+            </if>
+            <if test="lastWish != null">
+                #{lastWish,jdbcType=LONGVARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.bestomb.entity.MasterWithBLOBs">
+        update master
+        <set>
+            <if test="name != null">
+                name = #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="portrait != null">
+                portrait = #{portrait,jdbcType=VARCHAR},
+            </if>
+            <if test="tombstoneId != null">
+                tombstone_id = #{tombstoneId,jdbcType=VARCHAR},
+            </if>
+            <if test="birthday != null">
+                birthday = #{birthday,jdbcType=INTEGER},
+            </if>
+            <if test="deathTime != null">
+                death_time = #{deathTime,jdbcType=INTEGER},
+            </if>
+            <if test="sort != null">
+                sort = #{sort,jdbcType=INTEGER},
+            </if>
+            <if test="lifeIntroduce != null">
+                life_introduce = #{lifeIntroduce,jdbcType=LONGVARCHAR},
+            </if>
+            <if test="lastWish != null">
+                last_wish = #{lastWish,jdbcType=LONGVARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.bestomb.entity.MasterWithBLOBs">
+    update master
+    set name = #{name,jdbcType=VARCHAR},
+      portrait = #{portrait,jdbcType=VARCHAR},
+      tombstone_id = #{tombstoneId,jdbcType=VARCHAR},
+      birthday = #{birthday,jdbcType=INTEGER},
+      death_time = #{deathTime,jdbcType=INTEGER},
+      sort = #{sort,jdbcType=INTEGER},
+      life_introduce = #{lifeIntroduce,jdbcType=LONGVARCHAR},
+      last_wish = #{lastWish,jdbcType=LONGVARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+    <update id="updateByPrimaryKey" parameterType="com.bestomb.entity.Master">
+    update master
+    set name = #{name,jdbcType=VARCHAR},
+      portrait = #{portrait,jdbcType=VARCHAR},
+      tombstone_id = #{tombstoneId,jdbcType=VARCHAR},
+      birthday = #{birthday,jdbcType=INTEGER},
+      death_time = #{deathTime,jdbcType=INTEGER},
+      sort = #{sort,jdbcType=INTEGER}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+
+    <!--查询总数-->
+    <select id="countByPagination" resultType="java.lang.Long">
+        select count(1) from master
+        <!--<where>-->
+        <!--<if test="cemeteryId != null and cemeteryId != ''">-->
+        <!--cemeteryId = #{cemeteryId}-->
+        <!--</if>-->
+        <!--</where>-->
+    </select>
+
+    <!--分页查询-->
+    <select id="selectByPagination" resultMap="ResultMapWithBLOBs">
+    select
+    <include refid="Base_Column_List"/>
+    ,
+    <include refid="Blob_Column_List"/>
+    from master
+    WHERE tombstone_id in
+    <if test="cemeteryId != null and cemeteryId != ''">
+    (select id from tombstone where cemetery_id = #{cemeteryId,jdbcType=INTEGER})
+    </if>
+    limit ${page.pageNo}, ${page.pageSize}
+    </select>
+
+</mapper>

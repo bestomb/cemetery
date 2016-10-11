@@ -202,6 +202,8 @@ public class ExceptionMsgConstant {
     public static final String CEMETERY_NOTICE_ID_IS_EMPTY = "20010021";
     //陵园公告数据不存在
     public static final String CEMETERY_NOTICE_DATA_NOT_EXISTS = "20010022";
+    //陵园墓碑信息ID为空
+    public static final String CEMETERY_TOMBSTONE_INFORMATION_ID_IS_EMPTY = "20010023";
     /***** 陵园 *****/
     
     /***** 留言 *****/
@@ -297,5 +299,14 @@ public class ExceptionMsgConstant {
     public static final String SPECIAL_HOLIDAY_ID_IS_EMPTY = "40010001";
     //特殊节日推送语内容太长
     public static final String HOLIDAY_PUSH_LANGUAGE_CONTENT_IS_TOO_LONG = "40010002";
+
+    /*****
+     * 公众人物管理
+     *****/
+    //公众人物信息ID为空
+    public static final String PUBLIC_FIGURES_INFORMATION_ID_IS_EMPTY = "50010001";
+    //公众人物状态为空
+    public static final String PUBLIC_FIGURES_INFORMATION_Status_IS_EMPTY = "50010002";
+
 /********** 客户端 **********/
 }

@@ -48,13 +48,24 @@
 
     <!--分页查询-->
     <select id="selectByPagination" resultMap="BaseResultMap">
-        select * from member_account
+        SELECT a.* from member_account a LEFT JOIN member_role_relate b on a.member_id = b.member_id
+        <where>
+            <if test="type != null and type != ''">
+                type = #{type}
+            </if>
+        </where>
+        GROUP BY member_id
         limit ${page.pageNo}, ${page.pageSize}
     </select>
 
     <!--查询数据总条数-->
     <select id="countByPagination" resultType="java.lang.Long">
-        select count(1) from member_account
+        select count(1) from member_account a left JOIN member_role_relate b ON a.member_id = b.member_id
+        <where>
+            <if test="type != null and type != ''">
+                type = #{type}
+            </if>
+        </where>
     </select>
 
     <insert id="insertSelective" parameterType="com.bestomb.entity.MemberAccount">

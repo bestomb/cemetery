@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bestomb.dao.IMemberRoleRelateDao" >
+  <resultMap id="BaseResultMap" type="com.bestomb.entity.MemberRoleRelate" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="member_id" property="memberId" jdbcType="INTEGER" />
+    <result column="remaining_number" property="remainingNumber" jdbcType="INTEGER" />
+    <result column="type" property="type" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, member_id, remaining_number, type
+  </sql>
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from member_role_relate
+    where member_id = #{memberId,jdbcType=INTEGER}
+  </select>
+
+  <!--根据memberid,type查询数据-->
+  <select id="selectByPrimary" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select
+    <include refid="Base_Column_List" />
+    from member_role_relate
+    where member_id = #{memberId,jdbcType=INTEGER} and type = #{type,jdbcType=INTEGER}
+  </select>
+
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from member_role_relate
+    where member_id = #{memberId,jdbcType=INTEGER} and type = 1
+  </delete>
+
+  <insert id="insert" parameterType="com.bestomb.entity.MemberRoleRelate" >
+    <selectKey keyProperty="id" resultType="String" order="BEFORE">
+      select replace(uuid(),'-','') from dual
+    </selectKey>
+    insert into member_role_relate (id, member_id, remaining_number, type)
+    values (#{id,jdbcType=VARCHAR}, #{memberId,jdbcType=INTEGER}, #{remainingNumber,jdbcType=INTEGER},
+      #{type,jdbcType=INTEGER})
+  </insert>
+
+  <insert id="insertSelective" parameterType="com.bestomb.entity.MemberRoleRelate" >
+    INSERT INTO member_role_relate(id, member_id, remaining_number, type)
+    VALUES(#{id,jdbcType=VARCHAR}, #{memberId,jdbcType=INTEGER}, 1,2)
+  </insert>
+
+  <update id="updateByPrimaryKeySelective" parameterType="com.bestomb.entity.MemberRoleRelate" >
+    UPDATE member_role_relate
+    SET
+    <if test="remainingNumber != null" >
+      remaining_number = #{remainingNumber,jdbcType=INTEGER},
+    </if>
+    remaining_number = remaining_number + 1 where id = #{id,jdbcType=VARCHAR}
+
+  </update>
+
+  <update id="updateByPrimaryKey" parameterType="com.bestomb.entity.MemberRoleRelate" >
+    update member_role_relate
+    set member_id = #{memberId,jdbcType=INTEGER},
+      remaining_number = #{remainingNumber,jdbcType=INTEGER},
+      type = #{type,jdbcType=INTEGER}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+
+  <select id="selectByList" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from member_role_relate
+    where member_id = #{memberId,jdbcType=INTEGER}
+  </select>
+</mapper>

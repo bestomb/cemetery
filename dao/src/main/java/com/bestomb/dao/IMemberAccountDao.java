@@ -30,12 +30,12 @@ public interface IMemberAccountDao {
     /**
      * 分页查询
      */
-    List<MemberAccount> selectByPagination(@Param("page") Page page);
+    List<MemberAccount> selectByPagination(@Param("page") Page page,@Param("type") String type);
 
     /**
      * 根据数据对象获取总条数
      */
-    Long countByPagination();
+    Long countByPagination(@Param("type") String type);
 
     /**
      * 根据登录信息查询数据对象
