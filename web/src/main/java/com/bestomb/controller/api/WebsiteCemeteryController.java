@@ -50,7 +50,7 @@ public class WebsiteCemeteryController extends BaseController {
         /**
          * 从session池中获取系统用户信息
          */
-        MemberLoginVo memberLoginVo = (MemberLoginVo) SessionUtil.getAttribute(SessionContextUtil.getInstance().getSession(SessionUtil.getSessionByCookie()), SystemConf.WEBSITE_SESSION_MEMBER.toString());
+        MemberLoginVo memberLoginVo = (MemberLoginVo) SessionUtil.getAttribute(SessionContextUtil.getInstance().getSession(SessionUtil.getSessionByHeader()), SystemConf.WEBSITE_SESSION_MEMBER.toString());
         cemeteryByEditRequest.setMemberId(String.valueOf(memberLoginVo.getMemberId()));
         websiteCemeteryService.create(cemeteryByEditRequest);
         return new ServerResponse();

@@ -85,6 +85,7 @@ public class WebsiteMusicController extends BaseController {
     @ResponseBody
     public ServerResponse uploadMusic(String name, String fileAddress, String cemeteryId) {
         //todo 询问U3D表单，是异步上传附件，还是随表单上传附件
+        //todo 询问结果，附件随表单内容一并上传，附件为二进制流
         return new ServerResponse();
     }
 }

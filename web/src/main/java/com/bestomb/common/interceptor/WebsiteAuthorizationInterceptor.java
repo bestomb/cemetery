@@ -29,7 +29,7 @@ public class WebsiteAuthorizationInterceptor implements HandlerInterceptor {
      */
     public boolean preHandle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o) throws Exception {
 
-        String sessionId = SessionUtil.getSessionByCookie();
+        String sessionId = SessionUtil.getSessionByHeader();
         if (StringUtils.isEmpty(sessionId)) {
             return falseByInterceptor(httpServletRequest, httpServletResponse);
         }

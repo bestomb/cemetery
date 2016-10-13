@@ -116,7 +116,7 @@ public class WebsiteCemeteryService {
         /**
          * 从session池中获取系统用户信息
          */
-        MemberLoginVo memberLoginVo = (MemberLoginVo) SessionUtil.getAttribute(SessionContextUtil.getInstance().getSession(SessionUtil.getSessionByCookie()), SystemConf.WEBSITE_SESSION_MEMBER.toString());
+        MemberLoginVo memberLoginVo = (MemberLoginVo) SessionUtil.getAttribute(SessionContextUtil.getInstance().getSession(SessionUtil.getSessionByHeader()), SystemConf.WEBSITE_SESSION_MEMBER.toString());
         List<CemeteryBo> cemeteryBos = cemeteryService.getListByMemberId(memberLoginVo.getMemberId());
         List<CemeteryByMineVo> cemeteryByMineVos = new ArrayList<CemeteryByMineVo>();
         for (CemeteryBo cemeteryBo : cemeteryBos) {
