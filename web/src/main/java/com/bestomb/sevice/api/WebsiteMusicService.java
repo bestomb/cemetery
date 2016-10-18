@@ -49,7 +49,6 @@ public class WebsiteMusicService {
      */
     public PageResponse getListByCondition(Music music, Pager page) throws EqianyuanException{
     	PageResponse pageResponse = musicService.getListByCondition(music, page);
-    	@SuppressWarnings("unchecked")
 		List<MusicBo> musicBos = (List<MusicBo>) pageResponse.getList();
         if (!CollectionUtils.isEmpty(musicBos)) {
             setListByPageResponse(pageResponse, musicBos);

@@ -136,7 +136,7 @@ public class ModelServiceImpl implements IModelService {
         }
 
         //移动临时附件到持久目录
-        FileUtilHandle.moveFile(fileResponse.getFileName(), fileResponse.getFilePath(), SystemConf.MODEL_FILE_UPLOAD_FIXED_DIRECTORY.toString());
+        FileUtilHandle.moveFile(fileResponse.getFilePath(), SystemConf.MODEL_FILE_UPLOAD_FIXED_DIRECTORY.toString());
 
         //持久化模型数据
         Model model = new Model();
@@ -188,7 +188,7 @@ public class ModelServiceImpl implements IModelService {
             }
 
             //移动临时附件到持久目录
-            FileUtilHandle.moveFile(fileResponse.getFileName(), fileResponse.getFilePath(), SystemConf.MODEL_FILE_UPLOAD_FIXED_DIRECTORY.toString());
+            FileUtilHandle.moveFile(fileResponse.getFilePath(), SystemConf.MODEL_FILE_UPLOAD_FIXED_DIRECTORY.toString());
             model.setFileAddress(SystemConf.MODEL_FILE_UPLOAD_FIXED_DIRECTORY.toString() + File.separator + fileResponse.getFileName());
 
             //删除原数据绑定的模型文件

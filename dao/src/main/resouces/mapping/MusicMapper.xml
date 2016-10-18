@@ -23,6 +23,9 @@
     where id = #{id,jdbcType=VARCHAR}
   </delete>
     <insert id="insertSelective" parameterType="com.bestomb.entity.Music">
+        <selectKey keyProperty="id" resultType="String" order="BEFORE">
+            select replace(uuid(),'-','') from dual
+        </selectKey>
         insert into music
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null">

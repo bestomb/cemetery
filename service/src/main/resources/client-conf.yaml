@@ -15,8 +15,8 @@ SMS:
 constructionCount: 3
 ### 陵园社区名称默认可重命名次数 ###
 renameCount: 3
-### 陵园创建初始容量，单位（M） ###
-init_storage_size: 30
+### 陵园创建初始容量，单位（bit） ###
+init_storage_size: 30000000
 
 ### 处理多人在线消息服务端通信套接字配置 ###
 serverSocketByMsgAddress: 139.196.149.131

@@ -204,6 +204,9 @@ public class ExceptionMsgConstant {
     public static final String CEMETERY_NOTICE_DATA_NOT_EXISTS = "20010022";
     //陵园墓碑信息ID为空
     public static final String CEMETERY_TOMBSTONE_INFORMATION_ID_IS_EMPTY = "20010023";
+
+    //陵园可用空间不足
+    public static final String CEMETERY_STORAGE_SIZE_INSUFFICIENT = "20010024";
     /***** 陵园 *****/
     
     /***** 留言 *****/

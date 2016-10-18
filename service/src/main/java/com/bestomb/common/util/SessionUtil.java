@@ -44,6 +44,11 @@ public class SessionUtil {
 
         //如果header中没有sessionid，则从cookies中获取sessionid
         if (StringUtils.isEmpty(sessionId)) {
+            //从cookies中获取jsessionid
+            sessionId = getSessionByCookie();
+        }
+
+        if(StringUtils.isEmpty(sessionId)){
             return null;
         }
 
