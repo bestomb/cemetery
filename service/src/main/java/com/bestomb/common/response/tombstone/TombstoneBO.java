@@ -1,6 +1,6 @@
-package com.bestomb.entity;
+package com.bestomb.common.response.tombstone;
 
-public class Tombstone {
+public class TombstoneBO {
     private String id;
 
     private Integer sort;

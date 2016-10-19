@@ -6,7 +6,6 @@ import com.bestomb.common.response.PageResponse;
 import com.bestomb.common.response.ServerResponse;
 import com.bestomb.controller.BaseController;
 import com.bestomb.entity.Music;
-import com.bestomb.service.IMusicService;
 import com.bestomb.sevice.api.WebsiteMusicService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -25,10 +24,6 @@ public class WebsiteMusicController extends BaseController {
 
     @Autowired
     private WebsiteMusicService websiteMusicService;
-
-    @Autowired
-    private IMusicService musicService;
-
 
     /***
      * 音乐删除
@@ -72,7 +67,7 @@ public class WebsiteMusicController extends BaseController {
     public ServerResponse uploadMusic(MultipartFile musicFile,
                                       String name,
                                       String cemeteryId) throws EqianyuanException {
-        musicService.uploadMusic(musicFile, name, cemeteryId);
+        websiteMusicService.uploadMusic(musicFile, name, cemeteryId);
         return new ServerResponse();
     }
 }

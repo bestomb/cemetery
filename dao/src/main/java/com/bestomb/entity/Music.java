@@ -7,7 +7,7 @@ public class Music {
 
     private String fileAddress;
 
-    private Long fileSize;
+    private Integer fileSize;
 
     private Integer type;
 
@@ -37,11 +37,11 @@ public class Music {
         this.fileAddress = fileAddress == null ? null : fileAddress.trim();
     }
 
-    public Long getFileSize() {
+    public Integer getFileSize() {
         return fileSize;
     }
 
-    public void setFileSize(Long fileSize) {
+    public void setFileSize(Integer fileSize) {
         this.fileSize = fileSize;
     }
 

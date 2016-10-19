@@ -15,11 +15,12 @@ public interface IMusicService {
     /***
      * 删除音乐
      *
-     * @param Id
+     * @param id
+     * @param memberId
      * @return
      * @throws EqianyuanException
      */
-    public boolean deleteById(String id) throws EqianyuanException;
+    public boolean deleteById(String id, Integer memberId) throws EqianyuanException;
 
     /***
      * 根据条件查询音乐分页集合
@@ -32,24 +33,15 @@ public interface IMusicService {
     PageResponse getListByCondition(Music music, Pager page) throws EqianyuanException;
 
     /**
-     * 根据陵园编号查询陵园背景音乐分页集合
-     *
-     * @param cemeteryId
-     * @param pageNo
-     * @param pageSize
-     * @return
-     */
-    PageResponse getListByCemeteryId(String cemeteryId, int pageNo, int pageSize) throws EqianyuanException;
-
-    /**
      * 对陵园上传音乐
      *
      * @param musicFile
      * @param name
      * @param cemeteryId
+     * @param memberId
      * @throws EqianyuanException
      */
-    void uploadMusic(MultipartFile musicFile, String name, String cemeteryId) throws EqianyuanException;
+    void uploadMusic(MultipartFile musicFile, String name, String cemeteryId, Integer memberId) throws EqianyuanException;
 
 
 }

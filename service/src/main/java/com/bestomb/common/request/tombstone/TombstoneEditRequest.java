@@ -1,6 +1,6 @@
-package com.bestomb.entity;
+package com.bestomb.common.request.tombstone;
 
-public class Tombstone {
+public class TombstoneEditRequest {
     private String id;
 
     private Integer sort;
@@ -12,8 +12,6 @@ public class Tombstone {
     private Integer type;
 
     private Integer species;
-
-    private Integer createTime;
 
     public String getId() {
         return id;
@@ -63,11 +61,4 @@ public class Tombstone {
         this.species = species;
     }
 
-    public Integer getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Integer createTime) {
-        this.createTime = createTime;
-    }
 }

@@ -7,12 +7,12 @@ import com.bestomb.common.response.FileResponse;
 import com.bestomb.common.response.PageResponse;
 import com.bestomb.common.response.music.MusicBo;
 import com.bestomb.common.util.FileUtilHandle;
+import com.bestomb.common.util.SessionUtil;
 import com.bestomb.common.util.yamlMapper.SystemConf;
 import com.bestomb.dao.ICemeteryDao;
 import com.bestomb.dao.IMusicDao;
 import com.bestomb.entity.Cemetery;
 import com.bestomb.entity.Music;
-import com.bestomb.service.IFileService;
 import com.bestomb.service.IMusicService;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -43,17 +43,40 @@ public class MusicServiceImpl implements IMusicService {
     private ICemeteryDao cemeteryDao;
 
     @Autowired
-    private IFileService fileService;
+    private CommonService commonService;
 
     /***
      * 音乐删除
      */
-    public boolean deleteById(String id) throws EqianyuanException {
+    @Transactional(rollbackFor = Exception.class)
+    public boolean deleteById(String id, Integer memberId) throws EqianyuanException {
         if (StringUtils.isEmpty(id)) {
             logger.warn("deleteById fail , because id is null.");
             throw new EqianyuanException(ExceptionMsgConstant.SYSTEM_LACK_OF_REQUEST_PARAMETER);
         }
-        return musicDao.deleteByPrimaryKey(id) > 0;
+
+        //根据音乐编号查询音乐数据
+        Music music = musicDao.selectByPrimaryKey(id);
+
+        if (!ObjectUtils.isEmpty(music)
+                && !ObjectUtils.isEmpty(music.getId())) {
+            //检查当前登录会员是否拥有对该陵园的管理权限
+            Cemetery cemetery = commonService.hasPermissionsByCemetery(music.getCemeteryId(), memberId);
+
+            //删除陵园音乐数据
+            musicDao.deleteByPrimaryKey(id);
+
+            //获取被删除音乐附件容量(bit)
+            int fileSize = music.getFileSize();
+
+            //删除附件
+            FileUtilHandle.deleteFile(SessionUtil.getSession().getServletContext().getRealPath("/") + music.getFileAddress());
+            //回收附件空间容量
+            cemetery.setRemainingStorageSize(cemetery.getRemainingStorageSize() + fileSize);
+            //持久化陵园数据
+            cemeteryDao.updateByPrimaryKeySelective(cemetery);
+        }
+        return true;
     }
 
     /***
@@ -65,9 +88,14 @@ public class MusicServiceImpl implements IMusicService {
      * @throws EqianyuanException
      */
     public PageResponse getListByCondition(Music music, Pager page) throws EqianyuanException {
-        String cemeteryId = music.getCemeteryId();
-        // 验证陵园编号
-        validCemeteryId(cemeteryId);
+        //检查查询条件中，陵园编号是否存在值，如果有值，则查询陵园自定义上传音乐，如果没有值，则查询系统音乐
+        if(!StringUtils.isEmpty(music.getCemeteryId())){
+            //获取陵园编号
+            String cemeteryId = music.getCemeteryId();
+            // 验证陵园编号
+            commonService.validCemeteryId(cemeteryId);
+        }
+
         // 根据条件查询音乐列表
         int dataCount = musicDao.countByCondition(music, page);
         page.setTotalRow(dataCount);
@@ -89,23 +117,6 @@ public class MusicServiceImpl implements IMusicService {
         return new PageResponse(page, musicBos);
     }
 
-
-    /***
-     * 根据陵园编号查询陵园背景音乐分页集合
-     *
-     * @param cemeteryId
-     * @param pageNo
-     * @param pageSize
-     * @return
-     * @throws EqianyuanException
-     */
-    public PageResponse getListByCemeteryId(String cemeteryId, int pageNo, int pageSize) throws EqianyuanException {
-        Music music = new Music();
-        music.setCemeteryId(cemeteryId);
-        Pager page = new Pager(pageNo, pageSize);
-        return getListByCondition(music, page);
-    }
-
     /**
      * 对陵园上传音乐
      * 需要先检查陵园剩余容量空间是否可以容纳当前文件大小
@@ -116,7 +127,10 @@ public class MusicServiceImpl implements IMusicService {
      * @throws EqianyuanException
      */
     @Transactional(rollbackFor = Exception.class)
-    public void uploadMusic(MultipartFile musicFile, String name, String cemeteryId) throws EqianyuanException {
+    public void uploadMusic(MultipartFile musicFile, String name, String cemeteryId, Integer memberId) throws EqianyuanException {
+        //检查当前登录会员是否拥有对该陵园的管理权限
+        commonService.hasPermissionsByCemetery(cemeteryId, memberId);
+
         //根据陵园编号查询陵园当前剩余容量
         Cemetery cemetery = cemeteryDao.selectByPrimaryKey(cemeteryId);
         if (ObjectUtils.isEmpty(cemetery) || ObjectUtils.isEmpty(cemetery.getId())) {
@@ -147,7 +161,7 @@ public class MusicServiceImpl implements IMusicService {
         Music music = new Music();
         music.setName(name);
         music.setCemeteryId(cemeteryId);
-        music.setFileSize(musicFile.getSize());
+        music.setFileSize((int) musicFile.getSize());
         music.setFileAddress(musicPath + File.separator + fileResponse.getFileName());
         music.setType(2);
         musicDao.insertSelective(music);
@@ -155,26 +169,4 @@ public class MusicServiceImpl implements IMusicService {
         //将音乐文件从临时上传目录移动到持久目录
         FileUtilHandle.moveFile(fileResponse.getFilePath(), musicPath);
     }
-
-    /***
-     * 验证陵园编号是否有值，并且在数据库中存在。否则直接抛出异常
-     *
-     * @param cemeteryId
-     * @throws EqianyuanException
-     */
-    private void validCemeteryId(String cemeteryId) throws EqianyuanException {
-        if (StringUtils.isEmpty(cemeteryId)) {
-            logger.warn("getListByCemeteryId fail , because cemeteryId is null.");
-            throw new EqianyuanException(ExceptionMsgConstant.CEMETERY_ID_IS_EMPTY);
-        }
-        //根据陵园编号获取陵园
-        Cemetery cemetery = cemeteryDao.selectByPrimaryKey(cemeteryId);
-        if (ObjectUtils.isEmpty(cemetery)
-                || ObjectUtils.isEmpty(cemetery.getId())) {
-            logger.info("getListByCemeteryId fail , because cemeteryId [" + cemeteryId + "] query data is empty");
-            throw new EqianyuanException(ExceptionMsgConstant.CEMETERY_DATA_NOT_EXISTS);
-        }
-    }
-
-
 }

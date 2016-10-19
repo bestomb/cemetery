@@ -32,6 +32,9 @@
       #{createTime,jdbcType=INTEGER})
   </insert>
   <insert id="insertSelective" parameterType="com.bestomb.entity.Tombstone" >
+    <selectKey keyProperty="id" resultType="String" order="BEFORE">
+      select replace(uuid(),'-','') from dual
+    </selectKey>
     insert into tombstone
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -114,4 +117,35 @@
       create_time = #{createTime,jdbcType=INTEGER}
     where id = #{id,jdbcType=VARCHAR}
   </update>
+
+  <sql id="whereCondition">
+    <where>
+      <if test="tombstone.species != null">
+        and species = #{tombstone.species, jdbcType=INTEGER}
+      </if>
+      <if test="tombstone.type != null">
+        and type = #{tombstone.type, jdbcType=INTEGER}
+      </if>
+      <if test="tombstone.cemeteryId != null">
+        and cemetery_id = #{tombstone.cemeteryId, jdbcType=VARCHAR}
+      </if>
+    </where>
+  </sql>
+
+  <!-- 根据查询条件查询陵园墓碑总数 -->
+  <select id="countByCondition" resultType="java.lang.Integer">
+    select count(1) from tombstone
+    <include refid="whereCondition" />
+    order by sort asc
+  </select>
+
+  <!-- 根据查询条件查询陵园墓碑列表 -->
+  <select id="selectByCondition" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"/>
+    from tombstone
+    <include refid="whereCondition" />
+    order by sort asc
+    limit ${page.start}, ${page.pageSize}
+  </select>
 </mapper>
