@@ -14,11 +14,6 @@ public interface IMasterDao {
 
     int insertSelective(MasterWithBLOBs record);
 
-    /**
-     * ��ϸ��Ϣ��ѯ
-     * @param id
-     * @return
-     */
     MasterWithBLOBs selectByPrimaryKey(String id);
 
     int updateByPrimaryKeySelective(MasterWithBLOBs record);
@@ -28,14 +23,22 @@ public interface IMasterDao {
     int updateByPrimaryKey(Master record);
 
     /**
-     * ��ҳ��ѯ
+     * 根据陵园编号及分页信息查询陵园纪念人分页集合
      */
     List<MasterWithBLOBs> selectByPagination(@Param("page") Page page, @Param("cemeteryId") Integer cemeteryId);
 
     /**
-     * ��ȡ����������
+     * 根据陵园编号查询陵园纪念人总数
      *
      * @return
      */
-    Long countByPagination();
+    Long countByPagination(@Param("cemeteryId") Integer cemeteryId);
+
+    /**
+     * 根据陵园墓碑编号查询墓中纪念人集合
+     *
+     * @param tombstoneId
+     * @return
+     */
+    List<Master> selectByTombstone(@Param("tombstoneId") String tombstoneId);
 }

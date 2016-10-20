@@ -61,6 +61,7 @@
             <mvc:exclude-mapping path="/website/area_api/*"/>
             <mvc:exclude-mapping path="/website/cemetery_api/getListByArea"/>
             <mvc:exclude-mapping path="/website/cemetery_api/getListByCemeteryId"/>
+            <mvc:exclude-mapping path="/website/music_api/getListByCondition"/>
             <bean class="com.bestomb.common.interceptor.WebsiteAuthorizationInterceptor"/>
         </mvc:interceptor>
     </mvc:interceptors>

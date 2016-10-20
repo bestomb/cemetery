@@ -59,9 +59,9 @@ public enum SystemConf {
      */
     MODEL_FILE_UPLOAD_FIXED_DIRECTORY(File.separator + "upload" + File.separator + "fixed" + File.separator + "model"),
     /**
-     * 陵园音乐附件上传最终持久目录
+     * 陵园附件上传最终持久目录
      */
-    MUSIC_FILE_UPLOAD_FIXED_DIRECTORY(File.separator + "upload" + File.separator + "fixed" + File.separator + "music");
+    MUSIC_FILE_UPLOAD_FIXED_DIRECTORY(File.separator + "upload" + File.separator + "fixed");
 
     private Object value;
 

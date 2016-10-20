@@ -89,7 +89,7 @@ public class MusicServiceImpl implements IMusicService {
      */
     public PageResponse getListByCondition(Music music, Pager page) throws EqianyuanException {
         //检查查询条件中，陵园编号是否存在值，如果有值，则查询陵园自定义上传音乐，如果没有值，则查询系统音乐
-        if(!StringUtils.isEmpty(music.getCemeteryId())){
+        if (!StringUtils.isEmpty(music.getCemeteryId())) {
             //获取陵园编号
             String cemeteryId = music.getCemeteryId();
             // 验证陵园编号
@@ -153,9 +153,9 @@ public class MusicServiceImpl implements IMusicService {
 
         /**
          * 构建音乐文件持久化目录地址
-         * 目录结构：music/陵园编号/文件
+         * 目录结构：持久化上传目录/陵园编号/music/文件
          */
-        String musicPath = SystemConf.MUSIC_FILE_UPLOAD_FIXED_DIRECTORY.toString() + File.separator + cemeteryId;
+        String musicPath = SystemConf.MUSIC_FILE_UPLOAD_FIXED_DIRECTORY.toString() + File.separator + cemeteryId + File.separator + "music";
 
         //插入音乐数据
         Music music = new Music();

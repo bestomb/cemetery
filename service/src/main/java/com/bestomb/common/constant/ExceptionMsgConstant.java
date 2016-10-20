@@ -211,6 +211,8 @@ public class ExceptionMsgConstant {
     public static final String CEMETERY_TOMBSTONE_DATA_NOT_EXISTS = "20010025";
     //陵园墓碑修改-减少纪念空间是被禁止的行为
     public static final String CEMETERY_TOMBSTONE_REDUCE_SIZE_IS_PROHIBITED = "20010026";
+    //墓碑纪念人不存在
+    public static final String CEMETERY_MASTER_DATA_NOT_EXISTS = "20010027";
     /***** 陵园 *****/
     
     /***** 留言 *****/

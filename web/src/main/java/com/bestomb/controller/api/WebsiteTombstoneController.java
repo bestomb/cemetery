@@ -78,7 +78,7 @@ public class WebsiteTombstoneController extends BaseController {
      */
     @RequestMapping("/delTombstone")
     @ResponseBody
-    public ServerResponse getListByCondition(String cemeteryId, String tombstoneId) throws EqianyuanException {
+    public ServerResponse delTombstone(String cemeteryId, String tombstoneId) throws EqianyuanException {
         websiteTombstoneService.delTombstone(cemeteryId, tombstoneId);
         return new ServerResponse();
     }

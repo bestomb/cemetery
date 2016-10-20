@@ -11,7 +11,7 @@ public class MasterBo {
 
     private Integer birthday;
 
-    private String deathTime;
+    private Integer deathTime;
 
     private Integer sort;
 
@@ -59,11 +59,11 @@ public class MasterBo {
         this.birthday = birthday;
     }
 
-    public String getDeathTime() {
+    public Integer getDeathTime() {
         return deathTime;
     }
 
-    public void setDeathTime(String deathTime) {
+    public void setDeathTime(Integer deathTime) {
         this.deathTime = deathTime;
     }
 

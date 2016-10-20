@@ -1,5 +1,9 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%
+    String path = request.getContextPath();
+    String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
+%>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -25,7 +29,7 @@
     <!-- Navigation -->
     <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
         <div class="navbar-header">
-            <a class="navbar-brand" href="${pageContext.request.contextPath}">百思陵园管理系统</a>
+            <a class="navbar-brand">百思陵园管理系统</a>
         </div>
 
         <ul class="nav navbar-top-links navbar-right">
