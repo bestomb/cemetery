@@ -67,7 +67,7 @@ public class WebsiteMasterController extends BaseController {
     }
 
     /***
-     * 根据陵园编号删除墓碑
+     * 根据陵园墓碑纪念人编号删除纪念人信息
      *
      * @param cemeteryId 陵园编号
      * @param masterId   纪念人编号

@@ -69,7 +69,7 @@ public class WebsiteTombstoneController extends BaseController {
     }
 
     /***
-     * 根据陵园编号删除墓碑
+     * 根据陵园墓碑编号删除墓碑
      *
      * @param cemeteryId  陵园编号
      * @param tombstoneId 墓碑编号
