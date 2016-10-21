@@ -48,7 +48,7 @@
     </servlet-mapping>
 
     <welcome-file-list>
-        <welcome-file>/index.html</welcome-file>
+        <welcome-file>/3D</welcome-file>
     </welcome-file-list>
 
     <session-config>
