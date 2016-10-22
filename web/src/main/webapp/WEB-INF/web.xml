@@ -48,7 +48,7 @@
     </servlet-mapping>
 
     <welcome-file-list>
-        <welcome-file>/3D</welcome-file>
+        <welcome-file>/indexByU3d.jsp</welcome-file>
     </welcome-file-list>
 
     <session-config>
