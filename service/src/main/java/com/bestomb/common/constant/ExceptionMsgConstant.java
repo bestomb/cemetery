@@ -204,7 +204,6 @@ public class ExceptionMsgConstant {
     public static final String CEMETERY_NOTICE_DATA_NOT_EXISTS = "20010022";
     //陵园墓碑信息ID为空
     public static final String CEMETERY_TOMBSTONE_INFORMATION_ID_IS_EMPTY = "20010023";
-
     //陵园可用空间不足
     public static final String CEMETERY_STORAGE_SIZE_INSUFFICIENT = "20010024";
     //陵园墓碑不存在
@@ -213,6 +212,8 @@ public class ExceptionMsgConstant {
     public static final String CEMETERY_TOMBSTONE_REDUCE_SIZE_IS_PROHIBITED = "20010026";
     //墓碑纪念人不存在
     public static final String CEMETERY_MASTER_DATA_NOT_EXISTS = "20010027";
+    //墓碑纪念人祭文悼词不存在
+    public static final String CEMETERY_EULOGY_DATA_NOT_EXISTS = "20010028";
     /***** 陵园 *****/
     
     /***** 留言 *****/

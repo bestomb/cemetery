@@ -83,6 +83,13 @@ public class MasterServiceImpl implements IMasterService {
         }
         //根据主键查询数据
         MasterWithBLOBs masterWithBLOBs = masterDao.selectByPrimaryKey(id);
+
+        if (ObjectUtils.isEmpty(masterWithBLOBs)
+                || StringUtils.isEmpty(masterWithBLOBs.getId())) {
+            logger.info("编号" + id + "查询墓碑纪念人信息为空");
+            throw new EqianyuanException(ExceptionMsgConstant.CEMETERY_MASTER_DATA_NOT_EXISTS);
+        }
+
         MasterBo masterBo = new MasterBo();
         BeanUtils.copyProperties(masterWithBLOBs, masterBo);
 //        masterBo.setDeathTime(CalendarUtil.secondsTimeToDateTimeString(masterWithBLOBs.getDeathTime()));
