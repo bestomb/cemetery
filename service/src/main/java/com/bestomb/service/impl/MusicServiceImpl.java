@@ -129,14 +129,8 @@ public class MusicServiceImpl implements IMusicService {
     @Transactional(rollbackFor = Exception.class)
     public void uploadMusic(MultipartFile musicFile, String name, String cemeteryId, Integer memberId) throws EqianyuanException {
         //检查当前登录会员是否拥有对该陵园的管理权限
-        commonService.hasPermissionsByCemetery(cemeteryId, memberId);
+        Cemetery cemetery = commonService.hasPermissionsByCemetery(cemeteryId, memberId);
 
-        //根据陵园编号查询陵园当前剩余容量
-        Cemetery cemetery = cemeteryDao.selectByPrimaryKey(cemeteryId);
-        if (ObjectUtils.isEmpty(cemetery) || ObjectUtils.isEmpty(cemetery.getId())) {
-            logger.info("uploadMusic fail , because cemeteryId [" + cemeteryId + "] query data is empty");
-            throw new EqianyuanException(ExceptionMsgConstant.CEMETERY_DATA_NOT_EXISTS);
-        }
         //获得当前陵园剩余容量(bit)
         int remainingStorageSize = cemetery.getRemainingStorageSize();
         if (remainingStorageSize <= 0 || remainingStorageSize < musicFile.getSize()) {
@@ -155,7 +149,7 @@ public class MusicServiceImpl implements IMusicService {
          * 构建音乐文件持久化目录地址
          * 目录结构：持久化上传目录/陵园编号/music/文件
          */
-        String musicPath = SystemConf.MUSIC_FILE_UPLOAD_FIXED_DIRECTORY.toString() + File.separator + cemeteryId + File.separator + "music";
+        String musicPath = SystemConf.FILE_UPLOAD_FIXED_DIRECTORY.toString() + File.separator + cemeteryId + File.separator + "music";
 
         //插入音乐数据
         Music music = new Music();

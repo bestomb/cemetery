@@ -141,7 +141,7 @@ public class MasterServiceImpl implements IMasterService {
          * 构建头像文件持久化目录地址
          * 目录结构：持久化上传目录/陵园编号/master_portrait/文件
          */
-        String portraitPath = SystemConf.MUSIC_FILE_UPLOAD_FIXED_DIRECTORY.toString() + File.separator + masterEditRequest.getCemeteryId() + File.separator + "master_portrait";
+        String portraitPath = SystemConf.FILE_UPLOAD_FIXED_DIRECTORY.toString() + File.separator + masterEditRequest.getCemeteryId() + File.separator + "master_portrait";
 
         //构建持久化墓碑中纪念人数据
         MasterWithBLOBs master = new MasterWithBLOBs();
@@ -181,7 +181,7 @@ public class MasterServiceImpl implements IMasterService {
          * 构建头像文件持久化目录地址
          * 目录结构：持久化上传目录/陵园编号/master_portrait/文件
          */
-        String portraitPath = SystemConf.MUSIC_FILE_UPLOAD_FIXED_DIRECTORY.toString() + File.separator + masterEditRequest.getCemeteryId() + File.separator + "master_portrait";
+        String portraitPath = SystemConf.FILE_UPLOAD_FIXED_DIRECTORY.toString() + File.separator + masterEditRequest.getCemeteryId() + File.separator + "master_portrait";
 
         FileResponse fileResponse = null;
         try {

@@ -61,7 +61,7 @@ public enum SystemConf {
     /**
      * 陵园附件上传最终持久目录
      */
-    MUSIC_FILE_UPLOAD_FIXED_DIRECTORY(File.separator + "upload" + File.separator + "fixed");
+    FILE_UPLOAD_FIXED_DIRECTORY(File.separator + "upload" + File.separator + "fixed");
 
     private Object value;
 
