@@ -107,13 +107,13 @@
     where id = #{id,jdbcType=VARCHAR}
   </update>
 
-    <!-- 根据查询条件查询音乐总数 -->
+    <!-- 根据查询条件查询相片总数 -->
     <select id="countByCondition" resultType="java.lang.Integer">
     select count(1) from photo
     where album_id = #{albumId}
   </select>
 
-    <!-- 根据查询条件查询音乐列表 -->
+    <!-- 根据查询条件查询相片列表 -->
     <select id="selectByCondition" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>

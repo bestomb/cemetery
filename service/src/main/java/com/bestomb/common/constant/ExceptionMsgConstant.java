@@ -216,6 +216,8 @@ public class ExceptionMsgConstant {
     public static final String CEMETERY_EULOGY_DATA_NOT_EXISTS = "20010028";
     //墓碑纪念人相片不存在
     public static final String CEMETERY_PHOTO_DATA_NOT_EXISTS = "20010029";
+    //墓碑纪念人视频不存在
+    public static final String CEMETERY_VIDEO_DATA_NOT_EXISTS = "20010030";
     /***** 陵园 *****/
     
     /***** 留言 *****/
