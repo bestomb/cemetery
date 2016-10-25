@@ -40,7 +40,8 @@ public class SessionUtil {
      */
     public static String getSessionByHeader() {
         //从HEADER中获取jsessionid
-        String sessionId = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest().getHeader("JSESSIONID");
+        String sessionId = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest().getParameter("jsessionid");
+//        String sessionId = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest().getHeader("JSESSIONID");
 
         //如果header中没有sessionid，则从cookies中获取sessionid
         if (StringUtils.isEmpty(sessionId)) {
@@ -53,7 +54,7 @@ public class SessionUtil {
         }
 
         //将sessionid写入到header中
-        ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getResponse().addHeader("JSESSIONID", sessionId);
+//        ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getResponse().addHeader("JSESSIONID", sessionId);
         return sessionId;
     }
 

@@ -68,7 +68,7 @@ public class VideoAlbumServiceImpl implements IVideoAlbumService {
 
         //删除数据
         videoAlbumDao.deleteByPrimaryKey(videoAlbumId);
-        //todo 需要删除该相册的所有视频相关数据/附件等
+        //todo 需要删除该专辑的所有视频相关数据/附件等
     }
 
     /**
