@@ -204,4 +204,11 @@
             #{member_id}
         </foreach>
     </select>
+
+    <select id="selectAll" resultMap="BaseResultMap">
+        select
+        mobile_number, nick_name
+        from member_account
+    </select>
+
 </mapper>

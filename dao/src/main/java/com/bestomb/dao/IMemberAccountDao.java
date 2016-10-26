@@ -69,4 +69,10 @@ public interface IMemberAccountDao {
      * @return
      */
     List<MemberAccount> selectByMemberIds(@Param("member_ids") List<String> memberIds);
+
+    /**
+     * 查询全部会员信息
+     * @return
+     */
+    List<MemberAccount> selectAll();
 }

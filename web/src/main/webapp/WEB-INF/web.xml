@@ -24,6 +24,11 @@
         <listener-class>com.bestomb.common.listener.ServerSocketyByCemeteryListener</listener-class>
     </listener>
 
+    <!-- 启动系统特殊节日短信推送线程类 -->
+    <listener>
+        <listener-class>com.bestomb.common.listener.SpecialHolidayListener</listener-class>
+    </listener>
+
     <context-param>
         <param-name>contextConfigLocation</param-name>
         <param-value>classpath*:spring-*.xml;</param-value>

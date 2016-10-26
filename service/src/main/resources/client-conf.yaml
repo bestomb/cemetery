@@ -22,3 +22,8 @@ init_storage_size: 30000000
 serverSocketByMsgAddress: 139.196.149.131
 serverSocketByMsgPort: 59466
 serverSocketByMsgBackLog: 500
+
+### 特殊节日短信推送配置 ###
+# 短息推送程序执行节点
+execute_node: 10-12
+
