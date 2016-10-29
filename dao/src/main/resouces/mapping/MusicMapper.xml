@@ -5,7 +5,7 @@
         <id column="id" property="id" jdbcType="VARCHAR"/>
         <result column="name" property="name" jdbcType="VARCHAR"/>
         <result column="file_address" property="fileAddress" jdbcType="VARCHAR"/>
-        <result column="file_size" property="fileSize" jdbcType="BIGINT"/>
+        <result column="file_size" property="fileSize" jdbcType="INTEGER"/>
         <result column="type" property="type" jdbcType="INTEGER"/>
         <result column="cemetery_id" property="cemeteryId" jdbcType="VARCHAR"/>
     </resultMap>
@@ -23,6 +23,9 @@
     where id = #{id,jdbcType=VARCHAR}
   </delete>
     <insert id="insertSelective" parameterType="com.bestomb.entity.Music">
+        <selectKey keyProperty="id" resultType="String" order="BEFORE">
+            select replace(uuid(),'-','') from dual
+        </selectKey>
         insert into music
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null">
@@ -55,7 +58,7 @@
                 #{fileAddress,jdbcType=VARCHAR},
             </if>
             <if test="fileSize != null">
-                #{fileSize,jdbcType=BIGINT},
+                #{fileSize,jdbcType=INTEGER},
             </if>
             <if test="type != null">
                 #{type,jdbcType=INTEGER},
@@ -75,7 +78,7 @@
                 file_address = #{fileAddress,jdbcType=VARCHAR},
             </if>
             <if test="fileSize != null">
-                file_size = #{fileSize,jdbcType=BIGINT},
+                file_size = #{fileSize,jdbcType=INTEGER},
             </if>
             <if test="type != null">
                 type = #{type,jdbcType=INTEGER},
@@ -110,7 +113,7 @@
                	and fileAddress = #{music.fileAddress, jdbcType=VARCHAR}
            	</if>
    			<if test="music.fileSize != null">
-               	and fileSize = #{music.fileSize, jdbcType=BIGINT}
+               	and fileSize = #{music.fileSize, jdbcType=INTEGER}
            	</if>
    			<if test="music.type != null">
                	and type = #{music.type, jdbcType=INTEGER}

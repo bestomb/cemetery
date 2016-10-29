@@ -103,6 +103,10 @@
     where id = #{id,jdbcType=VARCHAR}
   </update>
 
+    <select id="selectAll" resultMap="BaseResultMap">
+        select * from special_holiday
+    </select>
+
     <!--分页查询-->
     <select id="selectByPagination" resultMap="BaseResultMap">
     select * from special_holiday

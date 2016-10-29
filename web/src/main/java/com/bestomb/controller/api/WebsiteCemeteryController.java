@@ -50,7 +50,7 @@ public class WebsiteCemeteryController extends BaseController {
         /**
          * 从session池中获取系统用户信息
          */
-        MemberLoginVo memberLoginVo = (MemberLoginVo) SessionUtil.getAttribute(SessionContextUtil.getInstance().getSession(SessionUtil.getSessionByCookie()), SystemConf.WEBSITE_SESSION_MEMBER.toString());
+        MemberLoginVo memberLoginVo = (MemberLoginVo) SessionUtil.getAttribute(SessionContextUtil.getInstance().getSession(SessionUtil.getSessionByHeader()), SystemConf.WEBSITE_SESSION_MEMBER.toString());
         cemeteryByEditRequest.setMemberId(String.valueOf(memberLoginVo.getMemberId()));
         websiteCemeteryService.create(cemeteryByEditRequest);
         return new ServerResponse();
@@ -148,20 +148,6 @@ public class WebsiteCemeteryController extends BaseController {
         return new ServerResponse();
     }
 
-    /**
-     * 已经使用的存储空间
-     *
-     * @param cemeteryId
-     * @return
-     * @throws EqianyuanException
-     */
-    @RequestMapping("/useStorage")
-    @ResponseBody
-    public ServerResponse useStorage(String cemeteryId) throws EqianyuanException {
-        //todo 实现业务
-        return new ServerResponse();
-    }
-    
     /***
      * 授权陵园给他人代管理
      * @param MemberAuthorization

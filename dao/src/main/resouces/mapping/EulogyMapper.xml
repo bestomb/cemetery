@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bestomb.dao.IEulogyDao">
+    <resultMap id="BaseResultMap" type="com.bestomb.entity.Eulogy">
+        <id column="id" property="id" jdbcType="VARCHAR"/>
+        <result column="member_id" property="memberId" jdbcType="INTEGER"/>
+        <result column="master_id" property="masterId" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createTime" jdbcType="INTEGER"/>
+    </resultMap>
+    <resultMap id="ResultMapWithBLOBs" type="com.bestomb.entity.Eulogy" extends="BaseResultMap">
+        <result column="content" property="content" jdbcType="LONGVARCHAR"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    id, member_id, master_id, create_time
+  </sql>
+    <sql id="Blob_Column_List">
+    content
+  </sql>
+    <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        ,
+        <include refid="Blob_Column_List"/>
+        from eulogy
+        where id = #{id,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from eulogy
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+    <insert id="insert" parameterType="com.bestomb.entity.Eulogy">
+    insert into eulogy (id, member_id, master_id, 
+      create_time, content)
+    values (#{id,jdbcType=VARCHAR}, #{memberId,jdbcType=INTEGER}, #{masterId,jdbcType=VARCHAR},
+      #{createTime,jdbcType=INTEGER}, #{content,jdbcType=LONGVARCHAR})
+  </insert>
+    <insert id="insertSelective" parameterType="com.bestomb.entity.Eulogy">
+        <selectKey keyProperty="id" resultType="String" order="BEFORE">
+            select replace(uuid(),'-','') from dual
+        </selectKey>
+        insert into eulogy
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="memberId != null">
+                member_id,
+            </if>
+            <if test="masterId != null">
+                master_id,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="content != null">
+                content,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=VARCHAR},
+            </if>
+            <if test="memberId != null">
+                #{memberId,jdbcType=INTEGER},
+            </if>
+            <if test="masterId != null">
+                #{masterId,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=INTEGER},
+            </if>
+            <if test="content != null">
+                #{content,jdbcType=LONGVARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.bestomb.entity.Eulogy">
+        update eulogy
+        <set>
+            <if test="memberId != null">
+                member_id = #{memberId,jdbcType=INTEGER},
+            </if>
+            <if test="masterId != null">
+                master_id = #{masterId,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=INTEGER},
+            </if>
+            <if test="content != null">
+                content = #{content,jdbcType=LONGVARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.bestomb.entity.Eulogy">
+    update eulogy
+    set member_id = #{memberId,jdbcType=INTEGER},
+      master_id = #{masterId,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=INTEGER},
+      content = #{content,jdbcType=LONGVARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+    <update id="updateByPrimaryKey" parameterType="com.bestomb.entity.Eulogy">
+    update eulogy
+    set member_id = #{memberId,jdbcType=INTEGER},
+      master_id = #{masterId,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=INTEGER}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+    <!-- 查询纪念人祭文悼词总数 -->
+    <select id="countByCondition" resultType="java.lang.Integer">
+    select count(1) from eulogy
+    where master_id = #{masterId,jdbcType=VARCHAR}
+  </select>
+    <!-- 查询纪念人祭文悼词分页列表 -->
+    <select id="selectByCondition" resultMap="ResultMapWithBLOBs">
+        select
+        <include refid="Base_Column_List"/>
+        ,
+        <include refid="Blob_Column_List"/>
+        from eulogy
+        where master_id = #{masterId,jdbcType=VARCHAR}
+        limit ${page.start}, ${page.pageSize}
+    </select>
+</mapper>

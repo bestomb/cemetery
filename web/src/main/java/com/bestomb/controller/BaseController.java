@@ -91,6 +91,6 @@ public class BaseController {
      * @throws EqianyuanException
      */
     public MemberLoginVo getLoginMember() throws EqianyuanException{
-    	return (MemberLoginVo) SessionUtil.getAttribute(SessionContextUtil.getInstance().getSession(SessionUtil.getSessionByCookie()), SystemConf.WEBSITE_SESSION_MEMBER.toString());
+    	return (MemberLoginVo) SessionUtil.getAttribute(SessionContextUtil.getInstance().getSession(SessionUtil.getSessionByHeader()), SystemConf.WEBSITE_SESSION_MEMBER.toString());
     }
 }

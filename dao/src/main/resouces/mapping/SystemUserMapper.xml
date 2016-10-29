@@ -116,4 +116,16 @@
         order by create_time desc
         limit ${page.pageNo}, ${page.pageSize}
     </select>
+
+
+    <select id="selectByMemberIds" resultMap="BaseResultMap" parameterType="java.util.ArrayList">
+        select
+        <include refid="Base_Column_List"/>
+        from system_user
+        where id IN
+        <foreach item="id" collection="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </select>
+
 </mapper>

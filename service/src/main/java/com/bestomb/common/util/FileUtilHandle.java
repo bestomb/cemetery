@@ -56,7 +56,7 @@ public class FileUtilHandle {
             throw new EqianyuanException(ExceptionMsgConstant.FILE_NO_EXISTS);
         }
 
-        if (org.springframework.util.StringUtils.isEmpty(multipartFile.getOriginalFilename())) {
+        if (StringUtils.isEmpty(multipartFile.getOriginalFilename())) {
             logger.info("upload fail , because file no exists");
             throw new EqianyuanException(ExceptionMsgConstant.FILE_NO_EXISTS);
         }
@@ -89,17 +89,11 @@ public class FileUtilHandle {
     /**
      * 附件移动，从临时目录移动到指定目录
      *
-     * @param fileName  附件名
      * @param original  源目录
      * @param directory 指定放置目录
      * @return
      */
-    public static void moveFile(String fileName, String original, String directory) throws EqianyuanException {
-        if (StringUtils.isEmpty(fileName)) {
-            logger.info("moveFile fail , because fileName is empty");
-            throw new EqianyuanException(ExceptionMsgConstant.FILE_NAME_IS_EMPTY);
-        }
-
+    public static void moveFile(String original, String directory) throws EqianyuanException {
         if (StringUtils.isEmpty(original)) {
             logger.info("moveFile fail , because original is empty");
             throw new EqianyuanException(ExceptionMsgConstant.FILE_MOVE_ERROR);

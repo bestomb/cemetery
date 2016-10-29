@@ -40,7 +40,7 @@ public interface IMemberService {
     /**
      * 分页查询
      */
-    PageResponse getList(int pageNo, int pageSize) throws EqianyuanException;
+    PageResponse getList(int pageNo, int pageSize,String type)throws EqianyuanException;
     
     /***
      * 修改会员资料

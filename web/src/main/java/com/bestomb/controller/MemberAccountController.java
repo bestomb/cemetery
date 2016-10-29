@@ -36,9 +36,10 @@ public class MemberAccountController extends BaseController{
      */
     @RequestMapping("/getlistmemberCount")
     @ResponseBody
-    public ServerResponse getList(@RequestParam(value = "pageNo",required = false,defaultValue = "1") int pageNo,
-                                   @RequestParam(value = "pageSize",required = false,defaultValue = "10") int pageSize) throws EqianyuanException{
-        PageResponse pageResponse =  memberService.getList(pageNo, pageSize);
+    public ServerResponse getList(String type,
+                                  @RequestParam(value = "pageNo",required = false,defaultValue = "1") int pageNo,
+                                  @RequestParam(value = "pageSize",required = false,defaultValue = "10") int pageSize) throws EqianyuanException{
+        PageResponse pageResponse =  memberService.getList(pageNo, pageSize, type);
         return new ServerResponse.ResponseBuilder().data(pageResponse).build();
     }
 

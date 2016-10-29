@@ -10,6 +10,7 @@ public interface ISpecialHolidayDao {
 
     /**
      * 删除特殊节日
+     *
      * @param id
      * @return
      */
@@ -19,6 +20,7 @@ public interface ISpecialHolidayDao {
 
     /**
      * 添加特殊节日
+     *
      * @param record
      * @return
      */
@@ -29,6 +31,13 @@ public interface ISpecialHolidayDao {
     int updateByPrimaryKeySelective(SpecialHoliday record);
 
     int updateByPrimaryKey(SpecialHoliday record);
+
+    /**
+     * 查询所有特殊节日数据集合
+     *
+     * @return
+     */
+    List<SpecialHoliday> selectAll();
 
     /**
      * 分页查询

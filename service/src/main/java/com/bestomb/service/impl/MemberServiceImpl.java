@@ -229,20 +229,21 @@ public class MemberServiceImpl implements IMemberService {
      * @return
      * @throws EqianyuanException
      */
-    public PageResponse getList(int pageNo, int pageSize) throws EqianyuanException {
+    public PageResponse getList(int pageNo, int pageSize, String type) throws EqianyuanException {
 
-        Long dataCount = memberAccountDao.countByPagination();
+        Long dataCount = memberAccountDao.countByPagination(type);
         if (ObjectUtils.isEmpty(dataCount)) {
             logger.info("get total count is null");
             return new PageResponse(pageNo, pageSize, dataCount, null);
         }
 
         Page page = new Page(pageNo, pageSize);
-        List<MemberAccount> memberAccountList = memberAccountDao.selectByPagination(page);
+        List<MemberAccount> memberAccountList = memberAccountDao.selectByPagination(page, type);
         if (CollectionUtils.isEmpty(memberAccountList)) {
             logger.warn("pageNo [" + pageNo + "], pageSize [" + pageSize + "] get List is null");
             return new PageResponse(pageNo, pageSize, dataCount, null);
         }
+
         List<MemberAccountBo> memberAccountBoList = new ArrayList<MemberAccountBo>();
         for (MemberAccount memberAccount : memberAccountList) {
             MemberAccountBo memberAccountBo = new MemberAccountBo();

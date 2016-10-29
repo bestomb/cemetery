@@ -273,6 +273,7 @@ public class CemeteryServiceImpl implements ICemeteryService {
         //构建陵园DB对象
         Cemetery cemetery = new Cemetery();
         BeanUtils.copyProperties(cemeteryByEditRequest, cemetery);
+        cemetery.setMemberId(Integer.parseInt(cemeteryByEditRequest.getMemberId()));
         cemetery.setCreateTime(CalendarUtil.getSystemSeconds());
         cemetery.setStorageSize(Integer.parseInt(String.valueOf(initStorageSize)));
         cemetery.setRemainingStorageSize(Integer.parseInt(String.valueOf(initStorageSize)));

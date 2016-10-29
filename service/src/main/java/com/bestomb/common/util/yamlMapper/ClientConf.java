@@ -72,4 +72,21 @@ public class ClientConf {
         }
     }
 
+    /**
+     * 特殊节日短信推送配置
+     */
+    public enum SpecialHolidayByMsg {
+        execute_node("execute_node");
+
+        private String key;
+
+        SpecialHolidayByMsg(String key) {
+            this.key = key;
+        }
+
+        @Override
+        public String toString() {
+            return String.valueOf(this.key);
+        }
+    }
 }

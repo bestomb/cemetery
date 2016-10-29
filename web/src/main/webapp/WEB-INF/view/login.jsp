@@ -1,4 +1,10 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%
+    String path = request.getContextPath();
+    String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
+%>
+
+<base href="<%=basePath%>">
 <!DOCTYPE html>
 <html lang="en">
 
@@ -35,7 +41,7 @@
                     </div>
                     <div class="form-group">
                         <input class="form-control verification-code-ipt" type="text" placeholder="验证码" id="validate_code" maxlength="4">
-                        <img class="verification-code-img" src="${pageContext.request.contextPath}/system-manage/verifyCode" title="点击重新获取验证码"/>
+                        <img class="verification-code-img" src="/system-manage/verifyCode" title="点击重新获取验证码"/>
                     </div>
                     <a href="javascript:;" class="btn btn-lg btn-success btn-block submit">登&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;录</a>
                 </div>

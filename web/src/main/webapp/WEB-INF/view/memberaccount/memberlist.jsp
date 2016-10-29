@@ -31,26 +31,20 @@
     <div class="row">
       <div class="col-lg-12">
         <div class="panel panel-default">
-          <%--<div class="panel-heading">--%>
-            <%--<button type="button" class="btn btn-default btn-lg add">添加管理用户</button>--%>
-            <%--<button type="button" class="btn btn-danger btn-lg delete">删除管理用户</button>--%>
-          <%--</div>--%>
-          <%--<div class="alert alert-warning alert-dismissable hidden operatorTip">--%>
-            <%--<button type="button" class="close" data-dismiss="operatorTip"--%>
-                    <%--aria-hidden="true">--%>
-              <%--&times;--%>
-            <%--</button>--%>
-            <%--<span></span>--%>
-          <%--</div>--%>
-          <%--<div class="panel-body panel-search">--%>
-            <%--<form class="form-inline">--%>
-              <%--<div class="form-group">--%>
-                <%--<label>角色</label>--%>
-                <%--<select class="form-control" id="search_by_role"></select>--%>
-              <%--</div>--%>
-              <%--<button type="button" class="btn btn-default btn-sm" id="search">筛选查找</button>--%>
-            <%--</form>--%>
-          <%--</div>--%>
+
+          <div class="panel-body panel-search">
+            <form class="form-inline">
+              <div class="form-group">
+                <label>角色</label>
+                <select class="form-control" id="search_by_role">
+                  <option value="">---请选择---</option>
+                  <option value="1">内置管理员</option>
+                  <option value="2">公众事件申请临时管理</option>
+                </select>
+              </div>
+              <button type="button" class="btn btn-default btn-sm" id="search">筛选查找</button>
+            </form>
+          </div>
           <div class="panel-body">
             <div class="dataTable_wrapper">
               <table width="100%" class="table table-striped table-bordered table-hover"
@@ -59,12 +53,10 @@
                 <tr>
                   <th>会员编号</th>
                   <th>会员手机号码</th>
-                  <%--<th>登录密码</th>--%>
                   <th>昵称</th>
                   <th>邀请者编号</th>
                   <th>会员积分</th>
                   <th>交易币</th>
-                  <%--<th>支付密码</th>--%>
                   <th>可建设陵园总数</th>
                   <th>注册时间</th>
                   <th>操作</th>
@@ -103,9 +95,12 @@
             确定
           </button>
         </div>
-      </div><!-- /.modal-content -->
-    </div><!-- /.modal-dialog -->
-  </div><!-- /.modal -->
+      </div>
+      <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+  </div>
+  <!-- /.modal -->
 </div>
 
 <script>
@@ -147,28 +142,23 @@
             if (response.data.totalCount > 0) {
               var tableBody = "";
               $(response.data.list).each(function () {
-                  console.log(this);
                 tableBody += '<tr id="' + this.memberId + '">'
                         + '<td>' + this.memberId + '</td>'
                         + '<td>' + this.mobileNumber + '</td>'
-//                        + '<td>' + this.loginPassword + '</td>'
                         + '<td>' + this.nickName + '</td>'
                         + '<td>' + this.inviterId + '</td>'
                         + '<td>' + this.integral + '</td>'
                         + '<td>' + this.tradingAmount + '</td>'
-//                        + '<td>' + this.tradingPassword + '</td>'
                         + '<td>' + this.constructionCount + '</td>'
                         + '<td>' + this.createTime + '</td>'
                         + '<td>'
                         + '<button type="button" class="btn btn-outline btn-info detail">详情</button>&nbsp;'
-//                        + '<button type="button" class="btn btn-outline btn-warning update">修改</button>&nbsp;'
-//                        + '<button type="button" class="btn btn-outline btn-danger singleDelete">注销</button></td>'
                         + '</tr>';
               });
 
               $("#dataTables tbody").html(tableBody);
             } else {
-              $("#dataTables tbody").html('<tr class="text-center"><td colspan="8">查无数据</td></tr>');
+              $("#dataTables tbody").html('<tr class="text-center"><td colspan="9">查无数据</td></tr>');
             }
           }
         });
@@ -178,7 +168,8 @@
     //获取列表数据
     pagination.list();
 
-    $("#search").click(function(){
+    $("#search").click(function () {
+      pagination.data.type = $("#search_by_role").val();
       pagination.page.pageNo = 1;
       pagination.list();
     });
@@ -187,7 +178,6 @@
     $("#dataTables tbody").on("click", ".detail", function () {
       window.location.href = "/system-manage/gotoPage?url=memberaccount/detail&id=" + $(this).parents("tr").attr("id");
     })
-
   });
 
   /**

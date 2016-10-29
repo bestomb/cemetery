@@ -121,7 +121,7 @@
                             $(response.data.list).each(function () {
                                 tableBody += '<tr>'
                                         + '<td>' + this.id + '</td>'
-                                        + '<td>' + this.name + '</td>'
+                                        + '<td><a href="/system-manage/gotoPage?url=cemetery/memorial&cemeteryId=' + this.id + '">'+ this.name + '</a></td>'
                                         + '<td>' + this.memberName + '</td>'
                                         + '<td>' + (this.isOpen == 1 ? "公开" : "不公开") + '</td>'
                                         + '<td>' + this.remainingStorageSize + "/" + this.storageSize + '</td>'

@@ -36,7 +36,7 @@ public class WebsiteNoticeService {
      */
     public void add(String content, String cemeteryId) throws EqianyuanException {
         //获取session会员信息
-        MemberLoginVo memberLoginVo = (MemberLoginVo) SessionUtil.getAttribute(SessionContextUtil.getInstance().getSession(SessionUtil.getSessionByCookie()), SystemConf.WEBSITE_SESSION_MEMBER.toString());
+        MemberLoginVo memberLoginVo = (MemberLoginVo) SessionUtil.getAttribute(SessionContextUtil.getInstance().getSession(SessionUtil.getSessionByHeader()), SystemConf.WEBSITE_SESSION_MEMBER.toString());
         noticeService.add(content, cemeteryId, memberLoginVo.getMemberId());
     }
 
@@ -48,7 +48,7 @@ public class WebsiteNoticeService {
      */
     public void delete(String... id) throws EqianyuanException {
         //获取session会员信息
-        MemberLoginVo memberLoginVo = (MemberLoginVo) SessionUtil.getAttribute(SessionContextUtil.getInstance().getSession(SessionUtil.getSessionByCookie()), SystemConf.WEBSITE_SESSION_MEMBER.toString());
+        MemberLoginVo memberLoginVo = (MemberLoginVo) SessionUtil.getAttribute(SessionContextUtil.getInstance().getSession(SessionUtil.getSessionByHeader()), SystemConf.WEBSITE_SESSION_MEMBER.toString());
         noticeService.removeByIds(memberLoginVo.getMemberId(), id);
     }
 
@@ -61,7 +61,7 @@ public class WebsiteNoticeService {
      */
     public void modify(String id, String content) throws EqianyuanException {
         //获取session会员信息
-        MemberLoginVo memberLoginVo = (MemberLoginVo) SessionUtil.getAttribute(SessionContextUtil.getInstance().getSession(SessionUtil.getSessionByCookie()), SystemConf.WEBSITE_SESSION_MEMBER.toString());
+        MemberLoginVo memberLoginVo = (MemberLoginVo) SessionUtil.getAttribute(SessionContextUtil.getInstance().getSession(SessionUtil.getSessionByHeader()), SystemConf.WEBSITE_SESSION_MEMBER.toString());
         noticeService.modify(id, content, memberLoginVo.getMemberId());
     }
 

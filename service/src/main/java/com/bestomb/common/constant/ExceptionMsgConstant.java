@@ -196,12 +196,30 @@ public class ExceptionMsgConstant {
     public static final String CEMETERY_ACCESS_PASSWORD_ERROR = "20010018";
     //陵园公告内容为空
     public static final String CEMETERY_NOTICE_CONTENT_IS_EMPTY = "20010019";
-    //不是园主
+    //不是园主或未获得园主授权
     public static final String IS_NO_MASTER_BY_CEMETERY = "20010020";
     //陵园公告编号为空
     public static final String CEMETERY_NOTICE_ID_IS_EMPTY = "20010021";
     //陵园公告数据不存在
     public static final String CEMETERY_NOTICE_DATA_NOT_EXISTS = "20010022";
+    //陵园墓碑信息ID为空
+    public static final String CEMETERY_TOMBSTONE_INFORMATION_ID_IS_EMPTY = "20010023";
+    //陵园可用空间不足
+    public static final String CEMETERY_STORAGE_SIZE_INSUFFICIENT = "20010024";
+    //陵园墓碑不存在
+    public static final String CEMETERY_TOMBSTONE_DATA_NOT_EXISTS = "20010025";
+    //陵园墓碑修改-减少纪念空间是被禁止的行为
+    public static final String CEMETERY_TOMBSTONE_REDUCE_SIZE_IS_PROHIBITED = "20010026";
+    //墓碑纪念人不存在
+    public static final String CEMETERY_MASTER_DATA_NOT_EXISTS = "20010027";
+    //墓碑纪念人祭文悼词不存在
+    public static final String CEMETERY_EULOGY_DATA_NOT_EXISTS = "20010028";
+    //墓碑纪念人相片不存在
+    public static final String CEMETERY_PHOTO_DATA_NOT_EXISTS = "20010029";
+    //墓碑纪念人视频不存在
+    public static final String CEMETERY_VIDEO_DATA_NOT_EXISTS = "20010030";
+    //墓碑纪念人作品不存在
+    public static final String CEMETERY_LIFE_WORKS_DATA_NOT_EXISTS = "20010031";
     /***** 陵园 *****/
     
     /***** 留言 *****/
@@ -297,5 +315,14 @@ public class ExceptionMsgConstant {
     public static final String SPECIAL_HOLIDAY_ID_IS_EMPTY = "40010001";
     //特殊节日推送语内容太长
     public static final String HOLIDAY_PUSH_LANGUAGE_CONTENT_IS_TOO_LONG = "40010002";
+
+    /*****
+     * 公众人物管理
+     *****/
+    //公众人物信息ID为空
+    public static final String PUBLIC_FIGURES_INFORMATION_ID_IS_EMPTY = "50010001";
+    //公众人物状态为空
+    public static final String PUBLIC_FIGURES_INFORMATION_Status_IS_EMPTY = "50010002";
+
 /********** 客户端 **********/
 }

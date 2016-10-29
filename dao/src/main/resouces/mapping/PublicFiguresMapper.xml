@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bestomb.dao.IPublicFiguresDao" >
+  <resultMap id="BaseResultMap" type="com.bestomb.entity.PublicFigures" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="member_id" property="memberId" jdbcType="INTEGER" />
+    <result column="audit_opinion" property="auditOpinion" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="system_user_id" property="systemUserId" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="INTEGER" />
+    <result column="dispose_time" property="disposeTime" jdbcType="INTEGER" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.bestomb.entity.PublicFigures" extends="BaseResultMap" >
+    <result column="bewrite" property="bewrite" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, member_id, audit_opinion, status, system_user_id, create_time, dispose_time
+  </sql>
+  <sql id="Blob_Column_List" >
+    bewrite
+  </sql>
+
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from public_figures
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from public_figures
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.bestomb.entity.PublicFigures" >
+    insert into public_figures (id, member_id, audit_opinion, 
+      status, system_user_id, create_time,
+      dispose_time, bewrite)
+    values (#{id,jdbcType=VARCHAR}, #{memberId,jdbcType=INTEGER}, #{auditOpinion,jdbcType=VARCHAR}, 
+      #{status,jdbcType=INTEGER}, #{systemUserId,jdbcType=VARCHAR}, #{createTime,jdbcType=INTEGER},
+      #{disposeTime,jdbcType=INTEGER}, #{bewrite,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.bestomb.entity.PublicFigures" >
+    insert into public_figures
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="memberId != null" >
+        member_id,
+      </if>
+      <if test="auditOpinion != null" >
+        audit_opinion,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="systemUserId != null" >
+        system_user_id,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="disposeTime != null" >
+        dispose_time,
+      </if>
+      <if test="bewrite != null" >
+        bewrite,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="memberId != null" >
+        #{memberId,jdbcType=INTEGER},
+      </if>
+      <if test="auditOpinion != null" >
+        #{auditOpinion,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="systemUserId != null" >
+        #{systemUserId,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=INTEGER},
+      </if>
+      <if test="disposeTime != null" >
+        #{disposeTime,jdbcType=INTEGER},
+      </if>
+      <if test="bewrite != null" >
+        #{bewrite,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.bestomb.entity.PublicFigures" >
+    update public_figures
+    <set >
+      <if test="memberId != null" >
+        member_id = #{memberId,jdbcType=INTEGER},
+      </if>
+      <if test="auditOpinion != null" >
+        audit_opinion = #{auditOpinion,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="systemUserId != null" >
+        system_user_id = #{systemUserId,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=INTEGER},
+      </if>
+      <if test="disposeTime != null" >
+        dispose_time = #{disposeTime,jdbcType=INTEGER},
+      </if>
+      <if test="bewrite != null" >
+        bewrite = #{bewrite,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.bestomb.entity.PublicFigures" >
+    update public_figures
+    set member_id = #{memberId,jdbcType=INTEGER},
+      audit_opinion = #{auditOpinion,jdbcType=VARCHAR},
+      status = #{status,jdbcType=INTEGER},
+      system_user_id = #{systemUserId,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=INTEGER},
+      dispose_time = #{disposeTime,jdbcType=INTEGER},
+      bewrite = #{bewrite,jdbcType=LONGVARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.bestomb.entity.PublicFigures" >
+    update public_figures
+    set member_id = #{memberId,jdbcType=INTEGER},
+      audit_opinion = #{auditOpinion,jdbcType=VARCHAR},
+      status = #{status,jdbcType=INTEGER},
+      system_user_id = #{systemUserId,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=INTEGER},
+      dispose_time = #{disposeTime,jdbcType=INTEGER}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+
+  <!--分页查询-->
+  <select id="selectByPagination" resultMap="ResultMapWithBLOBs">
+    select
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from public_figures
+    <where>
+      <if test="status != null and status != ''">
+        status = #{status}
+      </if>
+    </where>
+    limit ${page.pageNo}, ${page.pageSize}
+  </select>
+
+  <!--查询数据总条数-->
+  <select id="countByPagination" resultType="java.lang.Long">
+    select count(1) from public_figures
+    <where>
+      <if test="status != null and status != ''">
+        status = #{status}
+      </if>
+    </where>
+  </select>
+
+</mapper>

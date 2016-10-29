@@ -64,4 +64,7 @@ public interface ISystemUserDao {
      * @return
      */
     List<SystemUser> selectByPagination(@Param("page") Page page, @Param("role_id") String roleId);
+
+    List<SystemUser> selectByMemberIds(@Param("id") List<String> id);
+
 }

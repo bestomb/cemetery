@@ -1,35 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.bestomb.dao.ILeaveMessageDao">
-  <resultMap id="BaseResultMap" type="com.bestomb.entity.LeaveMessage">
-    <id column="id" jdbcType="VARCHAR" property="id" />
-    <result column="member_id" jdbcType="INTEGER" property="memberId" />
-    <result column="master_id" jdbcType="VARCHAR" property="masterId" />
-    <result column="reply_id" jdbcType="VARCHAR" property="replyId" />
-    <result column="create_time" jdbcType="INTEGER" property="createTime" />
-  </resultMap>
-  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.bestomb.entity.LeaveMessage">
-    <result column="content" jdbcType="LONGVARCHAR" property="content" />
-  </resultMap>
-  <sql id="Base_Column_List">
+    <resultMap id="BaseResultMap" type="com.bestomb.entity.LeaveMessage">
+        <id column="id" jdbcType="VARCHAR" property="id"/>
+        <result column="member_id" jdbcType="INTEGER" property="memberId"/>
+        <result column="master_id" jdbcType="VARCHAR" property="masterId"/>
+        <result column="reply_id" jdbcType="VARCHAR" property="replyId"/>
+        <result column="create_time" jdbcType="INTEGER" property="createTime"/>
+    </resultMap>
+    <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.bestomb.entity.LeaveMessage">
+        <result column="content" jdbcType="LONGVARCHAR" property="content"/>
+    </resultMap>
+    <sql id="Base_Column_List">
     id, member_id, master_id, reply_id, create_time
   </sql>
-  <sql id="Blob_Column_List">
+    <sql id="Blob_Column_List">
     content
   </sql>
-  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="ResultMapWithBLOBs">
-    select 
-    <include refid="Base_Column_List" />
-    ,
-    <include refid="Blob_Column_List" />
-    from leave_message
-    where id = #{id,jdbcType=VARCHAR}
-  </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="ResultMapWithBLOBs">
+        select
+        <include refid="Base_Column_List"/>
+        ,
+        <include refid="Blob_Column_List"/>
+        from leave_message
+        where id = #{id,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
     delete from leave_message
     where id = #{id,jdbcType=VARCHAR}
   </delete>
-  <insert id="insert" parameterType="com.bestomb.entity.LeaveMessage">
+    <insert id="insert" parameterType="com.bestomb.entity.LeaveMessage">
     insert into leave_message (id, member_id, master_id, 
       reply_id, create_time, content
       )
@@ -37,71 +37,74 @@
       #{replyId,jdbcType=VARCHAR}, #{createTime,jdbcType=INTEGER}, #{content,jdbcType=LONGVARCHAR}
       )
   </insert>
-  <insert id="insertSelective" parameterType="com.bestomb.entity.LeaveMessage">
-    insert into leave_message
-    <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        id,
-      </if>
-      <if test="memberId != null">
-        member_id,
-      </if>
-      <if test="masterId != null">
-        master_id,
-      </if>
-      <if test="replyId != null">
-        reply_id,
-      </if>
-      <if test="createTime != null">
-        create_time,
-      </if>
-      <if test="content != null">
-        content,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        #{id,jdbcType=VARCHAR},
-      </if>
-      <if test="memberId != null">
-        #{memberId,jdbcType=INTEGER},
-      </if>
-      <if test="masterId != null">
-        #{masterId,jdbcType=VARCHAR},
-      </if>
-      <if test="replyId != null">
-        #{replyId,jdbcType=VARCHAR},
-      </if>
-      <if test="createTime != null">
-        #{createTime,jdbcType=INTEGER},
-      </if>
-      <if test="content != null">
-        #{content,jdbcType=LONGVARCHAR},
-      </if>
-    </trim>
-  </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.bestomb.entity.LeaveMessage">
-    update leave_message
-    <set>
-      <if test="memberId != null">
-        member_id = #{memberId,jdbcType=INTEGER},
-      </if>
-      <if test="masterId != null">
-        master_id = #{masterId,jdbcType=VARCHAR},
-      </if>
-      <if test="replyId != null">
-        reply_id = #{replyId,jdbcType=VARCHAR},
-      </if>
-      <if test="createTime != null">
-        create_time = #{createTime,jdbcType=INTEGER},
-      </if>
-      <if test="content != null">
-        content = #{content,jdbcType=LONGVARCHAR},
-      </if>
-    </set>
-    where id = #{id,jdbcType=VARCHAR}
-  </update>
-  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.bestomb.entity.LeaveMessage">
+    <insert id="insertSelective" parameterType="com.bestomb.entity.LeaveMessage">
+        <selectKey keyProperty="id" resultType="String" order="BEFORE">
+            select replace(uuid(),'-','') from dual
+        </selectKey>
+        insert into leave_message
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="memberId != null">
+                member_id,
+            </if>
+            <if test="masterId != null">
+                master_id,
+            </if>
+            <if test="replyId != null">
+                reply_id,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="content != null">
+                content,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=VARCHAR},
+            </if>
+            <if test="memberId != null">
+                #{memberId,jdbcType=INTEGER},
+            </if>
+            <if test="masterId != null">
+                #{masterId,jdbcType=VARCHAR},
+            </if>
+            <if test="replyId != null">
+                #{replyId,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=INTEGER},
+            </if>
+            <if test="content != null">
+                #{content,jdbcType=LONGVARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.bestomb.entity.LeaveMessage">
+        update leave_message
+        <set>
+            <if test="memberId != null">
+                member_id = #{memberId,jdbcType=INTEGER},
+            </if>
+            <if test="masterId != null">
+                master_id = #{masterId,jdbcType=VARCHAR},
+            </if>
+            <if test="replyId != null">
+                reply_id = #{replyId,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=INTEGER},
+            </if>
+            <if test="content != null">
+                content = #{content,jdbcType=LONGVARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.bestomb.entity.LeaveMessage">
     update leave_message
     set member_id = #{memberId,jdbcType=INTEGER},
       master_id = #{masterId,jdbcType=VARCHAR},
@@ -110,7 +113,7 @@
       content = #{content,jdbcType=LONGVARCHAR}
     where id = #{id,jdbcType=VARCHAR}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.bestomb.entity.LeaveMessage">
+    <update id="updateByPrimaryKey" parameterType="com.bestomb.entity.LeaveMessage">
     update leave_message
     set member_id = #{memberId,jdbcType=INTEGER},
       master_id = #{masterId,jdbcType=VARCHAR},
@@ -118,9 +121,9 @@
       create_time = #{createTime,jdbcType=INTEGER}
     where id = #{id,jdbcType=VARCHAR}
   </update>
-  
-  <!-- 查询我（接收到）的留言总数 -->
-  <select id="getReceivedMessageCount" resultType="java.lang.Integer">
+
+    <!-- 查询我（接收到）的留言总数 -->
+    <select id="getReceivedMessageCount" resultType="java.lang.Integer">
     select count(1) from leave_message
     where master_id in (
     	select id from master where tombstone_id in (
@@ -130,37 +133,66 @@
     	)
     )
   </select>
-  <!-- 查询我（接收到）的留言分页列表 -->
-  <select id="getReceivedMessage" resultMap="ResultMapWithBLOBs">
-    select 
-    <include refid="Base_Column_List" />
-    ,
-    <include refid="Blob_Column_List" />
-    from leave_message
-    where master_id in (
-    	select id from master where tombstone_id in (
-    		select id from tombstone where cemetery_id in (
-    			select id from cemetery where member_id = #{memberId,jdbcType=INTEGER}
-    		)
-    	)
-    )
-    limit ${page.start}, ${page.pageSize}
-  </select>
-  
-  <!-- 查询我（发出）的留言总数 -->
-  <select id="getPushedMessageCount" resultType="java.lang.Integer">
+    <!-- 查询我（接收到）的留言分页列表 -->
+    <select id="getReceivedMessage" resultMap="ResultMapWithBLOBs">
+        select
+        <include refid="Base_Column_List"/>
+        ,
+        <include refid="Blob_Column_List"/>
+        from leave_message
+        where master_id in (
+        select id from master where tombstone_id in (
+        select id from tombstone where cemetery_id in (
+        select id from cemetery where member_id = #{memberId,jdbcType=INTEGER}
+        )
+        )
+        )
+        limit ${page.start}, ${page.pageSize}
+    </select>
+
+    <!-- 查询我（发出）的留言总数 -->
+    <select id="getPushedMessageCount" resultType="java.lang.Integer">
     select count(1) from leave_message
     where member_id = #{memberId,jdbcType=INTEGER}
   </select>
-  <!-- 查询我（发出）的留言分页列表 -->
-  <select id="getPushedMessage" resultMap="ResultMapWithBLOBs">
-    select 
-    <include refid="Base_Column_List" />
-    ,
-    <include refid="Blob_Column_List" />
-    from leave_message
-    where member_id = #{memberId,jdbcType=INTEGER}
-    limit ${page.start}, ${page.pageSize}
+    <!-- 查询我（发出）的留言分页列表 -->
+    <select id="getPushedMessage" resultMap="ResultMapWithBLOBs">
+        select
+        <include refid="Base_Column_List"/>
+        ,
+        <include refid="Blob_Column_List"/>
+        from leave_message
+        where member_id = #{memberId,jdbcType=INTEGER}
+        limit ${page.start}, ${page.pageSize}
+    </select>
+
+
+    <!-- 查询纪念人留言（不含回复）总数 -->
+    <select id="countByMasterId" resultType="java.lang.Integer">
+    select count(1) from leave_message
+    where master_id = #{masterId,jdbcType=VARCHAR}
+    and reply_id is null
   </select>
-  
+    <!-- 查询纪念人留言（不含回复）分页列表 -->
+    <select id="getPagingByMasterId" resultMap="ResultMapWithBLOBs">
+        select
+        <include refid="Base_Column_List"/>
+        ,
+        <include refid="Blob_Column_List"/>
+        from leave_message
+        where master_id = #{masterId,jdbcType=VARCHAR}
+        and reply_id is null
+        limit ${page.start}, ${page.pageSize}
+    </select>
+
+    <!-- 查询纪念人留言回复集合 -->
+    <select id="getReplyMessage" resultMap="ResultMapWithBLOBs">
+        select
+        <include refid="Base_Column_List"/>
+        ,
+        <include refid="Blob_Column_List"/>
+        from leave_message
+        where reply_id = #{leaveMessageId,jdbcType=VARCHAR}
+    </select>
+
 </mapper>

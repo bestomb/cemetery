@@ -34,6 +34,31 @@ public class SessionUtil {
     }
 
     /**
+     * 从request请求header中获取JSESSIONID
+     *
+     * @return
+     */
+    public static String getSessionByHeader() {
+        //从HEADER中获取jsessionid
+        String sessionId = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest().getParameter("jsessionid");
+//        String sessionId = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest().getHeader("JSESSIONID");
+
+        //如果header中没有sessionid，则从cookies中获取sessionid
+        if (StringUtils.isEmpty(sessionId)) {
+            //从cookies中获取jsessionid
+            sessionId = getSessionByCookie();
+        }
+
+        if(StringUtils.isEmpty(sessionId)){
+            return null;
+        }
+
+        //将sessionid写入到header中
+//        ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getResponse().addHeader("JSESSIONID", sessionId);
+        return sessionId;
+    }
+
+    /**
      * 从cookie中获取sessionId
      *
      * @return
@@ -67,7 +92,7 @@ public class SessionUtil {
      * @throws EqianyuanException
      */
     public static HttpSession getClientSession() throws EqianyuanException {
-        String sessionId = getSessionByCookie();
+        String sessionId = getSessionByHeader();
         if (StringUtils.isEmpty(sessionId)) {
             throw new EqianyuanException(ExceptionMsgConstant.WEB_SITE_SESSION_ID_IS_EMPTY);
         }

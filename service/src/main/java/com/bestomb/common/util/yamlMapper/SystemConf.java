@@ -57,7 +57,11 @@ public enum SystemConf {
     /**
      * 模型附件上传最终持久目录
      */
-    MODEL_FILE_UPLOAD_FIXED_DIRECTORY(File.separator + "upload" + File.separator + "fixed" + File.separator + "model");
+    MODEL_FILE_UPLOAD_FIXED_DIRECTORY(File.separator + "upload" + File.separator + "fixed" + File.separator + "model"),
+    /**
+     * 陵园附件上传最终持久目录
+     */
+    FILE_UPLOAD_FIXED_DIRECTORY(File.separator + "upload" + File.separator + "fixed");
 
     private Object value;
 

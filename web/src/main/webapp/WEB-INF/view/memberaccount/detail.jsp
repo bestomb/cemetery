@@ -70,7 +70,24 @@
                     <input class="form-control" name="createTime" disabled>
                   </div>
 
+                  <div class="form-group" id="kind_aa">
+                    <input type="checkbox" id="ch1" value="1">
+                    <label>内置管理员</label>
+                    <input type="checkbox" id="ch2" value="2" disabled>
+                    <label>公众事件申请临时管理</label>
+                  </div>
+
+                  <%--<div class="form-group">--%>
+                  <%--<label class="control-label">绑定菜单</label>--%>
+
+                  <%--<div class="controls">--%>
+                  <%--<ul id="menuTree" class="ztree span6 m-wrap"--%>
+                  <%--style="border: 1px solid;overflow-y: scroll;overflow-x: auto;"></ul>--%>
+                  <%--</div>--%>
+                  <%--</div>--%>
+
                   <input type="button" class="btn btn-outline btn-info back" value="返回">
+                  <input type="button" class="btn btn-outline btn-info submit" value="确定">
                 </form>
               </div>
             </div>
@@ -102,6 +119,11 @@
           $("input[name='tradingAmount']").val(_this.tradingAmount);
           $("input[name='constructionCount']").val(_this.constructionCount);
           $("input[name='createTime']").val(_this.createTime);
+
+          getSystemMenuList(_this.memberId);
+
+          //console.log(getSystemMenuList);
+
         } else {
           $("#form-tip").removeClass("hidden alert-warning").addClass("alert-success").show().find("strong").text(response.message);
           //3秒后自动关闭警告框
@@ -113,6 +135,54 @@
     //返回
     $(".back").click(function () {
       window.history.go(-1);
+    });
+  });
+
+  /**
+   * 获取会员角色数据,如果type存在，则将节点选中
+   *
+   */
+  function getSystemMenuList(memberIds) {
+    //获取菜单数据集合
+    $.ajax({
+      type: "post",
+      url: "/sys_memberrole/list",
+      traditional: true,
+      data: {memberId: "${param.id}"},
+      success: function (response) {
+        if (response.code != "200" || response.data.length <= 0) {
+          return false;
+        }
+        console.log(response);
+        for(var i= 0;i<response.data.length;i++){
+          var id=response.data[i].type;
+          $("#ch"+id).attr("checked",true);
+          //$("#ch"+id).attr('disabled', 'disabled');
+
+        }
+      }
+    });
+  }
+
+
+  $(".submit").click(function () {
+    $.ajax({
+      type: "post",
+      url: "/sys_memberrole/memberadd",
+      traditional: true,
+      data: {memberId: "${param.id}", type:$("#ch1:checked").val()},
+      success: function (response) {
+
+        if (response.code == "200") {
+          $("#form-tip").removeClass("hidden alert-warning").addClass("alert-success").show().find("strong").text(response.message);
+          setTimeout(function () {
+            window.location.href = "/system-manage/gotoPage?url=memberaccount/memberlist";
+          }, 500);
+        } else {
+          $("#form-tip").removeClass("hidden alert-success").addClass("alert-warning").show().find("strong").text(response.message);
+          $(".submit").removeAttr("disabled");
+        }
+      }
     });
   });
 

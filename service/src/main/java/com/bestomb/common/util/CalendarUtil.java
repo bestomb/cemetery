@@ -14,9 +14,16 @@ public class CalendarUtil {
      * 常用时间格式
      */
     public static final String Format_Date = "yyyy-MM-dd";
+    public static final String Format_DateMinute = Format_Date + " HH:mm";
     public static final String Format_Time = "HH:mm:ss";
     public static final String Format_DateTime = "yyyy-MM-dd HH:mm:ss";
     public static final String Format_DateNum = "yyyyMMddHHmmss";
+
+    /**
+     * 月份英文描述
+     */
+    public static final String[] Month_EN = {"Janurary", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
+
     /**
      * 默认的日期格式化器，格式为yyyy-MM-dd
      */
@@ -183,6 +190,15 @@ public class CalendarUtil {
     public static int getCurrentMonth() {
         Calendar cal = Calendar.getInstance();
         return cal.get(Calendar.MONTH) + 1;
+    }
+
+    /**
+     * 得到当前月份英文描述
+     *
+     * @return
+     */
+    public static String getCurrentMonthEN() {
+        return Month_EN[getCurrentMonth() - 1];
     }
 
     /**
@@ -423,6 +439,18 @@ public class CalendarUtil {
     }
 
     /**
+     * 秒数时间转为日期格式字符串
+     *
+     * @param time
+     * @return
+     */
+    public static String secondsTimeToDateTimeString(Integer time, String format) {
+        SimpleDateFormat t = new SimpleDateFormat(format);
+        String d = t.format((long) time * 1000);
+        return d;
+    }
+
+    /**
      * 获取系统当前秒数时间
      *
      * @return
@@ -431,4 +459,13 @@ public class CalendarUtil {
         return (int) (System.currentTimeMillis() / 1000);
     }
 
+    /**
+     * 根据yyyy-MM-dd日期字符串获取秒数时间
+     *
+     * @param date
+     * @return
+     */
+    public static int getSecondsByDate(String date) {
+        return (int) (parseDate(date).getTime() / 1000);
+    }
 }
