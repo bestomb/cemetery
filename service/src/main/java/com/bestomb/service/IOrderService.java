@@ -1,11 +1,8 @@
 package com.bestomb.service;
 
-import java.util.List;
-
 import com.bestomb.common.Pager;
 import com.bestomb.common.exception.EqianyuanException;
 import com.bestomb.common.response.PageResponse;
-import com.bestomb.entity.OrderGoodsWithBLOBs;
 import com.bestomb.entity.PurchaseOrder;
 
 /***
@@ -23,14 +20,6 @@ public interface IOrderService {
 	 * @throws EqianyuanException 
 	 */
 	public PageResponse getPageList(PurchaseOrder order, Pager page) throws EqianyuanException;
-	
-	/***
-	 * 根据订单编号查询订单商品详情
-	 * @param orderId
-	 * @return
-	 * @throws EqianyuanException
-	 */
-	public List<OrderGoodsWithBLOBs> getOrderGoodsByOrderId(String orderId) throws EqianyuanException;
 	
 	/***
 	 * 订单支付

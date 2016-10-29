@@ -76,62 +76,19 @@ public class OrderServiceImpl implements IOrderService {
 	}
 	
 	/***
-	 * 根据订单编号查询订单商品详情
+	 * 订单支付（直接扣减会员交易币）
 	 * @param orderId
 	 * @return
 	 * @throws EqianyuanException
 	 */
-	public List<OrderGoodsWithBLOBs> getOrderGoodsByOrderId(String orderId) throws EqianyuanException {
-		if (StringUtils.isEmpty(orderId)) {
-			logger.warn("查询订单详情失败，订单编号为空");
-			throw new EqianyuanException(ExceptionMsgConstant.ORDERID_IS_EMPTY); 
-		}
-		List<OrderGoodsWithBLOBs> resultList = orderGoodsDao.getOrderGoodsByOrderId(orderId);
-		// 订单商品详情为空
-		if (resultList.size() == 0) {
-			logger.warn("查询订单详情失败，根据订单编号："+orderId+"查询商品详情无数据");
-			throw new EqianyuanException(ExceptionMsgConstant.ORDER_GOODS_IS_NOT_EXISTS); 
-		}
-		
-		return resultList;
-	}
-	
-	/***
-	 * 订单支付（修改订单状态为已完成）
-	 * @param orderId
-	 * @return
-	 * @throws EqianyuanException
-	 */
+	// TODO 需要重写！！！
 	public boolean orderPay(String orderNumber) throws EqianyuanException {
-		// 订单编号是否为空
-		if (StringUtils.isEmpty(orderNumber)) {
-			logger.warn("订单支付失败，订单编号为空");
-			throw new EqianyuanException(ExceptionMsgConstant.ORDERID_IS_EMPTY); 
-		}
-		// 查询该条订单总金额
-		PurchaseOrder record = purchaseOrderDao.selectByOrderNumber(orderNumber);
-		// 订单数据是否存在
-		if (ObjectUtils.isEmpty(record)) {
-			logger.warn("订单支付失败，该订单数据不存在");
-			throw new EqianyuanException(ExceptionMsgConstant.ORDER_IS_NOT_EXISTS); 
-		}
-		// 订单是否过期（status为-1表示已过期，或者当前时间距创建时间超过24小时，也表示已过期）
-		if ("-1".equals(record.getStatus()) || CalendarUtil.getSystemSeconds()-record.getCreateTime() > 24*3600 ) {
-			logger.warn("订单支付失败，该订单已过期");
-			throw new EqianyuanException(ExceptionMsgConstant.ORDER_IS_OVERDUE); 
-		}
-		Double money = record.getPrice();
-		//TODO 调用支付接口
-		boolean flag = true;
-		if (flag) {
-			PurchaseOrder order = new PurchaseOrder();
-			order.setOrderNumber(orderNumber);
-			order.setStatus(2); // 已完成
-			flag = purchaseOrderDao.updateByOrderNumber(order)>0 ;
-			//TODO 将订单商品放入我的背包中
-		}
+		// 查询该条订单总金额（此处比较麻烦）
+		// 查询会员交易币总额
+		// 根据订单总金额扣减会员交易币（交易币足够直接扣减；否则抛出错误）
+		// 将订单商品放入我的背包和我的订单中
 		
-		return flag;
+		return true;
 	}
 
 }

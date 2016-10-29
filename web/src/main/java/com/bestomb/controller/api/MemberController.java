@@ -1,5 +1,21 @@
 package com.bestomb.controller.api;
 
+import java.io.IOException;
+import java.util.List;
+
+import javax.servlet.http.HttpSession;
+
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+
 import com.bestomb.common.Pager;
 import com.bestomb.common.exception.EqianyuanException;
 import com.bestomb.common.response.PageResponse;
@@ -14,19 +30,12 @@ import com.bestomb.common.util.SessionContextUtil;
 import com.bestomb.common.util.SessionUtil;
 import com.bestomb.common.util.yamlMapper.SystemConf;
 import com.bestomb.controller.BaseController;
-import com.bestomb.entity.*;
+import com.bestomb.entity.Goods;
+import com.bestomb.entity.MemberAccount;
+import com.bestomb.entity.PurchaseOrder;
+import com.bestomb.entity.StoreWithGoods;
+import com.bestomb.entity.TradingDetail;
 import com.bestomb.sevice.api.MemberService;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.List;
 
 /**
  * 会员接口控制器
@@ -117,7 +126,7 @@ public class MemberController extends BaseController {
      * @return
      * @throws EqianyuanException
      */
-    @RequestMapping(value = "/info", method = RequestMethod.GET)
+    @RequestMapping(value = "/info", method = {RequestMethod.GET, RequestMethod.POST })
     @ResponseBody
     public ServerResponse getMemberInfo() throws EqianyuanException {
         // 从session池中获取系统用户信息
@@ -133,7 +142,7 @@ public class MemberController extends BaseController {
      * @return
      * @throws EqianyuanException
      */
-    @RequestMapping(value = "/edit", method = RequestMethod.PUT)
+    @RequestMapping(value = "/edit", method = {RequestMethod.PUT, RequestMethod.POST} )
     @ResponseBody
     public ServerResponse editMemberInfo(@RequestBody MemberAccount memberAccount) throws EqianyuanException {
         // 从session池中获取系统用户信息
@@ -155,7 +164,7 @@ public class MemberController extends BaseController {
      * @return
      * @throws EqianyuanException
      */
-    @RequestMapping(value = "/walletInfo", method = RequestMethod.GET)
+    @RequestMapping(value = "/walletInfo", method = {RequestMethod.GET, RequestMethod.POST})
     @ResponseBody
     public ServerResponse getWalletInfo() throws EqianyuanException {
         WalletVo walletVo = memberService.getWalletInfo(getLoginMember().getMemberId());
@@ -186,27 +195,12 @@ public class MemberController extends BaseController {
      * @return
      * @throws EqianyuanException
      */
-    @RequestMapping(value = "/order", method = RequestMethod.GET)
+    @RequestMapping(value = "/order", method = {RequestMethod.GET, RequestMethod.POST})
     @ResponseBody
     public ServerResponse getOrderPageList(@ModelAttribute PurchaseOrder order, @ModelAttribute Pager page) throws EqianyuanException {
         order.setMemberId(getLoginMember().getMemberId());
-        order.setType(1); // 1表示会员购物订单
         PageResponse pageResponse = memberService.getOrderPageList(order, page);
         return new ServerResponse.ResponseBuilder().data(pageResponse).build();
-    }
-
-    /***
-     * 获取订单详情
-     *
-     * @param orderId
-     * @return
-     * @throws EqianyuanException
-     */
-    @RequestMapping(value = "/order/{orderId}", method = RequestMethod.GET)
-    @ResponseBody
-    public ServerResponse getOrderGoodsByOrderId(@PathVariable String orderId) throws EqianyuanException {
-        List<OrderGoodsWithBLOBs> list = memberService.getOrderGoodsByOrderId(orderId);
-        return new ServerResponse.ResponseBuilder().data(list).build();
     }
 
     /***
@@ -218,6 +212,7 @@ public class MemberController extends BaseController {
      */
     @RequestMapping(value = "/order/{orderId}/pay", method = RequestMethod.POST)
     @ResponseBody
+    // TODO 需要重写！！！
     public ServerResponse orderPay(@PathVariable String orderId) throws EqianyuanException {
         // TODO  调用支付接口
         boolean flag = memberService.orderPay(orderId);
@@ -232,7 +227,7 @@ public class MemberController extends BaseController {
      * @return
      * @throws EqianyuanException
      */
-    @RequestMapping(value = "/receivedMessage", method = RequestMethod.GET)
+    @RequestMapping(value = "/receivedMessage", method = {RequestMethod.GET, RequestMethod.POST} )
     @ResponseBody
     public ServerResponse getReceivedMessage(@ModelAttribute Pager page) throws EqianyuanException {
         int memberId = getLoginMember().getMemberId();
@@ -248,7 +243,7 @@ public class MemberController extends BaseController {
      * @return
      * @throws EqianyuanException
      */
-    @RequestMapping(value = "/pushedMessage", method = RequestMethod.GET)
+    @RequestMapping(value = "/pushedMessage", method = {RequestMethod.GET, RequestMethod.POST} )
     @ResponseBody
     public ServerResponse getPushedMessage(@ModelAttribute Pager page) throws EqianyuanException {
         int memberId = getLoginMember().getMemberId();
@@ -263,7 +258,7 @@ public class MemberController extends BaseController {
      * @return
      * @throws EqianyuanException
      */
-    @RequestMapping(value = "/pushedMessage/{messageId}", method = RequestMethod.DELETE)
+    @RequestMapping(value = "/pushedMessage/{messageId}", method = {RequestMethod.DELETE, RequestMethod.POST} )
     @ResponseBody
     public ServerResponse deleteMessage(@PathVariable String messageId) throws EqianyuanException {
         boolean flag = memberService.deleteMessage(messageId);
@@ -278,7 +273,7 @@ public class MemberController extends BaseController {
      * @return
      * @throws EqianyuanException
      */
-    @RequestMapping(value = "/storeGoods", method = RequestMethod.GET)
+    @RequestMapping(value = "/storeGoods", method = {RequestMethod.GET, RequestMethod.POST} )
     @ResponseBody
     public ServerResponse getStoreGoods(@ModelAttribute Goods goods, @ModelAttribute Pager page) throws EqianyuanException {
         int memberId = getLoginMember().getMemberId();
@@ -293,7 +288,7 @@ public class MemberController extends BaseController {
      * @return
      * @throws EqianyuanException
      */
-    @RequestMapping(value = "/storeGoods/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/storeGoods/{id}", method = {RequestMethod.GET, RequestMethod.POST} )
     @ResponseBody
     public ServerResponse getStoreGoodsDetail(@PathVariable String id) throws EqianyuanException {
         GoodsBo goods = memberService.getStoreGoodsDetail(id);
@@ -326,7 +321,7 @@ public class MemberController extends BaseController {
      * @return
      * @throws EqianyuanException
      */
-    @RequestMapping(value = "/store/takeback/{id}", method = RequestMethod.DELETE)
+    @RequestMapping(value = "/store/takeback/{id}", method = {RequestMethod.DELETE, RequestMethod.POST} )
     @ResponseBody
     public ServerResponse takebackGoods(@PathVariable Integer id) throws EqianyuanException {
         boolean flag = memberService.takebackGoods(id);
@@ -339,7 +334,7 @@ public class MemberController extends BaseController {
      * @return
      * @throws EqianyuanException
      */
-    @RequestMapping(value = "/storeOrders", method = RequestMethod.GET)
+    @RequestMapping(value = "/storeOrders", method = {RequestMethod.GET, RequestMethod.POST} )
     @ResponseBody
     public ServerResponse getStoreOrders(@ModelAttribute Pager page) throws EqianyuanException {
         int memberId = getLoginMember().getMemberId();
@@ -354,7 +349,7 @@ public class MemberController extends BaseController {
      * @return
      * @throws EqianyuanException
      */
-    @RequestMapping(value = "/storeOrders/{orderId}", method = RequestMethod.GET)
+    @RequestMapping(value = "/storeOrders/{orderId}", method = {RequestMethod.GET, RequestMethod.POST} )
     @ResponseBody
     public ServerResponse getStoreOrdersDetail(@PathVariable String orderId) throws EqianyuanException {
         int memberId = getLoginMember().getMemberId();
@@ -368,7 +363,7 @@ public class MemberController extends BaseController {
      * @return
      * @throws EqianyuanException
      */
-    @RequestMapping(value = "/storeOrdersTotalPrice", method = RequestMethod.GET)
+    @RequestMapping(value = "/storeOrdersTotalPrice", method = {RequestMethod.GET, RequestMethod.POST} )
     @ResponseBody
     public ServerResponse getStoreOrdersTotalPrice() throws EqianyuanException {
         int memberId = getLoginMember().getMemberId();
@@ -384,7 +379,7 @@ public class MemberController extends BaseController {
      * @return
      * @throws EqianyuanException
      */
-    @RequestMapping(value = "/backpackGoods", method = RequestMethod.GET)
+    @RequestMapping(value = "/backpackGoods", method = {RequestMethod.GET, RequestMethod.POST} )
     @ResponseBody
     public ServerResponse getBackpackGoodsPageList(@ModelAttribute Goods goods, @ModelAttribute Pager page) throws EqianyuanException {
         int memberId = getLoginMember().getMemberId();
@@ -399,7 +394,7 @@ public class MemberController extends BaseController {
      * @return
      * @throws EqianyuanException
      */
-    @RequestMapping(value = "/backpackGoods/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/backpackGoods/{id}", method = {RequestMethod.GET, RequestMethod.POST} )
     @ResponseBody
     public ServerResponse getBackpackGoodsDetail(@PathVariable String id) throws EqianyuanException {
         GoodsBoWithCount goods = memberService.getBackpackGoodsDetail(id);

@@ -274,25 +274,12 @@ public class MemberService {
 	}
     
 	/***
-	 * 根据订单编号查询订单商品详情
-	 * @param orderId
-	 * @return
-	 * @throws EqianyuanException
-	 */
-	public List<OrderGoodsWithBLOBs> getOrderGoodsByOrderId(String orderId) throws EqianyuanException {
-		if (StringUtils.isEmpty(orderId)) {
-			logger.warn("查询订单详情失败，订单编号为空");
-			throw new EqianyuanException(ExceptionMsgConstant.ORDERID_IS_EMPTY); 
-		}
-		return orderSerivce.getOrderGoodsByOrderId(orderId);
-	}
-	
-	/***
 	 * 订单支付
 	 * @param orderId
 	 * @return
 	 * @throws EqianyuanException
 	 */
+	// TODO 需要重写！！！
 	public boolean orderPay(String orderId) throws EqianyuanException {
 		if (StringUtils.isEmpty(orderId)) {
 			logger.warn("查询订单详情失败，订单编号为空");
