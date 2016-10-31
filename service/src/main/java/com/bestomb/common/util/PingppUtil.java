@@ -38,6 +38,10 @@ public class PingppUtil {
         put("alipay_pc_direct", new HashMap<String, String>() {{
             put("success_url", "http://bestomb.eqianyuan.cn/pingpp/pay_success.jsp");
         }});
+        //银联PC页面支付
+        put("upacp_pc", new HashMap<String, String>() {{
+            put("result_url", "http://bestomb.eqianyuan.cn/pingpp/pay_success.jsp");
+        }});
     }};
 
     /**
@@ -75,7 +79,9 @@ public class PingppUtil {
         app.put("id", appId);
         chargeParams.put("app", app);
         chargeParams.put("channel", channel);
-        chargeParams.put("extra", payChannel.get(channel));
+        if (payChannel.get(channel) != null) {
+            chargeParams.put("extra", payChannel.get(channel));
+        }
         chargeParams.put("currency", "cny");
         chargeParams.put("client_ip", clientIp);
         chargeParams.put("subject", subject);
