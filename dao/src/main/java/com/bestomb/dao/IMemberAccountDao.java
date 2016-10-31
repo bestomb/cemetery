@@ -30,7 +30,7 @@ public interface IMemberAccountDao {
     /**
      * 分页查询
      */
-    List<MemberAccount> selectByPagination(@Param("page") Page page,@Param("type") String type);
+    List<MemberAccount> selectByPagination(@Param("page") Page page, @Param("type") String type);
 
     /**
      * 根据数据对象获取总条数
@@ -47,21 +47,24 @@ public interface IMemberAccountDao {
     MemberAccount selectByLogin(@Param("login_account") String loginAccount, @Param("login_password") String loginPassword);
 
     int updateByPrimaryKeySelective(MemberAccount record);
-    
+
     /***
      * 编辑会员资料
+     *
      * @param record
      * @return
      */
     int memberEdit(MemberAccount record);
-    
-    /***
+
+    /**
      * 更新交易币
-     * @param memberId
+     *
+     * @param tradingAmount 交易币金额
+     * @param memberId      会员编号
      * @return
      */
-    int updateTradingAmount(MemberAccount record);
-    
+    int updateTradingAmount(@Param("tradingAmount") Double tradingAmount, @Param("memberId") Integer memberId);
+
     /**
      * 根据会员编号集合查询会员数据集合
      *
@@ -72,6 +75,7 @@ public interface IMemberAccountDao {
 
     /**
      * 查询全部会员信息
+     *
      * @return
      */
     List<MemberAccount> selectAll();

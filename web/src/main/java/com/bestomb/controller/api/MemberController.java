@@ -172,22 +172,6 @@ public class MemberController extends BaseController {
     }
 
     /***
-     * 会员充值
-     *
-     * @param tradingDetail
-     * @return
-     * @throws EqianyuanException
-     */
-    @RequestMapping(value = "/deposit", method = RequestMethod.POST)
-    @ResponseBody
-    public ServerResponse deposit(@RequestBody TradingDetail tradingDetail) throws EqianyuanException {
-        // TODO 调用充值接口
-        tradingDetail.setMemberId(getLoginMember().getMemberId());
-        boolean flag = memberService.deposit(tradingDetail);
-        return new ServerResponse.ResponseBuilder().data(flag).build();
-    }
-
-    /***
      * 获取会员订单列表
      *
      * @param PurchaseOrder
