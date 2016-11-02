@@ -89,4 +89,22 @@ public class ClientConf {
             return String.valueOf(this.key);
         }
     }
+
+    /**
+     * ping++支付配置
+     */
+    public enum Pingpp {
+        pingpp("pingpp"), api_key("api_key"), app_id("app_id");
+
+        private String key;
+
+        Pingpp(String key) {
+            this.key = key;
+        }
+
+        @Override
+        public String toString() {
+            return String.valueOf(this.key);
+        }
+    }
 }
