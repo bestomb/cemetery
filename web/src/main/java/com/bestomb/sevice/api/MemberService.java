@@ -247,32 +247,29 @@ public class MemberService {
             throw new EqianyuanException(ExceptionMsgConstant.MEMBERSHIP_NUMBER_IS_EMPTY);
         }
         return orderSerivce.getPageList(order, page);
-	}
-    
-	/***
-	 * 订单支付
-	 * @param orderId
-	 * @return
-	 * @throws EqianyuanException
-	 */
-	// TODO 需要重写！！！
-	public boolean orderPay(String orderId) throws EqianyuanException {
-		if (StringUtils.isEmpty(orderId)) {
-			logger.warn("查询订单详情失败，订单编号为空");
-			throw new EqianyuanException(ExceptionMsgConstant.ORDERID_IS_EMPTY); 
-		}
-		return orderSerivce.orderPay(orderId);
-	}
-	
-	/***
-	 * 查看我（收到的）的留言分页列表
-	 * @param memberId
-	 * @param page
-	 * @return
-	 * @throws EqianyuanException
-	 */
-	public PageResponse getReceivedMessage(Integer memberId, Pager page) throws EqianyuanException{
-		// 会员编号是否为空
+    }
+
+    /***
+     * 商品购买
+     *
+     * @param goodsInfo
+     * @return
+     * @throws EqianyuanException
+     */
+    public void goodsBuy(String goodsInfo) throws EqianyuanException {
+        orderSerivce.goodsBuy(goodsInfo);
+    }
+
+    /***
+     * 查看我（收到的）的留言分页列表
+     *
+     * @param memberId
+     * @param page
+     * @return
+     * @throws EqianyuanException
+     */
+    public PageResponse getReceivedMessage(Integer memberId, Pager page) throws EqianyuanException {
+        // 会员编号是否为空
         if (ObjectUtils.isEmpty(memberId)) {
             logger.warn("getReceivedMessage fail , because memberId is null");
             throw new EqianyuanException(ExceptionMsgConstant.MEMBERSHIP_NUMBER_IS_EMPTY);
@@ -312,7 +309,7 @@ public class MemberService {
         }
 		return leaveMessage.deleteByPrimaryKey(messageId);
 	}
-	
+
 	/***
 	 * 根据查询条件查询会员背包商品分页列表
 	 * @param backpack
@@ -323,7 +320,7 @@ public class MemberService {
 	public PageResponse getBackpackGoodsPageList(Backpack backpack, Pager page) throws EqianyuanException {
 		return backpackService.getGoodsPageList(backpack, page);
 	}
-	
+
 	/***
 	 * 获取背包商品详情
 	 * @param id
@@ -333,5 +330,5 @@ public class MemberService {
 	public Object getBackpackGoodsDetail(Backpack backpack) throws EqianyuanException{
 		return backpackService.getGoodsDetail(backpack);
 	}
-	
+
 }

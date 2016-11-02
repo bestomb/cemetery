@@ -27,3 +27,9 @@ serverSocketByMsgBackLog: 500
 # 短息推送程序执行节点
 execute_node: 10-12
 
+### ping ++ 支付配置 ###
+#api_key
+#app_id  应用ID
+pingpp:
+  api_key: sk_test_5an944jrLinT8q1W5SjjLOaT
+  app_id: app_fv9Sa1qnvL4SrjLy

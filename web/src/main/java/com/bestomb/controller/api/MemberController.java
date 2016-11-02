@@ -182,19 +182,18 @@ public class MemberController extends BaseController {
     }
 
     /***
-     * 订单支付
+     * 商品购买
      *
-     * @param orderId
+     * @param goodsInfo 购物清单JSON字符串
      * @return
      * @throws EqianyuanException
      */
-    @RequestMapping(value = "/order/{orderId}/pay", method = RequestMethod.POST)
+    @RequestMapping("/goodsBuy")
     @ResponseBody
-    // TODO 需要重写！！！
-    public ServerResponse orderPay(@PathVariable String orderId) throws EqianyuanException {
-        // TODO  调用支付接口
-        boolean flag = memberService.orderPay(orderId);
-        return new ServerResponse.ResponseBuilder().data(flag).build();
+    public ServerResponse goodsBuy(String goodsInfo) throws EqianyuanException {
+        memberService.goodsBuy(goodsInfo);
+//        return new ServerResponse.ResponseBuilder().data(flag).build();
+        return new ServerResponse();
     }
 
     /***
