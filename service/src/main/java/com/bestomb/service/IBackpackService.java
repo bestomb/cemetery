@@ -3,9 +3,7 @@ package com.bestomb.service;
 import com.bestomb.common.Pager;
 import com.bestomb.common.exception.EqianyuanException;
 import com.bestomb.common.response.PageResponse;
-import com.bestomb.common.response.goods.GoodsBoWithCount;
-import com.bestomb.entity.Goods;
-import com.bestomb.entity.OrderGoodsWithBLOBs;
+import com.bestomb.entity.Backpack;
 
 /***
  * 背包接口
@@ -16,26 +14,18 @@ public interface IBackpackService {
 	
 	/***
 	 * 根据查询条件查询会员背包商品分页列表
-	 * @param memberId
-	 * @param goods
+	 * @param backpack
 	 * @param page
 	 * @return
 	 * @throws EqianyuanException
 	 */
-	public PageResponse getGoodsPageList(Integer memberId, Goods goods, Pager page) throws EqianyuanException;
+	public PageResponse getGoodsPageList(Backpack backpack, Pager page) throws EqianyuanException;
 	
 	/***
 	 * 查看背包商品详情
-	 * @param id
+	 * @param backpack
 	 * @return
 	 */
-	public GoodsBoWithCount getGoodsById(String id) throws EqianyuanException;
-	
-	/***
-	 * 查看背包商品详情
-	 * @param id
-	 * @return
-	 */
-	public OrderGoodsWithBLOBs getEntityGoodsById(String id) throws EqianyuanException;
+	public Object getGoodsDetail(Backpack backpack) throws EqianyuanException;
 	
 }

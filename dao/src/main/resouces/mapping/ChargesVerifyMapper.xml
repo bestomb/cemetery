@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bestomb.dao.IChargesVerifyDao">
+    <resultMap id="BaseResultMap" type="com.bestomb.entity.ChargesVerify">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="order_no" property="orderNo" jdbcType="BIGINT"/>
+        <result column="member_id" property="memberId" jdbcType="INTEGER"/>
+        <result column="create_time" property="createTime" jdbcType="INTEGER"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    id, order_no, member_id, create_time
+  </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from charges_verify
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from charges_verify
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+    <insert id="insert" parameterType="com.bestomb.entity.ChargesVerify">
+    insert into charges_verify (id, order_no, member_id, 
+      create_time)
+    values (#{id,jdbcType=INTEGER}, #{orderNo,jdbcType=BIGINT}, #{memberId,jdbcType=INTEGER},
+      #{createTime,jdbcType=INTEGER})
+  </insert>
+    <insert id="insertSelective" parameterType="com.bestomb.entity.ChargesVerify">
+        insert into charges_verify
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="orderNo != null">
+                order_no,
+            </if>
+            <if test="memberId != null">
+                member_id,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="orderNo != null">
+                #{orderNo,jdbcType=BIGINT},
+            </if>
+            <if test="memberId != null">
+                #{memberId,jdbcType=INTEGER},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=INTEGER},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.bestomb.entity.ChargesVerify">
+        update charges_verify
+        <set>
+            <if test="orderNo != null">
+                order_no = #{orderNo,jdbcType=BIGINT},
+            </if>
+            <if test="memberId != null">
+                member_id = #{memberId,jdbcType=INTEGER},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=INTEGER},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.bestomb.entity.ChargesVerify">
+    update charges_verify
+    set order_no = #{orderNo,jdbcType=BIGINT},
+      member_id = #{memberId,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+    <!-- 根据订单编号查询会员编号 -->
+    <select id="selectMemberByOrderNo" resultType="java.lang.Integer">
+    select
+    member_id
+    from charges_verify
+    where order_no = #{orderNo,jdbcType=BIGINT}
+  </select>
+
+    <!-- 根据订单编号删除数据 -->
+    <delete id="deleteByOrderNo">
+        delete from charges_verify
+        where order_no = #{orderNo,jdbcType=BIGINT}
+    </delete>
+</mapper>

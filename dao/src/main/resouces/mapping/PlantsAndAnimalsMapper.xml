@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bestomb.dao.IPlantsAndAnimalsDao" >
+  <resultMap id="BaseResultMap" type="com.bestomb.entity.PlantsAndAnimals" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="price" property="price" jdbcType="DOUBLE" />
+    <result column="images" property="images" jdbcType="VARCHAR" />
+    <result column="model_id" property="modelId" jdbcType="VARCHAR" />
+    <result column="type" property="type" jdbcType="INTEGER" />
+    <result column="grouping" property="grouping" jdbcType="INTEGER" />
+    <result column="phase" property="phase" jdbcType="INTEGER" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.bestomb.entity.PlantsAndAnimals" extends="BaseResultMap" >
+    <result column="description" property="description" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <resultMap id="ResultMapWithBiont" type="com.bestomb.entity.Biont" extends="ResultMapWithBLOBs" >
+    <result column="goodsId" property="goodsId" jdbcType="VARCHAR" />
+    <result column="cemeteryId" property="cemeteryId" jdbcType="VARCHAR" />
+    <result column="growingDays" property="growingDays" jdbcType="INTEGER" />
+    <result column="lifeValue" property="lifeValue" jdbcType="INTEGER" />
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    id, name, price, images, model_id, type, grouping, phase
+  </sql>
+  <sql id="Blob_Column_List" >
+    description
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from plants_and_animals
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from plants_and_animals
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.bestomb.entity.PlantsAndAnimals" >
+    insert into plants_and_animals (id, name, price, 
+      images, model_id, type, 
+      grouping, phase, description
+      )
+    values (#{id,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{price,jdbcType=DOUBLE}, 
+      #{images,jdbcType=VARCHAR}, #{modelId,jdbcType=VARCHAR}, #{type,jdbcType=INTEGER}, 
+      #{grouping,jdbcType=INTEGER}, #{phase,jdbcType=INTEGER}, #{description,jdbcType=LONGVARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.bestomb.entity.PlantsAndAnimals" >
+    insert into plants_and_animals
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="price != null" >
+        price,
+      </if>
+      <if test="images != null" >
+        images,
+      </if>
+      <if test="modelId != null" >
+        model_id,
+      </if>
+      <if test="type != null" >
+        type,
+      </if>
+      <if test="grouping != null" >
+        grouping,
+      </if>
+      <if test="phase != null" >
+        phase,
+      </if>
+      <if test="description != null" >
+        description,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="price != null" >
+        #{price,jdbcType=DOUBLE},
+      </if>
+      <if test="images != null" >
+        #{images,jdbcType=VARCHAR},
+      </if>
+      <if test="modelId != null" >
+        #{modelId,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=INTEGER},
+      </if>
+      <if test="grouping != null" >
+        #{grouping,jdbcType=INTEGER},
+      </if>
+      <if test="phase != null" >
+        #{phase,jdbcType=INTEGER},
+      </if>
+      <if test="description != null" >
+        #{description,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.bestomb.entity.PlantsAndAnimals" >
+    update plants_and_animals
+    <set >
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="price != null" >
+        price = #{price,jdbcType=DOUBLE},
+      </if>
+      <if test="images != null" >
+        images = #{images,jdbcType=VARCHAR},
+      </if>
+      <if test="modelId != null" >
+        model_id = #{modelId,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        type = #{type,jdbcType=INTEGER},
+      </if>
+      <if test="grouping != null" >
+        grouping = #{grouping,jdbcType=INTEGER},
+      </if>
+      <if test="phase != null" >
+        phase = #{phase,jdbcType=INTEGER},
+      </if>
+      <if test="description != null" >
+        description = #{description,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.bestomb.entity.PlantsAndAnimals" >
+    update plants_and_animals
+    set name = #{name,jdbcType=VARCHAR},
+      price = #{price,jdbcType=DOUBLE},
+      images = #{images,jdbcType=VARCHAR},
+      model_id = #{modelId,jdbcType=VARCHAR},
+      type = #{type,jdbcType=INTEGER},
+      grouping = #{grouping,jdbcType=INTEGER},
+      phase = #{phase,jdbcType=INTEGER},
+      description = #{description,jdbcType=LONGVARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.bestomb.entity.PlantsAndAnimals" >
+    update plants_and_animals
+    set name = #{name,jdbcType=VARCHAR},
+      price = #{price,jdbcType=DOUBLE},
+      images = #{images,jdbcType=VARCHAR},
+      model_id = #{modelId,jdbcType=VARCHAR},
+      type = #{type,jdbcType=INTEGER},
+      grouping = #{grouping,jdbcType=INTEGER},
+      phase = #{phase,jdbcType=INTEGER}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  
+  <!-- 查询动植物详情 -->
+  <select id="getDetail" resultMap="ResultMapWithBiont" parameterType="java.lang.String">
+	  	select a.id, a.name, a.price, a.images, a.model_id, a.type, a.grouping, a.phase, a.description, b.goodsId, b.cemeteryId, b.growingDays, b.lifeValue
+	    from plants_and_animals a, park b
+	    where a.id = b.goodsId and b.goodsId = #{goodsId,jdbcType=VARCHAR}
+  </select>
+  
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from plants_and_animals
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  
+</mapper>

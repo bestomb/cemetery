@@ -3,9 +3,8 @@ package com.bestomb.service;
 import com.bestomb.common.Pager;
 import com.bestomb.common.exception.EqianyuanException;
 import com.bestomb.common.response.PageResponse;
-import com.bestomb.common.response.goods.GoodsBo;
-import com.bestomb.entity.Goods;
 import com.bestomb.entity.GoodsWithBLOBs;
+import com.bestomb.entity.Mall;
 
 /***
  * 商品接口
@@ -20,15 +19,7 @@ public interface IGoodsService {
 	 * @return
 	 * @throws EqianyuanException
 	 */
-	public GoodsBo getGoodsById(String id) throws EqianyuanException;
-	
-	/***
-	 * 根据id查询商品详情
-	 * @param id
-	 * @return
-	 * @throws EqianyuanException
-	 */
-	public GoodsWithBLOBs getEntityGoodsById(String id) throws EqianyuanException;
+	public Object getGoodsById(Mall mall) throws EqianyuanException;
 	
 	/***
 	 * 添加商品
@@ -45,7 +36,7 @@ public interface IGoodsService {
 	 * @return
 	 * @throws EqianyuanException
 	 */
-	public PageResponse getGoodsPageList(Goods goods, Pager page) throws EqianyuanException;
+	public PageResponse getGoodsPageList(Mall mall, Pager page) throws EqianyuanException;
 	
 	/***
 	 * 删除商品

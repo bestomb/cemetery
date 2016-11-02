@@ -2,7 +2,6 @@ package com.bestomb.sevice.api;
 
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpSession;
@@ -19,36 +18,18 @@ import com.bestomb.common.Pager;
 import com.bestomb.common.constant.ExceptionMsgConstant;
 import com.bestomb.common.exception.EqianyuanException;
 import com.bestomb.common.response.PageResponse;
-import com.bestomb.common.response.goods.GoodsBo;
-import com.bestomb.common.response.goods.GoodsBoWithCount;
-import com.bestomb.common.response.member.MemberAccountBo;
-import com.bestomb.common.response.member.MemberAccountVo;
-import com.bestomb.common.response.member.MemberLoginBo;
-import com.bestomb.common.response.member.MemberLoginVo;
-import com.bestomb.common.response.member.WalletVo;
-import com.bestomb.common.response.orderGoods.OrderGoodsBo;
-import com.bestomb.common.util.CalendarUtil;
-import com.bestomb.common.util.RegexUtils;
-import com.bestomb.common.util.SMSUtils;
-import com.bestomb.common.util.SessionContextUtil;
-import com.bestomb.common.util.SessionUtil;
-import com.bestomb.common.util.StringTemplateReplaceUtil;
-import com.bestomb.common.util.VerifyCodeUtils;
-import com.bestomb.common.util.YamlForMapHandleUtil;
+import com.bestomb.common.response.member.*;
+import com.bestomb.common.util.*;
 import com.bestomb.common.util.yamlMapper.ClientConf;
 import com.bestomb.common.util.yamlMapper.SystemConf;
-import com.bestomb.entity.Goods;
+import com.bestomb.entity.Backpack;
 import com.bestomb.entity.MemberAccount;
-import com.bestomb.entity.OrderGoodsWithBLOBs;
 import com.bestomb.entity.PurchaseOrder;
-import com.bestomb.entity.StoreWithGoods;
 import com.bestomb.entity.TradingDetail;
 import com.bestomb.service.IBackpackService;
-import com.bestomb.service.IGoodsService;
 import com.bestomb.service.ILeaveMessage;
 import com.bestomb.service.IMemberService;
 import com.bestomb.service.IOrderService;
-import com.bestomb.service.IStoreService;
 import com.bestomb.service.ITradingService;
 
 /**
@@ -63,15 +44,9 @@ public class MemberService {
     @Autowired
     private IMemberService memberService; // 会员接口
     @Autowired
-    private ITradingService tradingDetailService; // 交易币接口
-    @Autowired
     private IOrderService orderSerivce; // 订单接口
     @Autowired
     private ILeaveMessage leaveMessage; // 祭祀留言接口
-    @Autowired
-    private IStoreService storeService; // 会员店铺接口
-    @Autowired
-    private IGoodsService goodsService; // 商品接口
     @Autowired
     private IBackpackService backpackService; // 背包接口
 
@@ -195,7 +170,7 @@ public class MemberService {
      * @return
      */
     @SuppressWarnings("unchecked")
-	private Map<String, Map<String, String>> getSendByVerificationCodes(HttpSession session) throws EqianyuanException {
+    private Map<String, Map<String, String>> getSendByVerificationCodes(HttpSession session) throws EqianyuanException {
         Object sendSMSByBatchSend2 = SessionUtil.getAttribute(session, SystemConf.SEND_SMS_BY_BATCHSEND2.toString());
         if (ObjectUtils.isEmpty(sendSMSByBatchSend2)) {
             return new HashMap<String, Map<String, String>>();
@@ -203,8 +178,8 @@ public class MemberService {
 
         return (Map<String, Map<String, String>>) sendSMSByBatchSend2;
     }
-    
-    
+
+
     /**
      * 根据主键ID查询信息
      *
@@ -213,12 +188,12 @@ public class MemberService {
      * @throws EqianyuanException
      */
     public MemberAccountVo getInfo(int memberId) throws EqianyuanException {
-    	MemberAccountVo memberAccountVo = new MemberAccountVo();
-    	MemberAccountBo memberLoginBo = memberService.getInfo(memberId+"");
-    	BeanUtils.copyProperties(memberLoginBo, memberAccountVo);
+        MemberAccountVo memberAccountVo = new MemberAccountVo();
+        MemberAccountBo memberLoginBo = memberService.getInfo(memberId + "");
+        BeanUtils.copyProperties(memberLoginBo, memberAccountVo);
         return memberAccountVo;
     }
-    
+
     /**
      * 根据主键ID查询钱包信息（交易币和积分）
      *
@@ -227,45 +202,37 @@ public class MemberService {
      * @throws EqianyuanException
      */
     public WalletVo getWalletInfo(int memberId) throws EqianyuanException {
-    	WalletVo walletVo = new WalletVo();
-    	MemberAccountBo memberLoginBo = memberService.getInfo(memberId+"");
-    	BeanUtils.copyProperties(memberLoginBo, walletVo);
-    	return walletVo;
+        WalletVo walletVo = new WalletVo();
+        MemberAccountBo memberLoginBo = memberService.getInfo(memberId + "");
+        BeanUtils.copyProperties(memberLoginBo, walletVo);
+        return walletVo;
     }
-    
+
     /***
      * 修改会员资料
+     *
      * @param memberAccount
      * @return
      * @throws EqianyuanException
      */
-    public boolean edit(MemberAccount memberAccount) throws EqianyuanException{
-    	// 会员编号是否为空
+    public boolean edit(MemberAccount memberAccount) throws EqianyuanException {
+        // 会员编号是否为空
         if (ObjectUtils.isEmpty(memberAccount.getMemberId())) {
             logger.warn("edit fail , because memberId is null");
             throw new EqianyuanException(ExceptionMsgConstant.MEMBERSHIP_NUMBER_IS_EMPTY);
         }
-    	return memberService.edit(memberAccount)>0;
+        return memberService.edit(memberAccount) > 0;
     }
-    
+
     /***
-     * 会员充值
-     * @param tradingDetail
+     * 查询订单分页列表
+     *
+     * @param order
+     * @param page
      * @return
-     * @throws EqianyuanException
      */
-    public boolean deposit(TradingDetail tradingDetail) throws EqianyuanException{
-    	return tradingDetailService.deposit(tradingDetail);
-    }
-    
-    /***
-	 * 查询订单分页列表
-	 * @param order
-	 * @param page
-	 * @return
-	 */
-	public PageResponse getOrderPageList(PurchaseOrder order, Pager page) throws EqianyuanException{
-		// 会员编号是否为空
+    public PageResponse getOrderPageList(PurchaseOrder order, Pager page) throws EqianyuanException {
+        // 会员编号是否为空
         if (ObjectUtils.isEmpty(order.getMemberId())) {
             logger.warn("getOrderPageList fail , because memberId is null");
             throw new EqianyuanException(ExceptionMsgConstant.MEMBERSHIP_NUMBER_IS_EMPTY);
@@ -302,33 +269,35 @@ public class MemberService {
             throw new EqianyuanException(ExceptionMsgConstant.MEMBERSHIP_NUMBER_IS_EMPTY);
         }
         return leaveMessage.getReceivedMessage(memberId, page);
-	}
-	
-	/***
-	 * 查看我（发出）的留言分页列表
-	 * @param memberId
-	 * @param page
-	 * @return
-	 * @throws EqianyuanException
-	 */
-	public PageResponse getPushedMessage(Integer memberId, Pager page) throws EqianyuanException{
-		// 会员编号是否为空
-		if (ObjectUtils.isEmpty(memberId)) {
-			logger.warn("getPushedMessage fail , because memberId is null");
-			throw new EqianyuanException(ExceptionMsgConstant.MEMBERSHIP_NUMBER_IS_EMPTY);
-		}
-		return leaveMessage.getPushedMessage(memberId, page);
-	}
-	
-	/***
-	 * 删除（我发出的）留言
-	 * @param messageId
-	 * @return
-	 * @throws EqianyuanException
-	 */
-	public boolean deleteMessage(String messageId) throws EqianyuanException{
-		// 留言ID是否为空
-		if (StringUtils.isEmpty(messageId)) {
+    }
+
+    /***
+     * 查看我（发出）的留言分页列表
+     *
+     * @param memberId
+     * @param page
+     * @return
+     * @throws EqianyuanException
+     */
+    public PageResponse getPushedMessage(Integer memberId, Pager page) throws EqianyuanException {
+        // 会员编号是否为空
+        if (ObjectUtils.isEmpty(memberId)) {
+            logger.warn("getPushedMessage fail , because memberId is null");
+            throw new EqianyuanException(ExceptionMsgConstant.MEMBERSHIP_NUMBER_IS_EMPTY);
+        }
+        return leaveMessage.getPushedMessage(memberId, page);
+    }
+
+    /***
+     * 删除（我发出的）留言
+     *
+     * @param messageId
+     * @return
+     * @throws EqianyuanException
+     */
+    public boolean deleteMessage(String messageId) throws EqianyuanException {
+        // 留言ID是否为空
+        if (StringUtils.isEmpty(messageId)) {
             logger.warn("deleteMessage fail , because messageId is null.");
             throw new EqianyuanException(ExceptionMsgConstant.MESSAGEID_IS_EMPTY);
         }
@@ -336,92 +305,14 @@ public class MemberService {
 	}
 	
 	/***
-	 * 查看我的店铺已发布商品分页列表
-	 * @param memberId
-	 * @param page
-	 * @return
-	 * @throws EqianyuanException
-	 */
-	public PageResponse getStoreGoods(Integer memberId, Goods goods, Pager page) throws EqianyuanException{
-		// 会员编号是否为空
-		if (ObjectUtils.isEmpty(memberId)) {
-			logger.warn("getStoreGoods fail , because memberId is null");
-			throw new EqianyuanException(ExceptionMsgConstant.MEMBERSHIP_NUMBER_IS_EMPTY);
-		}
-		return storeService.getPageList(memberId, goods, page);
-	}
-	
-	/***
-	 * 获取店铺商品详情
-	 * @param id
-	 * @return
-	 * @throws EqianyuanException
-	 */
-	public GoodsBo getStoreGoodsDetail(String id) throws EqianyuanException{
-		return goodsService.getGoodsById(id);
-	}
-
-	/***
-	 * 发布商品
-	 * @param storeWithGoods
-	 * @return
-	 * @throws EqianyuanException
-	 */
-	public boolean sellGoods(StoreWithGoods storeWithGoods) throws EqianyuanException{
-		return storeService.sellGoods(storeWithGoods);
-	}
-
-	/***
-     * 下架商品
-     * @param id
-     * @return
-     * @throws EqianyuanException
-     */
-	public boolean takebackGoods(Integer id) throws EqianyuanException {
-		return storeService.takebackGoods(id);
-	}
-	
-	/***
-	 * 查询会员店铺销售订单分页列表
-	 * @param memberId
-	 * @param page
-	 * @return
-	 * @throws EqianyuanException
-	 */
-	public PageResponse getStoreOrders(Integer memberId, Pager page) throws EqianyuanException{
-		return storeService.getStoreOrdersPageList(memberId, page);
-	}
-
-	/***
-	 * 查询会员店铺销售订单详情
-	 * @param orderId
-	 * @param memberId
-	 * @return
-	 * @throws EqianyuanException 
-	 */
-	public List<OrderGoodsBo> getStoreOrdersDetail(String orderId, Integer memberId) throws EqianyuanException {
-		return storeService.getStoreOrdersDetail(orderId, memberId);
-	}
-	
-	/***
-	 * 查询会员店铺订单销售总额
-	 * @param memberId
-	 * @return
-	 */
-	public Double getStoreOrdersTotalPrice(Integer memberId) throws EqianyuanException {
-		return storeService.getStoreOrdersTotalPrice(memberId);
-	}
-	
-	/***
 	 * 根据查询条件查询会员背包商品分页列表
-	 * @param memberId
-	 * @param goods
+	 * @param backpack
 	 * @param page
 	 * @return
 	 * @throws EqianyuanException
 	 */
-	public PageResponse getBackpackGoodsPageList(Integer memberId, Goods goods, Pager page) throws EqianyuanException {
-		return backpackService.getGoodsPageList(memberId, goods, page);
+	public PageResponse getBackpackGoodsPageList(Backpack backpack, Pager page) throws EqianyuanException {
+		return backpackService.getGoodsPageList(backpack, page);
 	}
 	
 	/***
@@ -430,8 +321,8 @@ public class MemberService {
 	 * @return
 	 * @throws EqianyuanException
 	 */
-	public GoodsBoWithCount getBackpackGoodsDetail(String id) throws EqianyuanException{
-		return backpackService.getGoodsById(id);
+	public Object getBackpackGoodsDetail(Backpack backpack) throws EqianyuanException{
+		return backpackService.getGoodsDetail(backpack);
 	}
 	
 }

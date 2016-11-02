@@ -19,7 +19,7 @@
   </sql>
     <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
         select
-       <include refid="Base_Column_List"/>
+        <include refid="Base_Column_List"/>
         from member_account
         where member_id = #{memberId,jdbcType=INTEGER}
     </select>
@@ -190,7 +190,7 @@
         where member_id = #{memberId,jdbcType=INTEGER}
     </update>
     <!-- 现金充值成功后修改会员帐号表中交易币总金额 -->
-    <update id="updateTradingAmount" parameterType="com.bestomb.entity.MemberAccount">
+    <update id="updateTradingAmount">
         update member_account
         set trading_amount = trading_amount + #{tradingAmount,jdbcType=DOUBLE}
         where member_id = #{memberId,jdbcType=INTEGER}
@@ -210,5 +210,4 @@
         mobile_number, nick_name
         from member_account
     </select>
-
 </mapper>

@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bestomb.dao.IGoodsOfficialDao" >
+  <resultMap id="BaseResultMap" type="com.bestomb.entity.GoodsOfficial" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="price" property="price" jdbcType="DOUBLE" />
+    <result column="images" property="images" jdbcType="VARCHAR" />
+    <result column="type" property="type" jdbcType="INTEGER" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.bestomb.entity.GoodsOfficialWithBLOBs" extends="BaseResultMap" >
+    <result column="description" property="description" jdbcType="LONGVARCHAR" />
+    <result column="extend_attribute" property="extendAttribute" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, name, price, images, type
+  </sql>
+  <sql id="Blob_Column_List" >
+    description, extend_attribute
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from goods_official
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from goods_official
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.bestomb.entity.GoodsOfficialWithBLOBs" >
+    insert into goods_official (id, name, price, 
+      images, type, description, 
+      extend_attribute)
+    values (#{id,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{price,jdbcType=DOUBLE}, 
+      #{images,jdbcType=VARCHAR}, #{type,jdbcType=INTEGER}, #{description,jdbcType=LONGVARCHAR}, 
+      #{extendAttribute,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.bestomb.entity.GoodsOfficialWithBLOBs" >
+    insert into goods_official
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="price != null" >
+        price,
+      </if>
+      <if test="images != null" >
+        images,
+      </if>
+      <if test="type != null" >
+        type,
+      </if>
+      <if test="description != null" >
+        description,
+      </if>
+      <if test="extendAttribute != null" >
+        extend_attribute,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="price != null" >
+        #{price,jdbcType=DOUBLE},
+      </if>
+      <if test="images != null" >
+        #{images,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=INTEGER},
+      </if>
+      <if test="description != null" >
+        #{description,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="extendAttribute != null" >
+        #{extendAttribute,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.bestomb.entity.GoodsOfficialWithBLOBs" >
+    update goods_official
+    <set >
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="price != null" >
+        price = #{price,jdbcType=DOUBLE},
+      </if>
+      <if test="images != null" >
+        images = #{images,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        type = #{type,jdbcType=INTEGER},
+      </if>
+      <if test="description != null" >
+        description = #{description,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="extendAttribute != null" >
+        extend_attribute = #{extendAttribute,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.bestomb.entity.GoodsOfficialWithBLOBs" >
+    update goods_official
+    set name = #{name,jdbcType=VARCHAR},
+      price = #{price,jdbcType=DOUBLE},
+      images = #{images,jdbcType=VARCHAR},
+      type = #{type,jdbcType=INTEGER},
+      description = #{description,jdbcType=LONGVARCHAR},
+      extend_attribute = #{extendAttribute,jdbcType=LONGVARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.bestomb.entity.GoodsOfficial" >
+    update goods_official
+    set name = #{name,jdbcType=VARCHAR},
+      price = #{price,jdbcType=DOUBLE},
+      images = #{images,jdbcType=VARCHAR},
+      type = #{type,jdbcType=INTEGER}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  
+  
+  <!-- 封装分页查询表名 -->
+  <sql id="pageQueryTable">goods_official</sql>
+  <!-- 封装商城商品查询条件 -->
+  <sql id="whereCondition">
+  	<where>
+	  	<if test="mall.name != null" >
+	       and name like '%${mall.name,jdbcType=VARCHAR}%'
+	    </if>
+	  	<if test="mall.type != null" >
+	       and type = #{mall.type,jdbcType=INTEGER}
+	    </if>
+  	</where>
+  </sql>
+  <!-- 根据条件查询分页列表总数 -->
+  <select id="getPageListCount" resultType="java.lang.Integer">
+    select count(1) from <include refid="pageQueryTable" />
+    <include refid="whereCondition" />
+  </select>
+  <!-- 根据条件查询分页列表 -->
+  <select id="getPageList" resultMap="ResultMapWithBLOBs" >
+    select
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from <include refid="pageQueryTable" />
+    <include refid="whereCondition" />
+    limit ${page.start}, ${page.pageSize}
+  </select>
+  
+</mapper>

@@ -1,10 +1,8 @@
 package com.bestomb.service.impl;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
@@ -14,11 +12,11 @@ import com.bestomb.common.Pager;
 import com.bestomb.common.constant.ExceptionMsgConstant;
 import com.bestomb.common.exception.EqianyuanException;
 import com.bestomb.common.response.PageResponse;
-import com.bestomb.common.response.goods.GoodsBo;
 import com.bestomb.dao.IGoodsDao;
-import com.bestomb.entity.Goods;
+import com.bestomb.dao.IGoodsOfficialDao;
+import com.bestomb.dao.IGoodsPersonageDao;
 import com.bestomb.entity.GoodsWithBLOBs;
-import com.bestomb.service.IDictService;
+import com.bestomb.entity.Mall;
 import com.bestomb.service.IGoodsService;
 
 /***
@@ -34,30 +32,48 @@ public class GoodsServiceImpl implements IGoodsService {
 	@Autowired
 	private IGoodsDao goodsDao;
 	@Autowired
-	private IDictService dictService;
+	private IGoodsOfficialDao goodsOfficialDao;
+	@Autowired
+	private IGoodsPersonageDao goodsPersonageDao;
 	
 	/***
-	 * 根据id查询商品详情
-	 * @param id
+	 * 根据条件查询商品分页列表
+	 * @param goods
+	 * @param page
 	 * @return
 	 * @throws EqianyuanException
 	 */
-	public GoodsBo getGoodsById(String id) throws EqianyuanException {
-		// 判断商品ID是否为空
-		if (StringUtils.isEmpty(id)) {
-            logger.warn("getGoodsById fail , because id is null.");
-            throw new EqianyuanException(ExceptionMsgConstant.GOODSID_IS_EMPTY);
+	public PageResponse getGoodsPageList(Mall mall, Pager page) throws EqianyuanException {
+		
+		// 商城类型为空
+		if (ObjectUtils.isEmpty(mall.getMallType())) {
+            logger.warn("query fail , because mailType is null.");
+            throw new EqianyuanException(ExceptionMsgConstant.MALLTYPE_IS_EMPTY);
         }
-		GoodsWithBLOBs entity = goodsDao.selectByPrimaryKey(id);
-		// 商品数据是否存在
-		if (ObjectUtils.isEmpty(entity)) {
-            logger.warn("getGoodsById fail , because id is null.");
-            throw new EqianyuanException(ExceptionMsgConstant.GOODS_DATA_NOT_EXISTS);
-        }
-		GoodsBo bo = new GoodsBo(dictService);
-		BeanUtils.copyProperties(entity, bo);
-		bo.convert(entity); // 转化商品数据
-		return bo;
+		// 先查询总数
+		int dataCount = 0;
+		if ( mall.getMallType() == 1 ) { // 官方商城
+			dataCount = goodsOfficialDao.getPageListCount(mall);
+		}else if ( mall.getMallType() == 2 ) { // 个人商城
+			dataCount = goodsPersonageDao.getPageListCount(mall);
+		}else { // 动植物
+			//TODO
+		}
+		if ( dataCount == 0 ) {
+	        logger.info("根据条件查询商品分页列表无数据l");
+	        return new PageResponse(page,  null);
+	    }
+		page.setTotalRow(dataCount);
+		// 再查询分页数据
+		List<?> entityList = null;
+		if ( mall.getMallType() == 1 ) { // 官方商城
+			entityList = goodsOfficialDao.getPageList(mall, page);
+		}else if ( mall.getMallType() == 2 ) { // 个人商城
+			entityList = goodsPersonageDao.getPageList(mall, page);
+		}else{ // 动植物
+			//TODO
+		}
+		return new PageResponse(page,  entityList);
 	}
 	
 	/***
@@ -66,19 +82,33 @@ public class GoodsServiceImpl implements IGoodsService {
 	 * @return
 	 * @throws EqianyuanException
 	 */
-	public GoodsWithBLOBs getEntityGoodsById(String id) throws EqianyuanException {
+	public Object getGoodsById(Mall mall) throws EqianyuanException {
+		
+		// 商城类型为空
+		if (ObjectUtils.isEmpty(mall.getMallType())) {
+            logger.warn("query fail , because mailType is null.");
+            throw new EqianyuanException(ExceptionMsgConstant.MALLTYPE_IS_EMPTY);
+        }
 		// 判断商品ID是否为空
-		if (StringUtils.isEmpty(id)) {
+		if (StringUtils.isEmpty(mall.getGoodsId())) {
             logger.warn("getGoodsById fail , because id is null.");
             throw new EqianyuanException(ExceptionMsgConstant.GOODSID_IS_EMPTY);
         }
-		GoodsWithBLOBs entity = goodsDao.selectByPrimaryKey(id);
+		Object goods = null;
+		if ( mall.getMallType() == 1 ) { // 官方商城
+			goods = goodsOfficialDao.selectByPrimaryKey(mall.getGoodsId());
+		}else if ( mall.getMallType() == 2 ) { // 个人商城
+			goods = goodsPersonageDao.selectByPrimaryKey(mall.getGoodsId());
+		}else { // 动植物
+			//TODO
+		}
 		// 商品数据是否存在
-		if (ObjectUtils.isEmpty(entity)) {
-            logger.warn("getGoodsById fail , because id is null.");
+		if (ObjectUtils.isEmpty(goods)) {
+            logger.warn("getGoodsById fail , because data is null.");
             throw new EqianyuanException(ExceptionMsgConstant.GOODS_DATA_NOT_EXISTS);
         }
-		return entity;
+		
+		return goods;
 	}
 	
 	/***
@@ -101,34 +131,6 @@ public class GoodsServiceImpl implements IGoodsService {
 		return goodsDao.insertSelective(record)>0 ;
 	}
 
-	/***
-	 * 根据条件查询商品分页列表
-	 * @param goods
-	 * @param page
-	 * @return
-	 * @throws EqianyuanException
-	 */
-	public PageResponse getGoodsPageList(Goods goods, Pager page) throws EqianyuanException {
-		// 先查询总数
-		int dataCount = goodsDao.getGoodsPageListCount(goods);
-		if ( dataCount == 0 ) {
-	        logger.info("根据条件查询商品分页列表无数据l");
-	        return new PageResponse(page,  null);
-	    }
-		page.setTotalRow(dataCount);
-		// 再查询分页数据
-		List<GoodsWithBLOBs> list = goodsDao.getGoodsPageList(goods, page);
-		List<GoodsBo> resultList = new ArrayList<GoodsBo>();
-		for (GoodsWithBLOBs entity : list) {
-			GoodsBo bo = new GoodsBo(dictService);
-			BeanUtils.copyProperties(entity, bo);
-			bo.convert(entity); // 转化商品数据
-			resultList.add(bo);
-		}
-		
-		return new PageResponse(page,  resultList);
-	}
-	
 	/***
 	 * 删除商品
 	 * @param id

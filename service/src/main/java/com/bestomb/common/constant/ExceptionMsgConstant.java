@@ -257,6 +257,12 @@ public class ExceptionMsgConstant {
     public static final String MODEL_DATA_NOT_EXIXTS = "20020011";
     /***** 模型 *****/
     
+    /*****
+     * 商城
+     */
+    // 商城类型不能为空（1：官方；2：个人）
+    public static final String MALLTYPE_IS_EMPTY = "30000001";
+    
     /******
      * 商品
      */
@@ -274,12 +280,12 @@ public class ExceptionMsgConstant {
     public static final String GOODS_PRICE_IS_EMPTY = "30001006";
     
     /***
-     * 店铺
+     * 动植物
      */
-    // 店铺主键ID为空
-    public static final String STOREID_IS_EMPTY = "30002001";
-    // 店铺商品数据不存在
-    public static final String STORE_DOODS_IS_NOT_EXISTS = "30002002";
+    // 生物类型为空
+    public static final String BIONTTYPE_IS_EMPTY = "30002001";
+    // 动植物不存在
+    public static final String BIONT_DATA_NOT_EXISTS = "30002002";
     
     /***
      * 购物车

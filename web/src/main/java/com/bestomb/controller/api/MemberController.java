@@ -1,7 +1,6 @@
 package com.bestomb.controller.api;
 
 import java.io.IOException;
-import java.util.List;
 
 import javax.servlet.http.HttpSession;
 
@@ -20,21 +19,16 @@ import com.bestomb.common.Pager;
 import com.bestomb.common.exception.EqianyuanException;
 import com.bestomb.common.response.PageResponse;
 import com.bestomb.common.response.ServerResponse;
-import com.bestomb.common.response.goods.GoodsBo;
-import com.bestomb.common.response.goods.GoodsBoWithCount;
 import com.bestomb.common.response.member.MemberAccountVo;
 import com.bestomb.common.response.member.MemberLoginVo;
 import com.bestomb.common.response.member.WalletVo;
-import com.bestomb.common.response.orderGoods.OrderGoodsBo;
 import com.bestomb.common.util.SessionContextUtil;
 import com.bestomb.common.util.SessionUtil;
 import com.bestomb.common.util.yamlMapper.SystemConf;
 import com.bestomb.controller.BaseController;
-import com.bestomb.entity.Goods;
+import com.bestomb.entity.Backpack;
 import com.bestomb.entity.MemberAccount;
 import com.bestomb.entity.PurchaseOrder;
-import com.bestomb.entity.StoreWithGoods;
-import com.bestomb.entity.TradingDetail;
 import com.bestomb.sevice.api.MemberService;
 
 /**
@@ -172,22 +166,6 @@ public class MemberController extends BaseController {
     }
 
     /***
-     * 会员充值
-     *
-     * @param tradingDetail
-     * @return
-     * @throws EqianyuanException
-     */
-    @RequestMapping(value = "/deposit", method = RequestMethod.POST)
-    @ResponseBody
-    public ServerResponse deposit(@RequestBody TradingDetail tradingDetail) throws EqianyuanException {
-        // TODO 调用充值接口
-        tradingDetail.setMemberId(getLoginMember().getMemberId());
-        boolean flag = memberService.deposit(tradingDetail);
-        return new ServerResponse.ResponseBuilder().data(flag).build();
-    }
-
-    /***
      * 获取会员订单列表
      *
      * @param PurchaseOrder
@@ -266,112 +244,6 @@ public class MemberController extends BaseController {
     }
 
     /***
-     * 查看我的店铺已发布商品分页列表
-     *
-     * @param message
-     * @param page
-     * @return
-     * @throws EqianyuanException
-     */
-    @RequestMapping(value = "/storeGoods", method = {RequestMethod.GET, RequestMethod.POST} )
-    @ResponseBody
-    public ServerResponse getStoreGoods(@ModelAttribute Goods goods, @ModelAttribute Pager page) throws EqianyuanException {
-        int memberId = getLoginMember().getMemberId();
-        PageResponse pageResponse = memberService.getStoreGoods(memberId, goods, page);
-        return new ServerResponse.ResponseBuilder().data(pageResponse).build();
-    }
-
-    /***
-     * 获取店铺商品详情
-     *
-     * @param orderId
-     * @return
-     * @throws EqianyuanException
-     */
-    @RequestMapping(value = "/storeGoods/{id}", method = {RequestMethod.GET, RequestMethod.POST} )
-    @ResponseBody
-    public ServerResponse getStoreGoodsDetail(@PathVariable String id) throws EqianyuanException {
-        GoodsBo goods = memberService.getStoreGoodsDetail(id);
-        return new ServerResponse.ResponseBuilder().data(goods).build();
-    }
-
-    /***
-     * 发布商品
-     *
-     * @param goodsId 背包中商品ID
-     * @param store
-     * @param goods
-     * @return
-     * @throws EqianyuanException
-     */
-    @RequestMapping(value = "/store/sell/{goodsId}", method = RequestMethod.POST)
-    @ResponseBody
-    public ServerResponse sellGoods(@RequestBody StoreWithGoods storeWithGoods, @PathVariable String goodsId) throws EqianyuanException {
-        int memberId = getLoginMember().getMemberId();
-        storeWithGoods.setMemberId(memberId);
-        storeWithGoods.setBackpackGoodsId(goodsId);
-        boolean flag = memberService.sellGoods(storeWithGoods);
-        return new ServerResponse.ResponseBuilder().data(flag).build();
-    }
-
-    /***
-     * 下架商品
-     *
-     * @param id 店铺表主键ID
-     * @return
-     * @throws EqianyuanException
-     */
-    @RequestMapping(value = "/store/takeback/{id}", method = {RequestMethod.DELETE, RequestMethod.POST} )
-    @ResponseBody
-    public ServerResponse takebackGoods(@PathVariable Integer id) throws EqianyuanException {
-        boolean flag = memberService.takebackGoods(id);
-        return new ServerResponse.ResponseBuilder().data(flag).build();
-    }
-
-    /***
-     * 查询会员店铺销售订单
-     *
-     * @return
-     * @throws EqianyuanException
-     */
-    @RequestMapping(value = "/storeOrders", method = {RequestMethod.GET, RequestMethod.POST} )
-    @ResponseBody
-    public ServerResponse getStoreOrders(@ModelAttribute Pager page) throws EqianyuanException {
-        int memberId = getLoginMember().getMemberId();
-        PageResponse pageResponse = memberService.getStoreOrders(memberId, page);
-        return new ServerResponse.ResponseBuilder().data(pageResponse).build();
-    }
-
-    /***
-     * 查询会员店铺销售订单详情
-     *
-     * @param orderId
-     * @return
-     * @throws EqianyuanException
-     */
-    @RequestMapping(value = "/storeOrders/{orderId}", method = {RequestMethod.GET, RequestMethod.POST} )
-    @ResponseBody
-    public ServerResponse getStoreOrdersDetail(@PathVariable String orderId) throws EqianyuanException {
-        int memberId = getLoginMember().getMemberId();
-        List<OrderGoodsBo> list = memberService.getStoreOrdersDetail(orderId, memberId);
-        return new ServerResponse.ResponseBuilder().data(list).build();
-    }
-
-    /***
-     * 查询会员店铺订单销售总额
-     *
-     * @return
-     * @throws EqianyuanException
-     */
-    @RequestMapping(value = "/storeOrdersTotalPrice", method = {RequestMethod.GET, RequestMethod.POST} )
-    @ResponseBody
-    public ServerResponse getStoreOrdersTotalPrice() throws EqianyuanException {
-        int memberId = getLoginMember().getMemberId();
-        Double totalPrice = memberService.getStoreOrdersTotalPrice(memberId);
-        return new ServerResponse.ResponseBuilder().data(totalPrice).build();
-    }
-
-    /***
      * 查询会员背包商品分页列表
      *
      * @param goods
@@ -381,9 +253,10 @@ public class MemberController extends BaseController {
      */
     @RequestMapping(value = "/backpackGoods", method = {RequestMethod.GET, RequestMethod.POST} )
     @ResponseBody
-    public ServerResponse getBackpackGoodsPageList(@ModelAttribute Goods goods, @ModelAttribute Pager page) throws EqianyuanException {
+    public ServerResponse getBackpackGoodsPageList(@ModelAttribute Backpack backpack, @ModelAttribute Pager page) throws EqianyuanException {
         int memberId = getLoginMember().getMemberId();
-        PageResponse pageResponse = memberService.getBackpackGoodsPageList(memberId, goods, page);
+        backpack.setMemberId(memberId);
+        PageResponse pageResponse = memberService.getBackpackGoodsPageList(backpack, page);
         return new ServerResponse.ResponseBuilder().data(pageResponse).build();
     }
 
@@ -396,8 +269,9 @@ public class MemberController extends BaseController {
      */
     @RequestMapping(value = "/backpackGoods/{id}", method = {RequestMethod.GET, RequestMethod.POST} )
     @ResponseBody
-    public ServerResponse getBackpackGoodsDetail(@PathVariable String id) throws EqianyuanException {
-        GoodsBoWithCount goods = memberService.getBackpackGoodsDetail(id);
+    public ServerResponse getBackpackGoodsDetail(@PathVariable String id, @ModelAttribute Backpack backpack) throws EqianyuanException {
+    	backpack.setGoodsId(id);
+    	Object goods = memberService.getBackpackGoodsDetail(backpack);
         return new ServerResponse.ResponseBuilder().data(goods).build();
     }
 

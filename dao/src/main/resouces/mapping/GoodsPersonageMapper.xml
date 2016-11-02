@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bestomb.dao.IGoodsPersonageDao" >
+  <resultMap id="BaseResultMap" type="com.bestomb.entity.GoodsPersonage" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="price" property="price" jdbcType="DOUBLE" />
+    <result column="repertory" property="repertory" jdbcType="INTEGER" />
+    <result column="member_id" property="memberId" jdbcType="INTEGER" />
+    <result column="plants_and_animals_id" property="plantsAndAnimalsId" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, price, repertory, member_id, plants_and_animals_id
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from goods_personage
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from goods_personage
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.bestomb.entity.GoodsPersonage" >
+    insert into goods_personage (id, price, repertory, 
+      member_id, plants_and_animals_id)
+    values (#{id,jdbcType=VARCHAR}, #{price,jdbcType=DOUBLE}, #{repertory,jdbcType=INTEGER}, 
+      #{memberId,jdbcType=INTEGER}, #{plantsAndAnimalsId,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.bestomb.entity.GoodsPersonage" >
+    insert into goods_personage
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="price != null" >
+        price,
+      </if>
+      <if test="repertory != null" >
+        repertory,
+      </if>
+      <if test="memberId != null" >
+        member_id,
+      </if>
+      <if test="plantsAndAnimalsId != null" >
+        plants_and_animals_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="price != null" >
+        #{price,jdbcType=DOUBLE},
+      </if>
+      <if test="repertory != null" >
+        #{repertory,jdbcType=INTEGER},
+      </if>
+      <if test="memberId != null" >
+        #{memberId,jdbcType=INTEGER},
+      </if>
+      <if test="plantsAndAnimalsId != null" >
+        #{plantsAndAnimalsId,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.bestomb.entity.GoodsPersonage" >
+    update goods_personage
+    <set >
+      <if test="price != null" >
+        price = #{price,jdbcType=DOUBLE},
+      </if>
+      <if test="repertory != null" >
+        repertory = #{repertory,jdbcType=INTEGER},
+      </if>
+      <if test="memberId != null" >
+        member_id = #{memberId,jdbcType=INTEGER},
+      </if>
+      <if test="plantsAndAnimalsId != null" >
+        plants_and_animals_id = #{plantsAndAnimalsId,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.bestomb.entity.GoodsPersonage" >
+    update goods_personage
+    set price = #{price,jdbcType=DOUBLE},
+      repertory = #{repertory,jdbcType=INTEGER},
+      member_id = #{memberId,jdbcType=INTEGER},
+      plants_and_animals_id = #{plantsAndAnimalsId,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  
+  
+  <!-- 封装分页查询表名 -->
+  <sql id="pageQueryTable">goods_personage</sql>
+  <!-- 封装商城商品查询条件 -->
+  <sql id="whereCondition">
+  	<where>
+	  	<if test="mall.memberId != null" >
+	       and member_id = #{mall.member_id,jdbcType=INTEGER}
+	    </if>
+  	</where>
+  </sql>
+  <!-- 根据条件查询分页列表总数 -->
+  <select id="getPageListCount" resultType="java.lang.Integer">
+    select count(1) from <include refid="pageQueryTable" />
+    <include refid="whereCondition" />
+  </select>
+  <!-- 根据条件查询分页列表 -->
+  <select id="getPageList" resultMap="BaseResultMap" >
+    select
+    <include refid="Base_Column_List" />
+    from <include refid="pageQueryTable" />
+    <include refid="whereCondition" />
+    limit ${page.start}, ${page.pageSize}
+  </select>
+  
+  
+</mapper>

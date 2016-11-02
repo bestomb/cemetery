@@ -13,48 +13,51 @@ import com.bestomb.common.Pager;
 import com.bestomb.common.exception.EqianyuanException;
 import com.bestomb.common.response.PageResponse;
 import com.bestomb.common.response.ServerResponse;
+import com.bestomb.common.response.cemetery.BiontBo;
 import com.bestomb.controller.BaseController;
-import com.bestomb.entity.Mall;
-import com.bestomb.sevice.api.MallService;
+import com.bestomb.entity.Biont;
+import com.bestomb.sevice.api.BiontService;
 
 /***
- * 商城
+ * 动植物API接口
  * @author qfzhang
  *
  */
+
 @Controller
-@RequestMapping("/website/mall_api")
-public class MallController extends BaseController {
+@RequestMapping("/website/biont_api")
+public class BiontController extends BaseController{
 	
 	@Autowired
-	private MallService mallService ;
+	private BiontService biontService ;
+	
 	
 	/***
-     * 查询商城商品分页列表
+     * 查询动植物分页列表
      * @param goods
      * @param page
      * @return
      * @throws EqianyuanException
      */
-    @RequestMapping(value="/goods", method={RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value="/bionts", method={RequestMethod.GET, RequestMethod.POST})
     @ResponseBody
-    public ServerResponse getGoodsPageList(@ModelAttribute Mall mall, @ModelAttribute Pager page) throws EqianyuanException{
-    	PageResponse pageResponse = mallService.getGoodsPageList(mall, page);
+    public ServerResponse getBiontPageList(@ModelAttribute Biont biont, @ModelAttribute Pager page) throws EqianyuanException{
+    	PageResponse pageResponse = biontService.getPageList(biont, page);
     	return new ServerResponse.ResponseBuilder().data(pageResponse).build();
     }
 	
     /***
-     * 查询商城商品详情
+     * 查询动植物详情
      * @param id
      * @return
      * @throws EqianyuanException
      */
-    @RequestMapping(value="/goods/{id}", method={RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value="/bionts/{id}", method={RequestMethod.GET, RequestMethod.POST})
     @ResponseBody
-    public ServerResponse getGoodsDetail(@PathVariable String id, @RequestBody Mall mall) throws EqianyuanException {
-    	mall.setGoodsId(id);
-    	Object goods = mallService.getGoodsDetail(mall);
-    	return new ServerResponse.ResponseBuilder().data(goods).build();
+    public ServerResponse getGoodsDetail(@PathVariable String id, @RequestBody Biont biont) throws EqianyuanException {
+    	biont.setGoodsId(id);
+    	BiontBo biontBo = biontService.getDetail(id);
+    	return new ServerResponse.ResponseBuilder().data(biontBo).build();
     }
     
 }
