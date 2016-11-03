@@ -170,14 +170,17 @@
 	    from plants_and_animals a, park b
 	    where a.id = b.goodsId and b.goodsId = #{goodsId,jdbcType=VARCHAR}
   </select>
-  
-  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.String" >
-    select 
+
+  <!-- 根据商品编号集合查找商品信息集合 -->
+  <select id="selectByIds" resultMap="ResultMapWithBLOBs">
+    select
     <include refid="Base_Column_List" />
     ,
     <include refid="Blob_Column_List" />
     from plants_and_animals
-    where id = #{id,jdbcType=VARCHAR}
+    where id IN
+    <foreach item="item" collection="goodsIds" open="(" separator="," close=")">
+      #{item}
+    </foreach>
   </select>
-  
 </mapper>
