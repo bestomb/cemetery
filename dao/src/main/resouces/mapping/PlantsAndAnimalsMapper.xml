@@ -4,7 +4,7 @@
   <resultMap id="BaseResultMap" type="com.bestomb.entity.PlantsAndAnimals" >
     <id column="id" property="id" jdbcType="VARCHAR" />
     <result column="name" property="name" jdbcType="VARCHAR" />
-    <result column="price" property="price" jdbcType="DOUBLE" />
+    <result column="price" property="price" jdbcType="DECIMAL" />
     <result column="images" property="images" jdbcType="VARCHAR" />
     <result column="model_id" property="modelId" jdbcType="VARCHAR" />
     <result column="type" property="type" jdbcType="INTEGER" />
@@ -44,7 +44,7 @@
       images, model_id, type, 
       grouping, phase, description
       )
-    values (#{id,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{price,jdbcType=DOUBLE}, 
+    values (#{id,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{price,jdbcType=DECIMAL},
       #{images,jdbcType=VARCHAR}, #{modelId,jdbcType=VARCHAR}, #{type,jdbcType=INTEGER}, 
       #{grouping,jdbcType=INTEGER}, #{phase,jdbcType=INTEGER}, #{description,jdbcType=LONGVARCHAR}
       )
@@ -88,7 +88,7 @@
         #{name,jdbcType=VARCHAR},
       </if>
       <if test="price != null" >
-        #{price,jdbcType=DOUBLE},
+        #{price,jdbcType=DECIMAL},
       </if>
       <if test="images != null" >
         #{images,jdbcType=VARCHAR},
@@ -117,7 +117,7 @@
         name = #{name,jdbcType=VARCHAR},
       </if>
       <if test="price != null" >
-        price = #{price,jdbcType=DOUBLE},
+        price = #{price,jdbcType=DECIMAL},
       </if>
       <if test="images != null" >
         images = #{images,jdbcType=VARCHAR},
@@ -143,7 +143,7 @@
   <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.bestomb.entity.PlantsAndAnimals" >
     update plants_and_animals
     set name = #{name,jdbcType=VARCHAR},
-      price = #{price,jdbcType=DOUBLE},
+      price = #{price,jdbcType=DECIMAL},
       images = #{images,jdbcType=VARCHAR},
       model_id = #{modelId,jdbcType=VARCHAR},
       type = #{type,jdbcType=INTEGER},
@@ -155,7 +155,7 @@
   <update id="updateByPrimaryKey" parameterType="com.bestomb.entity.PlantsAndAnimals" >
     update plants_and_animals
     set name = #{name,jdbcType=VARCHAR},
-      price = #{price,jdbcType=DOUBLE},
+      price = #{price,jdbcType=DECIMAL},
       images = #{images,jdbcType=VARCHAR},
       model_id = #{modelId,jdbcType=VARCHAR},
       type = #{type,jdbcType=INTEGER},

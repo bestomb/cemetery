@@ -26,9 +26,10 @@ public interface IOrderService {
      * 商品购买
      *
      * @param goodsInfo
+     * @param memberId
      * @return
      * @throws EqianyuanException
      */
-    void goodsBuy(String goodsInfo) throws EqianyuanException;
+    void goodsBuy(String goodsInfo, Integer memberId) throws Exception;
 
 }

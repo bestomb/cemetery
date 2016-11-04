@@ -1,5 +1,7 @@
 package com.bestomb.common.response.member;
 
+import java.math.BigDecimal;
+
 public class PurchaseOrderBo{
 	
 	private String id;
@@ -8,7 +10,7 @@ public class PurchaseOrderBo{
     private Integer memberId;
     private String createTime;
     private Integer type; // 订单类型（1：会员购物订单、2：会员店铺订单、3：系统订单）
-    private Double price;
+    private BigDecimal price;
     
     
 	public String getId() {
@@ -47,10 +49,12 @@ public class PurchaseOrderBo{
 	public void setType(Integer type) {
 		this.type = type;
 	}
-	public Double getPrice() {
+
+	public BigDecimal getPrice() {
 		return price;
 	}
-	public void setPrice(Double price) {
+
+	public void setPrice(BigDecimal price) {
 		this.price = price;
 	}
 }

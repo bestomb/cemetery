@@ -1,11 +1,13 @@
 package com.bestomb.entity;
 
+import java.math.BigDecimal;
+
 public class GoodsOfficial {
     private String id;
 
     private String name;
 
-    private Double price;
+    private BigDecimal price;
 
     private String images;
 
@@ -27,11 +29,11 @@ public class GoodsOfficial {
         this.name = name == null ? null : name.trim();
     }
 
-    public Double getPrice() {
+    public BigDecimal getPrice() {
         return price;
     }
 
-    public void setPrice(Double price) {
+    public void setPrice(BigDecimal price) {
         this.price = price;
     }
 

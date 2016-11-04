@@ -5,7 +5,7 @@
     <id column="id" jdbcType="VARCHAR" property="id" />
     <result column="member_id" jdbcType="INTEGER" property="memberId" />
     <result column="create_time" jdbcType="INTEGER" property="createTime" />
-    <result column="price" jdbcType="DOUBLE" property="price" />
+    <result column="price" jdbcType="DECIMAL" property="price" />
   </resultMap>
   <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.bestomb.entity.PurchaseOrder">
     <result column="goods" jdbcType="LONGVARCHAR" property="goods" />
@@ -32,9 +32,12 @@
     insert into purchase_order (id, member_id, create_time, 
       price, goods)
     values (#{id,jdbcType=VARCHAR}, #{memberId,jdbcType=INTEGER}, #{createTime,jdbcType=INTEGER}, 
-      #{price,jdbcType=DOUBLE}, #{goods,jdbcType=LONGVARCHAR})
+      #{price,jdbcType=DECIMAL}, #{goods,jdbcType=LONGVARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.bestomb.entity.PurchaseOrder">
+    <selectKey keyProperty="id" resultType="String" order="BEFORE">
+      select replace(uuid(),'-','') from dual
+    </selectKey>
     insert into purchase_order
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -52,6 +55,12 @@
       <if test="goods != null">
         goods,
       </if>
+      <if test="integral != null">
+        integral,
+      </if>
+      <if test="paidPrice != null">
+        paid_price,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -64,10 +73,16 @@
         #{createTime,jdbcType=INTEGER},
       </if>
       <if test="price != null">
-        #{price,jdbcType=DOUBLE},
+        #{price,jdbcType=DECIMAL},
       </if>
       <if test="goods != null">
         #{goods,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="integral != null">
+        #{integral,jdbcType=INTEGER},
+      </if>
+      <if test="paidPrice != null">
+        #{paidPrice,jdbcType=DECIMAL},
       </if>
     </trim>
   </insert>
@@ -81,7 +96,7 @@
         create_time = #{createTime,jdbcType=INTEGER},
       </if>
       <if test="price != null">
-        price = #{price,jdbcType=DOUBLE},
+        price = #{price,jdbcType=DECIMAL},
       </if>
       <if test="goods != null">
         goods = #{goods,jdbcType=LONGVARCHAR},
@@ -93,7 +108,7 @@
     update purchase_order
     set member_id = #{memberId,jdbcType=INTEGER},
       create_time = #{createTime,jdbcType=INTEGER},
-      price = #{price,jdbcType=DOUBLE},
+      price = #{price,jdbcType=DECIMAL},
       goods = #{goods,jdbcType=LONGVARCHAR}
     where id = #{id,jdbcType=VARCHAR}
   </update>
@@ -101,7 +116,7 @@
     update purchase_order
     set member_id = #{memberId,jdbcType=INTEGER},
       create_time = #{createTime,jdbcType=INTEGER},
-      price = #{price,jdbcType=DOUBLE}
+      price = #{price,jdbcType=DECIMAL}
     where id = #{id,jdbcType=VARCHAR}
   </update>
   

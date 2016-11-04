@@ -1,5 +1,7 @@
 package com.bestomb.entity;
 
+import java.math.BigDecimal;
+
 public class MemberAccount {
     
 	private Integer memberId; // 会员ID
@@ -14,7 +16,7 @@ public class MemberAccount {
 
     private Integer integral; // 会员积分
 
-    private Double tradingAmount; // 交易币
+    private BigDecimal tradingAmount; // 交易币
 
     private String tradingPassword; // 支付密码
 
@@ -83,11 +85,11 @@ public class MemberAccount {
         this.integral = integral;
     }
 
-    public Double getTradingAmount() {
+    public BigDecimal getTradingAmount() {
         return tradingAmount;
     }
 
-    public void setTradingAmount(Double tradingAmount) {
+    public void setTradingAmount(BigDecimal tradingAmount) {
         this.tradingAmount = tradingAmount;
     }
 

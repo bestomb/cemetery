@@ -8,7 +8,7 @@
         <result column="nick_name" property="nickName" jdbcType="VARCHAR"/>
         <result column="inviter_id" property="inviterId" jdbcType="INTEGER"/>
         <result column="integral" property="integral" jdbcType="INTEGER"/>
-        <result column="trading_amount" property="tradingAmount" jdbcType="DOUBLE"/>
+        <result column="trading_amount" property="tradingAmount" jdbcType="DECIMAL"/>
         <result column="trading_password" property="tradingPassword" jdbcType="VARCHAR"/>
         <result column="construction_count" property="constructionCount" jdbcType="INTEGER"/>
         <result column="create_time" property="createTime" jdbcType="INTEGER"/>
@@ -122,7 +122,7 @@
                 #{integral,jdbcType=INTEGER},
             </if>
             <if test="tradingAmount != null">
-                #{tradingAmount,jdbcType=DOUBLE},
+                #{tradingAmount,jdbcType=DECIMAL},
             </if>
             <if test="tradingPassword != null">
                 #{tradingPassword,jdbcType=VARCHAR},
@@ -154,7 +154,7 @@
                 integral = #{integral,jdbcType=INTEGER},
             </if>
             <if test="tradingAmount != null">
-                trading_amount = #{tradingAmount,jdbcType=DOUBLE},
+                trading_amount = #{tradingAmount,jdbcType=DECIMAL},
             </if>
             <if test="tradingPassword != null">
                 trading_password = #{tradingPassword,jdbcType=VARCHAR},
@@ -192,7 +192,7 @@
     <!-- 现金充值成功后修改会员帐号表中交易币总金额 -->
     <update id="updateTradingAmount">
         update member_account
-        set trading_amount = trading_amount + #{tradingAmount,jdbcType=DOUBLE}
+        set trading_amount = trading_amount + #{tradingAmount,jdbcType=DECIMAL}
         where member_id = #{memberId,jdbcType=INTEGER}
     </update>
     <select id="selectByMemberIds" resultMap="BaseResultMap" parameterType="java.util.ArrayList">
@@ -210,4 +210,20 @@
         mobile_number, nick_name
         from member_account
     </select>
+
+    <!-- 会员购物后，对积分及交易币进行扣减修改 -->
+    <update id="updateByGoodsBuy">
+        update member_account
+        set trading_amount = trading_amount - #{tradingAmount,jdbcType=DECIMAL},integral = integral - #{integral, jdbcType=INTEGER}
+        where member_id = #{memberId,jdbcType=INTEGER} and trading_amount >= #{tradingAmount,jdbcType=DECIMAL} and integral >= #{integral, jdbcType=INTEGER}
+    </update>
+
+    <!-- 根据会员商品销售情况批量更新会员账户交易币信息 -->
+    <update id="batchUpdateBySale">
+        <foreach collection="memberSaleList" item="item" index="index" separator=";">
+            update member_account
+            set trading_amount = trading_amount + #{item.tradingAmount,jdbcType=DECIMAL}
+            where member_id = #{item.memberId,jdbcType=INTEGER}
+        </foreach>
+    </update>
 </mapper>

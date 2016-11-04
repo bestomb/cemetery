@@ -1,36 +1,11 @@
 package com.bestomb.sevice.api;
 
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.servlet.http.HttpSession;
-
-import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
-import org.springframework.util.ObjectUtils;
-
 import com.bestomb.common.Pager;
 import com.bestomb.common.constant.ExceptionMsgConstant;
 import com.bestomb.common.exception.EqianyuanException;
 import com.bestomb.common.response.PageResponse;
-import com.bestomb.common.response.member.MemberAccountBo;
-import com.bestomb.common.response.member.MemberAccountVo;
-import com.bestomb.common.response.member.MemberLoginBo;
-import com.bestomb.common.response.member.MemberLoginVo;
-import com.bestomb.common.response.member.WalletVo;
-import com.bestomb.common.util.CalendarUtil;
-import com.bestomb.common.util.RegexUtils;
-import com.bestomb.common.util.SMSUtils;
-import com.bestomb.common.util.SessionContextUtil;
-import com.bestomb.common.util.SessionUtil;
-import com.bestomb.common.util.StringTemplateReplaceUtil;
-import com.bestomb.common.util.VerifyCodeUtils;
-import com.bestomb.common.util.YamlForMapHandleUtil;
+import com.bestomb.common.response.member.*;
+import com.bestomb.common.util.*;
 import com.bestomb.common.util.yamlMapper.ClientConf;
 import com.bestomb.common.util.yamlMapper.SystemConf;
 import com.bestomb.entity.Backpack;
@@ -40,6 +15,18 @@ import com.bestomb.service.IBackpackService;
 import com.bestomb.service.ILeaveMessage;
 import com.bestomb.service.IMemberService;
 import com.bestomb.service.IOrderService;
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
+import org.springframework.util.ObjectUtils;
+
+import javax.servlet.http.HttpSession;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 会员业务层调用
@@ -253,11 +240,12 @@ public class MemberService {
      * 商品购买
      *
      * @param goodsInfo
+     * @param memberId
      * @return
      * @throws EqianyuanException
      */
-    public void goodsBuy(String goodsInfo) throws EqianyuanException {
-        orderSerivce.goodsBuy(goodsInfo);
+    public void goodsBuy(String goodsInfo, Integer memberId) throws Exception {
+        orderSerivce.goodsBuy(goodsInfo, memberId);
     }
 
     /***
@@ -307,28 +295,30 @@ public class MemberService {
             logger.warn("deleteMessage fail , because messageId is null.");
             throw new EqianyuanException(ExceptionMsgConstant.MESSAGEID_IS_EMPTY);
         }
-		return leaveMessage.deleteByPrimaryKey(messageId);
-	}
+        return leaveMessage.deleteByPrimaryKey(messageId);
+    }
 
-	/***
-	 * 根据查询条件查询会员背包商品分页列表
-	 * @param backpack
-	 * @param page
-	 * @return
-	 * @throws EqianyuanException
-	 */
-	public PageResponse getBackpackGoodsPageList(Backpack backpack, Pager page) throws EqianyuanException {
-		return backpackService.getGoodsPageList(backpack, page);
-	}
+    /***
+     * 根据查询条件查询会员背包商品分页列表
+     *
+     * @param backpack
+     * @param page
+     * @return
+     * @throws EqianyuanException
+     */
+    public PageResponse getBackpackGoodsPageList(Backpack backpack, Pager page) throws EqianyuanException {
+        return backpackService.getGoodsPageList(backpack, page);
+    }
 
-	/***
-	 * 获取背包商品详情
-	 * @param id
-	 * @return
-	 * @throws EqianyuanException
-	 */
-	public Object getBackpackGoodsDetail(Backpack backpack) throws EqianyuanException{
-		return backpackService.getGoodsDetail(backpack);
-	}
+    /***
+     * 获取背包商品详情
+     *
+     * @param id
+     * @return
+     * @throws EqianyuanException
+     */
+    public Object getBackpackGoodsDetail(Backpack backpack) throws EqianyuanException {
+        return backpackService.getGoodsDetail(backpack);
+    }
 
 }

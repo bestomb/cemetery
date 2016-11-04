@@ -1,5 +1,7 @@
 package com.bestomb.entity;
 
+import java.math.BigDecimal;
+
 public class PurchaseOrder {
     private String id;
 
@@ -7,9 +9,13 @@ public class PurchaseOrder {
 
     private Integer createTime;
 
-    private Double price;
+    private BigDecimal price;
 
     private String goods;
+
+    private Integer integral;
+
+    private BigDecimal paidPrice;
 
     public String getId() {
         return id;
@@ -35,12 +41,20 @@ public class PurchaseOrder {
         this.createTime = createTime;
     }
 
-    public Double getPrice() {
+    public BigDecimal getPrice() {
         return price;
     }
 
-    public void setPrice(Double price) {
+    public void setPrice(BigDecimal price) {
         this.price = price;
+    }
+
+    public BigDecimal getPaidPrice() {
+        return paidPrice;
+    }
+
+    public void setPaidPrice(BigDecimal paidPrice) {
+        this.paidPrice = paidPrice;
     }
 
     public String getGoods() {
@@ -50,4 +64,13 @@ public class PurchaseOrder {
     public void setGoods(String goods) {
         this.goods = goods == null ? null : goods.trim();
     }
+
+    public Integer getIntegral() {
+        return integral;
+    }
+
+    public void setIntegral(Integer integral) {
+        this.integral = integral;
+    }
+
 }

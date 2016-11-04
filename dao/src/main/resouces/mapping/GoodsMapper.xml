@@ -4,7 +4,7 @@
   <resultMap id="BaseResultMap" type="com.bestomb.entity.Goods" >
     <id column="id" property="id" jdbcType="VARCHAR" />
     <result column="name" property="name" jdbcType="VARCHAR" />
-    <result column="price" property="price" jdbcType="DOUBLE" />
+    <result column="price" property="price" jdbcType="DECIMAL" />
     <result column="belongs" property="belongs" jdbcType="INTEGER" />
     <result column="type" property="type" jdbcType="INTEGER" />
     <result column="model_id" property="modelId" jdbcType="VARCHAR" />
@@ -41,7 +41,7 @@
       belongs, type, model_id, 
       create_time, images, description
       )
-    values (#{id,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{price,jdbcType=DOUBLE}, 
+    values (#{id,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{price,jdbcType=DECIMAL},
       #{belongs,jdbcType=INTEGER}, #{type,jdbcType=INTEGER}, #{modelId,jdbcType=VARCHAR}, 
       #{createTime,jdbcType=INTEGER}, #{images,jdbcType=LONGVARCHAR}, #{description,jdbcType=LONGVARCHAR}
       )
@@ -88,7 +88,7 @@
         #{name,jdbcType=VARCHAR},
       </if>
       <if test="price != null" >
-        #{price,jdbcType=DOUBLE},
+        #{price,jdbcType=DECIMAL},
       </if>
       <if test="belongs != null" >
         #{belongs,jdbcType=INTEGER},
@@ -117,7 +117,7 @@
         name = #{name,jdbcType=VARCHAR},
       </if>
       <if test="price != null" >
-        price = #{price,jdbcType=DOUBLE},
+        price = #{price,jdbcType=DECIMAL},
       </if>
       <if test="belongs != null" >
         belongs = #{belongs,jdbcType=INTEGER},
@@ -143,7 +143,7 @@
   <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.bestomb.entity.GoodsWithBLOBs" >
     update goods
     set name = #{name,jdbcType=VARCHAR},
-      price = #{price,jdbcType=DOUBLE},
+      price = #{price,jdbcType=DECIMAL},
       belongs = #{belongs,jdbcType=INTEGER},
       type = #{type,jdbcType=INTEGER},
       model_id = #{modelId,jdbcType=VARCHAR},
@@ -155,7 +155,7 @@
   <update id="updateByPrimaryKey" parameterType="com.bestomb.entity.Goods" >
     update goods
     set name = #{name,jdbcType=VARCHAR},
-      price = #{price,jdbcType=DOUBLE},
+      price = #{price,jdbcType=DECIMAL},
       belongs = #{belongs,jdbcType=INTEGER},
       type = #{type,jdbcType=INTEGER},
       model_id = #{modelId,jdbcType=VARCHAR},

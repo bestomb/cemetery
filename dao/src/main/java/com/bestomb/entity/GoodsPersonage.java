@@ -1,9 +1,11 @@
 package com.bestomb.entity;
 
+import java.math.BigDecimal;
+
 public class GoodsPersonage {
     private String id;
 
-    private Double price;
+    private BigDecimal price;
 
     private Integer repertory;
 
@@ -19,11 +21,11 @@ public class GoodsPersonage {
         this.id = id == null ? null : id.trim();
     }
 
-    public Double getPrice() {
+    public BigDecimal getPrice() {
         return price;
     }
 
-    public void setPrice(Double price) {
+    public void setPrice(BigDecimal price) {
         this.price = price;
     }
 

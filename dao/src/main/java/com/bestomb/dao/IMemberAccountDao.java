@@ -5,6 +5,7 @@ import com.bestomb.entity.MemberAccount;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import java.util.Map;
 
 public interface IMemberAccountDao {
     int insertSelective(MemberAccount record);
@@ -48,6 +49,16 @@ public interface IMemberAccountDao {
 
     int updateByPrimaryKeySelective(MemberAccount record);
 
+    /**
+     * 购物后修改账户信息，对购物消费的积分和交易币进行扣减
+     *
+     * @param tradingAmount 支付的交易币
+     * @param integral      支付的积分
+     * @param memberId      会员编号
+     * @return
+     */
+    int updateByGoodsBuy(@Param("tradingAmount") Double tradingAmount, @Param("integral") int integral, @Param("memberId") Integer memberId);
+
     /***
      * 编辑会员资料
      *
@@ -79,4 +90,12 @@ public interface IMemberAccountDao {
      * @return
      */
     List<MemberAccount> selectAll();
+
+    /**
+     * 根据会员商品销售情况批量更新会员账户交易币信息，将营收交易币叠加到账户
+     *
+     * @param memberSaleList
+     * @return
+     */
+    int batchUpdateBySale(@Param("memberSaleList") List<Map<String, Object>> memberSaleList);
 }

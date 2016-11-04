@@ -1,5 +1,7 @@
 package com.bestomb.common.response.member;
 
+import java.math.BigDecimal;
+
 /**
  * Created by asus on 2016/7/29.
  */
@@ -17,7 +19,7 @@ public class MemberAccountBo {
 
     private Integer integral;
 
-    private Double tradingAmount;
+    private BigDecimal tradingAmount;
 
     private String tradingPassword;
 
@@ -73,11 +75,11 @@ public class MemberAccountBo {
         this.integral = integral;
     }
 
-    public Double getTradingAmount() {
+    public BigDecimal getTradingAmount() {
         return tradingAmount;
     }
 
-    public void setTradingAmount(Double tradingAmount) {
+    public void setTradingAmount(BigDecimal tradingAmount) {
         this.tradingAmount = tradingAmount;
     }
 

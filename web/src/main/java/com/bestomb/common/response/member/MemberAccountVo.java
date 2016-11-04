@@ -1,5 +1,7 @@
 package com.bestomb.common.response.member;
 
+import java.math.BigDecimal;
+
 /***
  * 会员帐号信息
  * @author qfzhang
@@ -12,7 +14,7 @@ public class MemberAccountVo {
     private String nickName; // 昵称
     private Integer inviterId; // 邀请者编号
     private Integer integral; // 会员积分
-    private Double tradingAmount; // 交易币
+    private BigDecimal tradingAmount; // 交易币
     private Integer constructionCount; // 可建设陵园总数
     private String createTime; // 注册时间
 	
@@ -47,12 +49,15 @@ public class MemberAccountVo {
 	public void setIntegral(Integer integral) {
 		this.integral = integral;
 	}
-	public Double getTradingAmount() {
+
+	public BigDecimal getTradingAmount() {
 		return tradingAmount;
 	}
-	public void setTradingAmount(Double tradingAmount) {
+
+	public void setTradingAmount(BigDecimal tradingAmount) {
 		this.tradingAmount = tradingAmount;
 	}
+
 	public Integer getConstructionCount() {
 		return constructionCount;
 	}

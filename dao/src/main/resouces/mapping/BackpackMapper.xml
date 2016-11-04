@@ -1,88 +1,88 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.bestomb.dao.IBackpackDao">
-  <resultMap id="BaseResultMap" type="com.bestomb.entity.Backpack">
-    <id column="id" jdbcType="VARCHAR" property="id" />
-    <result column="member_id" jdbcType="INTEGER" property="memberId" />
-    <result column="source" jdbcType="INTEGER" property="source" />
-    <result column="count" jdbcType="INTEGER" property="count" />
-    <result column="goods_id" jdbcType="VARCHAR" property="goodsId" />
-  </resultMap>
-  <sql id="Base_Column_List">
+    <resultMap id="BaseResultMap" type="com.bestomb.entity.Backpack">
+        <id column="id" jdbcType="VARCHAR" property="id"/>
+        <result column="member_id" jdbcType="INTEGER" property="memberId"/>
+        <result column="source" jdbcType="INTEGER" property="source"/>
+        <result column="count" jdbcType="INTEGER" property="count"/>
+        <result column="goods_id" jdbcType="VARCHAR" property="goodsId"/>
+    </resultMap>
+    <sql id="Base_Column_List">
     id, member_id, source, count, goods_id
   </sql>
-  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
-    select 
-    <include refid="Base_Column_List" />
-    from backpack
-    where id = #{id,jdbcType=VARCHAR}
-  </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from backpack
+        where id = #{id,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
     delete from backpack
     where id = #{id,jdbcType=VARCHAR}
   </delete>
-  <insert id="insert" parameterType="com.bestomb.entity.Backpack">
+    <insert id="insert" parameterType="com.bestomb.entity.Backpack">
     insert into backpack (id, member_id, source, 
       count, goods_id)
     values (#{id,jdbcType=VARCHAR}, #{memberId,jdbcType=INTEGER}, #{source,jdbcType=INTEGER}, 
       #{count,jdbcType=INTEGER}, #{goodsId,jdbcType=VARCHAR})
   </insert>
-  <insert id="insertSelective" parameterType="com.bestomb.entity.Backpack">
-    insert into backpack
-    <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        id,
-      </if>
-      <if test="memberId != null">
-        member_id,
-      </if>
-      <if test="source != null">
-        source,
-      </if>
-      <if test="count != null">
-        count,
-      </if>
-      <if test="goodsId != null">
-        goods_id,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        #{id,jdbcType=VARCHAR},
-      </if>
-      <if test="memberId != null">
-        #{memberId,jdbcType=INTEGER},
-      </if>
-      <if test="source != null">
-        #{source,jdbcType=INTEGER},
-      </if>
-      <if test="count != null">
-        #{count,jdbcType=INTEGER},
-      </if>
-      <if test="goodsId != null">
-        #{goodsId,jdbcType=VARCHAR},
-      </if>
-    </trim>
-  </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.bestomb.entity.Backpack">
-    update backpack
-    <set>
-      <if test="memberId != null">
-        member_id = #{memberId,jdbcType=INTEGER},
-      </if>
-      <if test="source != null">
-        source = #{source,jdbcType=INTEGER},
-      </if>
-      <if test="count != null">
-        count = #{count,jdbcType=INTEGER},
-      </if>
-      <if test="goodsId != null">
-        goods_id = #{goodsId,jdbcType=VARCHAR},
-      </if>
-    </set>
-    where id = #{id,jdbcType=VARCHAR}
-  </update>
-  <update id="updateByPrimaryKey" parameterType="com.bestomb.entity.Backpack">
+    <insert id="insertSelective" parameterType="com.bestomb.entity.Backpack">
+        insert into backpack
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="memberId != null">
+                member_id,
+            </if>
+            <if test="source != null">
+                source,
+            </if>
+            <if test="count != null">
+                count,
+            </if>
+            <if test="goodsId != null">
+                goods_id,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=VARCHAR},
+            </if>
+            <if test="memberId != null">
+                #{memberId,jdbcType=INTEGER},
+            </if>
+            <if test="source != null">
+                #{source,jdbcType=INTEGER},
+            </if>
+            <if test="count != null">
+                #{count,jdbcType=INTEGER},
+            </if>
+            <if test="goodsId != null">
+                #{goodsId,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.bestomb.entity.Backpack">
+        update backpack
+        <set>
+            <if test="memberId != null">
+                member_id = #{memberId,jdbcType=INTEGER},
+            </if>
+            <if test="source != null">
+                source = #{source,jdbcType=INTEGER},
+            </if>
+            <if test="count != null">
+                count = #{count,jdbcType=INTEGER},
+            </if>
+            <if test="goodsId != null">
+                goods_id = #{goodsId,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.bestomb.entity.Backpack">
     update backpack
     set member_id = #{memberId,jdbcType=INTEGER},
       source = #{source,jdbcType=INTEGER},
@@ -90,33 +90,46 @@
       goods_id = #{goodsId,jdbcType=VARCHAR}
     where id = #{id,jdbcType=VARCHAR}
   </update>
-  
-  
-  <!-- 封装分页查询表名 -->
-  <sql id="pageQueryTable">backpack</sql>
-  <!-- 封装商城商品查询条件 -->
-  <sql id="whereCondition">
-  	<where>
-	  	<if test="backpack.memberId != null" >
-	       and member_id = #{backpack.member_id,jdbcType=INTEGER}
-	    </if>
-	    <if test="backpack.source != null" >
-	       and source = #{backpack.source,jdbcType=INTEGER}
-	    </if>
-  	</where>
-  </sql>
-  <!-- 根据条件查询分页列表总数 -->
-  <select id="getPageListCount" resultType="java.lang.Integer">
-    select count(1) from <include refid="pageQueryTable" />
-    <include refid="whereCondition" />
-  </select>
-  <!-- 根据条件查询分页列表 -->
-  <select id="getPageList" resultMap="BaseResultMap" >
-    select
-    <include refid="Base_Column_List" />
-    from <include refid="pageQueryTable" />
-    <include refid="whereCondition" />
-    limit ${page.start}, ${page.pageSize}
-  </select>
-  
+
+
+    <!-- 封装分页查询表名 -->
+    <sql id="pageQueryTable">backpack</sql>
+    <!-- 封装商城商品查询条件 -->
+    <sql id="whereCondition">
+        <where>
+            <if test="backpack.memberId != null">
+                and member_id = #{backpack.member_id,jdbcType=INTEGER}
+            </if>
+            <if test="backpack.source != null">
+                and source = #{backpack.source,jdbcType=INTEGER}
+            </if>
+        </where>
+    </sql>
+    <!-- 根据条件查询分页列表总数 -->
+    <select id="getPageListCount" resultType="java.lang.Integer">
+        select count(1) from
+        <include refid="pageQueryTable"/>
+        <include refid="whereCondition"/>
+    </select>
+    <!-- 根据条件查询分页列表 -->
+    <select id="getPageList" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from
+        <include refid="pageQueryTable"/>
+        <include refid="whereCondition"/>
+        limit ${page.start}, ${page.pageSize}
+    </select>
+
+
+    <!-- 根据购物清单将购物成功商品加入到会员背包中 -->
+    <insert id="insertByGoodsBuy">
+        insert into backpack
+        (
+        id,member_id,source,count,goods_id
+        ) values
+        <foreach item="item" collection="backpackList" separator=",">
+            ((select replace(uuid(),'-','') from dual),#{item.memberId,jdbcType=INTEGER},#{item.source,jdbcType=INTEGER},#{item.count,jdbcType=INTEGER},#{item.goodsId,jdbcType=VARCHAR})
+        </foreach>
+    </insert>
 </mapper>
