@@ -282,6 +282,8 @@ public class OrderServiceImpl implements IOrderService {
                 throw new Exception("批量更新会员商品库存失败");
             }
         }
+
+        //todo 将每一笔交易币变动和积分变动都持久化记录，将不同错误提示写完整，例如：账户余额不足...
     }
 
     /**
