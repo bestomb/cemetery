@@ -7,11 +7,21 @@ public class GoodsPersonage {
 
     private BigDecimal price;
 
-    private Integer repertory;
+    private Integer repertory;//库存
 
     private Integer memberId;
 
     private String plantsAndAnimalsId;
+
+    public GoodsPersonage() {
+    }
+
+    public GoodsPersonage(SellGoods sellGoods) {
+        this.memberId = sellGoods.getMemberId();
+        this.plantsAndAnimalsId = sellGoods.getGoodsId();
+        this.price = sellGoods.getPrice();
+        this.repertory = sellGoods.getCount();
+    }
 
     public String getId() {
         return id;

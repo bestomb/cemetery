@@ -13,9 +13,9 @@ public class Mall {
 	private String goodsId;
 	// 会员编号（个人商城）
 	private Integer memberId;
-	// 商品名称（官方商城）
+	// 商品名称
 	private String name;
-	// 商品类型（官方商城）
+	// 商品类型
 	private Integer type;
 	
 	public Mall(){}

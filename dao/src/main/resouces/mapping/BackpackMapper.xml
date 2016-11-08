@@ -132,4 +132,13 @@
             ((select replace(uuid(),'-','') from dual),#{item.memberId,jdbcType=INTEGER},#{item.source,jdbcType=INTEGER},#{item.count,jdbcType=INTEGER},#{item.goodsId,jdbcType=VARCHAR})
         </foreach>
     </insert>
+
+    <!-- 根据条件查询背包商品 -->
+    <select id="selectByCondition" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from backpack
+        where member_id = #{memberId,jdbcType=INTEGER}
+        and goods_id = #{goodsId,jdbcType=VARCHAR}
+    </select>
 </mapper>

@@ -31,14 +31,20 @@
     where id = #{id,jdbcType=VARCHAR}
   </delete>
     <insert id="insert" parameterType="com.bestomb.entity.GoodsOfficialWithBLOBs">
-    insert into goods_official (id, name, price, 
-      images, type, description, 
-      extend_attribute)
-    values (#{id,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{price,jdbcType=DECIMAL},
-      #{images,jdbcType=VARCHAR}, #{type,jdbcType=INTEGER}, #{description,jdbcType=LONGVARCHAR}, 
-      #{extendAttribute,jdbcType=LONGVARCHAR})
-  </insert>
+        <selectKey keyProperty="id" resultType="String" order="BEFORE">
+            select replace(uuid(),'-','') from dual
+        </selectKey>
+        insert into goods_official (id, name, price,
+        images, type, description,
+        extend_attribute)
+        values (#{id,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{price,jdbcType=DECIMAL},
+        #{images,jdbcType=VARCHAR}, #{type,jdbcType=INTEGER}, #{description,jdbcType=LONGVARCHAR},
+        #{extendAttribute,jdbcType=LONGVARCHAR})
+    </insert>
     <insert id="insertSelective" parameterType="com.bestomb.entity.GoodsOfficialWithBLOBs">
+        <selectKey keyProperty="id" resultType="String" order="BEFORE">
+            select replace(uuid(),'-','') from dual
+        </selectKey>
         insert into goods_official
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null">

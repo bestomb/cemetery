@@ -1,88 +1,94 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.bestomb.dao.IParkDao" >
-  <resultMap id="BaseResultMap" type="com.bestomb.entity.Park" >
-    <id column="id" property="id" jdbcType="VARCHAR" />
-    <result column="cemetery_id" property="cemeteryId" jdbcType="VARCHAR" />
-    <result column="growing_days" property="growingDays" jdbcType="INTEGER" />
-    <result column="life_value" property="lifeValue" jdbcType="INTEGER" />
-    <result column="goods_id" property="goodsId" jdbcType="VARCHAR" />
-  </resultMap>
-  <sql id="Base_Column_List" >
+<mapper namespace="com.bestomb.dao.IParkDao">
+    <resultMap id="BaseResultMap" type="com.bestomb.entity.Park">
+        <id column="id" property="id" jdbcType="VARCHAR"/>
+        <result column="cemetery_id" property="cemeteryId" jdbcType="VARCHAR"/>
+        <result column="growing_days" property="growingDays" jdbcType="INTEGER"/>
+        <result column="life_value" property="lifeValue" jdbcType="INTEGER"/>
+        <result column="goods_id" property="goodsId" jdbcType="VARCHAR"/>
+    </resultMap>
+    <sql id="Base_Column_List">
     id, cemetery_id, growing_days, life_value, goods_id
   </sql>
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
-    select 
-    <include refid="Base_Column_List" />
-    from park
-    where id = #{id,jdbcType=VARCHAR}
-  </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from park
+        where id = #{id,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
     delete from park
     where id = #{id,jdbcType=VARCHAR}
   </delete>
-  <insert id="insert" parameterType="com.bestomb.entity.Park" >
-    insert into park (id, cemetery_id, growing_days, 
-      life_value, goods_id)
-    values (#{id,jdbcType=VARCHAR}, #{cemeteryId,jdbcType=VARCHAR}, #{growingDays,jdbcType=INTEGER}, 
-      #{lifeValue,jdbcType=INTEGER}, #{goodsId,jdbcType=VARCHAR})
-  </insert>
-  <insert id="insertSelective" parameterType="com.bestomb.entity.Park" >
-    insert into park
-    <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        id,
-      </if>
-      <if test="cemeteryId != null" >
-        cemetery_id,
-      </if>
-      <if test="growingDays != null" >
-        growing_days,
-      </if>
-      <if test="lifeValue != null" >
-        life_value,
-      </if>
-      <if test="goodsId != null" >
-        goods_id,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        #{id,jdbcType=VARCHAR},
-      </if>
-      <if test="cemeteryId != null" >
-        #{cemeteryId,jdbcType=VARCHAR},
-      </if>
-      <if test="growingDays != null" >
-        #{growingDays,jdbcType=INTEGER},
-      </if>
-      <if test="lifeValue != null" >
-        #{lifeValue,jdbcType=INTEGER},
-      </if>
-      <if test="goodsId != null" >
-        #{goodsId,jdbcType=VARCHAR},
-      </if>
-    </trim>
-  </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.bestomb.entity.Park" >
-    update park
-    <set >
-      <if test="cemeteryId != null" >
-        cemetery_id = #{cemeteryId,jdbcType=VARCHAR},
-      </if>
-      <if test="growingDays != null" >
-        growing_days = #{growingDays,jdbcType=INTEGER},
-      </if>
-      <if test="lifeValue != null" >
-        life_value = #{lifeValue,jdbcType=INTEGER},
-      </if>
-      <if test="goodsId != null" >
-        goods_id = #{goodsId,jdbcType=VARCHAR},
-      </if>
-    </set>
-    where id = #{id,jdbcType=VARCHAR}
-  </update>
-  <update id="updateByPrimaryKey" parameterType="com.bestomb.entity.Park" >
+    <insert id="insert" parameterType="com.bestomb.entity.Park">
+        <selectKey keyProperty="id" resultType="String" order="BEFORE">
+            select replace(uuid(),'-','') from dual
+        </selectKey>
+        insert into park (id, cemetery_id, growing_days,
+        life_value, goods_id)
+        values (#{id,jdbcType=VARCHAR}, #{cemeteryId,jdbcType=VARCHAR}, #{growingDays,jdbcType=INTEGER},
+        #{lifeValue,jdbcType=INTEGER}, #{goodsId,jdbcType=VARCHAR})
+    </insert>
+    <insert id="insertSelective" parameterType="com.bestomb.entity.Park">
+        <selectKey keyProperty="id" resultType="String" order="BEFORE">
+            select replace(uuid(),'-','') from dual
+        </selectKey>
+        insert into park
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="cemeteryId != null">
+                cemetery_id,
+            </if>
+            <if test="growingDays != null">
+                growing_days,
+            </if>
+            <if test="lifeValue != null">
+                life_value,
+            </if>
+            <if test="goodsId != null">
+                goods_id,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=VARCHAR},
+            </if>
+            <if test="cemeteryId != null">
+                #{cemeteryId,jdbcType=VARCHAR},
+            </if>
+            <if test="growingDays != null">
+                #{growingDays,jdbcType=INTEGER},
+            </if>
+            <if test="lifeValue != null">
+                #{lifeValue,jdbcType=INTEGER},
+            </if>
+            <if test="goodsId != null">
+                #{goodsId,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.bestomb.entity.Park">
+        update park
+        <set>
+            <if test="cemeteryId != null">
+                cemetery_id = #{cemeteryId,jdbcType=VARCHAR},
+            </if>
+            <if test="growingDays != null">
+                growing_days = #{growingDays,jdbcType=INTEGER},
+            </if>
+            <if test="lifeValue != null">
+                life_value = #{lifeValue,jdbcType=INTEGER},
+            </if>
+            <if test="goodsId != null">
+                goods_id = #{goodsId,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.bestomb.entity.Park">
     update park
     set cemetery_id = #{cemeteryId,jdbcType=VARCHAR},
       growing_days = #{growingDays,jdbcType=INTEGER},
@@ -90,28 +96,37 @@
       goods_id = #{goodsId,jdbcType=VARCHAR}
     where id = #{id,jdbcType=VARCHAR}
   </update>
-  
-  <!-- 封装分页查询表名 -->
-  <sql id="pageQueryTable">park</sql>
-  <!-- 封装商城商品查询条件 -->
-  <sql id="whereCondition">
-  		where goods_id in ( select id from plants_and_animals where type = #{park.type, jdbcType=INTEGER} )
-	  	<if test="park.cemeteryId != null" >
-	       and cemetery_id = #{park.cemeteryId, jdbcType=INTEGER}
-	    </if>
-  </sql>
-  <!-- 根据条件查询分页列表总数 -->
-  <select id="getPageListCount" resultType="java.lang.Integer">
-    select count(1) from <include refid="pageQueryTable" />
-    <include refid="whereCondition" />
-  </select>
-  <!-- 根据条件查询分页列表 -->
-  <select id="getPageList" resultMap="BaseResultMap" >
-    select
-    <include refid="Base_Column_List" />
-    from <include refid="pageQueryTable" />
-    <include refid="whereCondition" />
-    limit ${page.start}, ${page.pageSize}
-  </select>
-  
+
+    <!-- 封装分页查询表名 -->
+    <sql id="pageQueryTable">park</sql>
+    <!-- 封装商城商品查询条件 -->
+    <sql id="whereCondition">
+        where goods_id in ( select id from plants_and_animals where type = #{park.type, jdbcType=INTEGER} )
+        <if test="park.cemeteryId != null">
+            and cemetery_id = #{park.cemeteryId, jdbcType=INTEGER}
+        </if>
+    </sql>
+    <!-- 根据条件查询分页列表总数 -->
+    <select id="getPageListCount" resultType="java.lang.Integer">
+        select count(1) from
+        <include refid="pageQueryTable"/>
+        <include refid="whereCondition"/>
+    </select>
+    <!-- 根据条件查询分页列表 -->
+    <select id="getPageList" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from
+        <include refid="pageQueryTable"/>
+        <include refid="whereCondition"/>
+        limit ${page.start}, ${page.pageSize}
+    </select>
+
+    <!-- 根据条件删除动植物 -->
+    <delete id="deleteByCondition" parameterType="com.bestomb.entity.Biont">
+    delete from park
+    where cemetery_id = #{cemeteryId,jdbcType=VARCHAR}
+    and goods_id = #{goodsId,jdbcType=VARCHAR}
+  </delete>
+
 </mapper>

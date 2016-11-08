@@ -11,9 +11,7 @@ import com.bestomb.common.util.SessionContextUtil;
 import com.bestomb.common.util.SessionUtil;
 import com.bestomb.common.util.yamlMapper.SystemConf;
 import com.bestomb.controller.BaseController;
-import com.bestomb.entity.Backpack;
-import com.bestomb.entity.MemberAccount;
-import com.bestomb.entity.PurchaseOrder;
+import com.bestomb.entity.*;
 import com.bestomb.sevice.api.MemberService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -253,16 +251,48 @@ public class MemberController extends BaseController {
     /***
      * 获取背包商品详情
      *
-     * @param orderId
+     * @param backpack
      * @return
      * @throws EqianyuanException
      */
     @RequestMapping(value = "/backpackGoods/{id}", method = {RequestMethod.GET, RequestMethod.POST})
     @ResponseBody
-    public ServerResponse getBackpackGoodsDetail(@PathVariable String id, @ModelAttribute Backpack backpack) throws EqianyuanException {
+    public ServerResponse getBackpackGoodsDetail(@PathVariable String id, @RequestBody Backpack backpack) throws EqianyuanException {
         backpack.setGoodsId(id);
         Object goods = memberService.getBackpackGoodsDetail(backpack);
         return new ServerResponse.ResponseBuilder().data(goods).build();
+    }
+
+    /***
+     * 背包商品使用
+     *
+     * @param useGoods
+     * @return
+     * @throws EqianyuanException
+     */
+    @RequestMapping(value = "/backpackGoods/use", method = {RequestMethod.GET, RequestMethod.POST})
+    @ResponseBody
+    public ServerResponse useBackpackGoods(@RequestBody UseGoods useGoods) throws EqianyuanException {
+        int memberId = getLoginMember().getMemberId();
+        useGoods.setMemberId(memberId);
+        boolean flag = memberService.useBackpackGoods(useGoods);
+        return new ServerResponse.ResponseBuilder().data(flag).build();
+    }
+
+    /***
+     * 背包商品发售（到个人商城）
+     *
+     * @param sellGoods
+     * @return
+     * @throws EqianyuanException
+     */
+    @RequestMapping(value = "/backpackGoods/sell", method = {RequestMethod.GET, RequestMethod.POST})
+    @ResponseBody
+    public ServerResponse sellBackpackGoods(@RequestBody SellGoods sellGoods) throws EqianyuanException {
+        int memberId = getLoginMember().getMemberId();
+        sellGoods.setMemberId(memberId);
+        boolean flag = memberService.sellBackpackGoods(sellGoods);
+        return new ServerResponse.ResponseBuilder().data(flag).build();
     }
 
 }

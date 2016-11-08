@@ -5,11 +5,22 @@ public class Park {
 
     private String cemeteryId;
 
-    private Integer growingDays;
-
-    private Integer lifeValue;
+    private Integer growingDays= 0;
+    private Integer lifeValue = 1;
 
     private String goodsId;
+
+    public Park(){}
+    public Park(String cemeteryId, String goodsId){
+        this.cemeteryId = cemeteryId;
+        this.goodsId = goodsId;
+    }
+    public Park(String cemeteryId, Integer growingDays, Integer lifeValue, String goodsId){
+        this.cemeteryId = cemeteryId;
+        this.growingDays = growingDays;
+        this.lifeValue = lifeValue;
+        this.goodsId = goodsId;
+    }
 
     public String getId() {
         return id;

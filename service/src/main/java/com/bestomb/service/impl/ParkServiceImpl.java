@@ -2,10 +2,14 @@ package com.bestomb.service.impl;
 
 import java.util.List;
 
+import com.bestomb.dao.IBackpackDao;
+import com.bestomb.entity.Backpack;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 
 import com.bestomb.common.Pager;
@@ -25,9 +29,11 @@ public class ParkServiceImpl implements IParkService {
 	private Logger logger = Logger.getLogger(this.getClass());
 	
 	@Autowired
-	private IParkDao parkDao;
+	private IParkDao parkDao; // 公园Dao层接口
 	@Autowired
-	private IPlantsAndAnimalsDao plantsAndAnimalsDao;
+	private IPlantsAndAnimalsDao plantsAndAnimalsDao; // 动植物Dao层接口
+	@Autowired
+	private IBackpackDao backpackDao; // 背包Dao层接口
 	
 	public PageResponse getPageList(Biont biont, Pager page) throws EqianyuanException {
 		// 陵园编号是否为空
@@ -72,13 +78,47 @@ public class ParkServiceImpl implements IParkService {
 	}
 
 	public boolean upgrade(Biont biont) throws EqianyuanException {
-		// TODO Auto-generated method stub
-		return false;
+		// 陵园编号是否为空
+		if (StringUtils.isEmpty(biont.getCemeteryId())) {
+			logger.warn("upgrade fail , because cemeteryId is null.");
+			throw new EqianyuanException(ExceptionMsgConstant.CEMETERY_ID_IS_EMPTY);
+		}
+		// 商品编号是否为空
+		if (StringUtils.isEmpty(biont.getGoodsId())) {
+			logger.warn("upgrade fail , because goodsId is null.");
+			throw new EqianyuanException(ExceptionMsgConstant.GOODSID_IS_EMPTY);
+		}
+
+		return parkDao.upgrade(biont)>0;
 	}
 
-	public boolean pickUp(Biont biont) throws EqianyuanException {
-		// TODO Auto-generated method stub
-		return false;
+	@Transactional
+	public boolean pickUp(Biont biont, Integer memberId) throws EqianyuanException {
+
+		boolean flag = false;
+		// 陵园编号是否为空
+		if (StringUtils.isEmpty(biont.getCemeteryId())) {
+			logger.warn("pickUp fail , because cemeteryId is null.");
+			throw new EqianyuanException(ExceptionMsgConstant.CEMETERY_ID_IS_EMPTY);
+		}
+		// 商品编号是否为空
+		if (StringUtils.isEmpty(biont.getGoodsId())) {
+			logger.warn("pickUp fail , because goodsId is null.");
+			throw new EqianyuanException(ExceptionMsgConstant.GOODSID_IS_EMPTY);
+		}
+		// 将该动植物放入会员背包中
+		Backpack backpack = new Backpack(memberId, 3, biont.getGoodsId());
+		flag = backpackDao.insert(backpack)>0;
+		// park表中删除该动植物数据
+		if (flag) {
+			flag = parkDao.deleteByCondition(biont)>0;
+			if (!flag) {
+				logger.error("会员（"+memberId+"）在陵园（"+biont.getCemeteryId()+"）中拾取动植物（"+biont.getGoodsId()+"）时，将该动植物从park表中删除失败！");
+			}
+		}else{
+			logger.error("会员（"+memberId+"）在陵园（"+biont.getCemeteryId()+"）中拾取动植物（"+biont.getGoodsId()+"）时，将该动植物插入会员背包表中失败！");
+		}
+		return flag;
 	}
 
 }

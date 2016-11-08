@@ -35,5 +35,19 @@ public interface IParkDao {
 	 * @return
 	 */
 	List<Park> getPageList(@Param("park") Biont park, @Param("page") Pager page);
+
+	/***
+	 * 动植物升级（动物喂养，植物施肥）
+	 * @param biont
+	 * @return
+	 */
+	int upgrade(Biont biont);
+
+	/***
+	 * 根据条件删除动植物
+	 * @param biont
+	 * @return
+	 */
+	int deleteByCondition(Biont biont);
     
 }

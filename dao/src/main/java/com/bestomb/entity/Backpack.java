@@ -5,11 +5,17 @@ public class Backpack {
 
     private Integer memberId;
 
-    private Integer source;
-
-    private Integer count;
+    private Integer source; // {1：商城（官方）， 2：商城（个人）， 3：动植物园}
+    private Integer count = 1;
 
     private String goodsId;
+
+    public Backpack(){};
+    public Backpack(Integer memberId, Integer source, String goodsId){
+        this.memberId = memberId;
+        this.source = source;
+        this.goodsId = goodsId;
+    }
 
     public String getId() {
         return id;

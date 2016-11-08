@@ -6,12 +6,14 @@
     <result column="member_id" jdbcType="INTEGER" property="memberId" />
     <result column="create_time" jdbcType="INTEGER" property="createTime" />
     <result column="price" jdbcType="DECIMAL" property="price" />
+    <result column="integral" jdbcType="INTEGER" property="integral" />
+    <result column="paid_price" jdbcType="DECIMAL" property="paidPrice" />
   </resultMap>
   <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.bestomb.entity.PurchaseOrder">
     <result column="goods" jdbcType="LONGVARCHAR" property="goods" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, member_id, create_time, price
+    id, member_id, create_time, price, integral, paid_price
   </sql>
   <sql id="Blob_Column_List">
     goods

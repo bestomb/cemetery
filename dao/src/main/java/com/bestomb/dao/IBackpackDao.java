@@ -44,4 +44,12 @@ public interface IBackpackDao {
      */
     List<Backpack> getPageList(@Param("backpack") Backpack backpack, @Param("page") Pager page);
 
+    /***
+     * 根据会员编号和商品编号查询背包商品
+     * @param memberId
+     * @param goodsId
+     * @return
+     */
+    Backpack selectByCondition(@Param("memberId") Integer memberId, @Param("goodsId") String goodsId);
+
 }

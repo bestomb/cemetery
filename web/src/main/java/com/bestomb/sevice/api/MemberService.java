@@ -8,9 +8,7 @@ import com.bestomb.common.response.member.*;
 import com.bestomb.common.util.*;
 import com.bestomb.common.util.yamlMapper.ClientConf;
 import com.bestomb.common.util.yamlMapper.SystemConf;
-import com.bestomb.entity.Backpack;
-import com.bestomb.entity.MemberAccount;
-import com.bestomb.entity.PurchaseOrder;
+import com.bestomb.entity.*;
 import com.bestomb.service.IBackpackService;
 import com.bestomb.service.ILeaveMessage;
 import com.bestomb.service.IMemberService;
@@ -319,6 +317,28 @@ public class MemberService {
      */
     public Object getBackpackGoodsDetail(Backpack backpack) throws EqianyuanException {
         return backpackService.getGoodsDetail(backpack);
+    }
+
+    /***
+     * 背包商品使用
+     *
+     * @param useGoods
+     * @return
+     */
+    public boolean useBackpackGoods(UseGoods useGoods) throws EqianyuanException {
+        return backpackService.use(useGoods);
+    }
+
+    /***
+     * 商品发售（到个人商城）
+     *
+     * @param sellGoods
+     * @return
+     * @throws EqianyuanException
+     */
+    public boolean sellBackpackGoods(SellGoods sellGoods) throws EqianyuanException {
+        GoodsPersonage goodsPersonage = new GoodsPersonage(sellGoods);
+        return backpackService.sell(goodsPersonage);
     }
 
 }

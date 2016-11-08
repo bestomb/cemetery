@@ -278,7 +278,10 @@ public class ExceptionMsgConstant {
     public static final String GOODS_NAME_IS_EMPTY = "30001005";
     // 发布的商品价格为空
     public static final String GOODS_PRICE_IS_EMPTY = "30001006";
-    
+    // 发布的商品数量超过背包商品数量
+    public static final String GOODS_COUNT_IS_NOT_ENOUGH = "30001007";
+    //商品发布失败
+    public static final String GOODS_PUBLISH_FAIL = "30001008";
     /***
      * 动植物
      */
