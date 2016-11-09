@@ -10,7 +10,7 @@ import java.util.List;
 
 public interface IGoodsOfficialDao {
 
-    int deleteByPrimaryKey(String id);
+    int deleteByPrimaryKey(@Param("id")String... id);
 
     int insert(GoodsOfficialWithBLOBs record);
 

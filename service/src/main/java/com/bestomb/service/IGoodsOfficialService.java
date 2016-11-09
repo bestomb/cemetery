@@ -39,7 +39,7 @@ public interface IGoodsOfficialService {
     /**
      * 删除商品
      */
-    void removeByIds(String goodsId) throws EqianyuanException;
+    void removeByIds(String... goodsId) throws EqianyuanException;
 
 
 }

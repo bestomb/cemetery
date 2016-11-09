@@ -172,8 +172,8 @@ public class GoodsOfficialServiceImpl implements IGoodsOfficialService {
      * @param goodsId
      * @throws EqianyuanException
      */
-    public void removeByIds(String goodsId) throws EqianyuanException {
-        if (StringUtils.isEmpty(goodsId)) {
+    public void removeByIds(String... goodsId) throws EqianyuanException {
+        if (ObjectUtils.isEmpty(goodsId)) {
             logger.warn("商品数据删除失败，因为商品编号不存在.");
             throw new EqianyuanException(ExceptionMsgConstant.GOODSID_IS_EMPTY);
         }

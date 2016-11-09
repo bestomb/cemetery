@@ -76,7 +76,7 @@ public class GoodsOfficialController extends BaseController {
      */
     @RequestMapping("/delete")
     @ResponseBody
-    public ServerResponse delete(String goodsId) throws EqianyuanException {
+    public ServerResponse delete(String... goodsId) throws EqianyuanException {
         goodsOfficialService.removeByIds(goodsId);
         return new ServerResponse();
     }
