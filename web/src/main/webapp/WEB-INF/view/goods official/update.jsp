@@ -83,7 +83,11 @@
                                         <label>扩建个数</label>
                                         <input class="form-control" id="extend_count">
                                     </div>
-                                    <div class="form-group">
+                                    <div class="form-group hide">
+                                        <label>生命周期（单位：天）</label>
+                                        <input class="form-control" id="lifecycle" name="lifecycle">
+                                    </div>
+                                    <div class="form-group hide">
                                         <label>模型编号</label>
                                         <input class="form-control" id="extend_model_id" onclick="window.open('/system-manage/gotoPage?url=/goods official/model_list','','top=50,left=400,width=500,height=600');" readonly>
                                     </div>
@@ -124,12 +128,20 @@
                     switch (parseInt(_this.type)){
                         case 1:;case 2:;case 3:;case 4:;case 5:;
                         case 6:
+                            var extendAttributeJSON = $.parseJSON(_this.extendAttribute);
+
+                            $("#lifecycle").parent("div").removeClass("hide");
+                            $("#extend_model_id").parent("div").removeClass("hide");
+
+                            $("#lifecycle").val(_this.lifecycle);
                             $("#extend_model_id").val(_this.extendAttribute)
                             break;
                         case 7:
+                            $("#extend_storage").parent("div").removeClass("hide");
                             $("#extend_storage").val(_this.extendAttribute)
                             break;;
                         case 8:
+                            $("#extend_count").parent("div").removeClass("hide");
                             $("#extend_count").val(_this.extendAttribute)
                             break;;
                     }
@@ -154,7 +166,7 @@
             switch (parseInt($("select[name='type']").val())){
                 case 1:;case 2:;case 3:;case 4:;case 5:;
                 case 6:
-                    $("input[name='extendAttribute']").val($("#extend_model_id").val());
+                    $("input[name='extendAttribute']").val($("#extend_model_id").val())
                     break;
                 case 7:
                     $("input[name='extendAttribute']").val($("#extend_storage").val());

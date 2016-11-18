@@ -18,7 +18,7 @@ public interface IPingggService {
      * @return
      * @throws Exception
      */
-    String getCharge(int amount, String channel, Integer memberId, HttpServletRequest request) throws Exception;
+    String getCharge(double amount, String channel, Integer memberId, HttpServletRequest request) throws Exception;
 
     /**
      * 接受、验证Webhooks并且更新会员充值支付信息

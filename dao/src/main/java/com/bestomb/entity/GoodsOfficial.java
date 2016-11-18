@@ -13,6 +13,8 @@ public class GoodsOfficial {
 
     private Integer type;
 
+    private Integer lifecycle;
+
     public String getId() {
         return id;
     }
@@ -51,5 +53,13 @@ public class GoodsOfficial {
 
     public void setType(Integer type) {
         this.type = type;
+    }
+
+    public Integer getLifecycle() {
+        return lifecycle;
+    }
+
+    public void setLifecycle(Integer lifecycle) {
+        this.lifecycle = lifecycle;
     }
 }

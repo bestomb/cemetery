@@ -46,10 +46,10 @@ public class PingppUtil {
         put("upacp_wap", new HashMap<String, String>() {{
             put("result_url", "http://bestomb.eqianyuan.cn/pingpp/pay_success.jsp");
         }});
-        //微信支付
-        put("wx", null);
-        //微信WAP支付
-        put("wx_wap", null);
+        //微信扫码支付
+        put("wx_pub_qr", new HashMap<String, String>(){{
+            put("product_id", "123456789");
+        }});
     }};
 
     /**

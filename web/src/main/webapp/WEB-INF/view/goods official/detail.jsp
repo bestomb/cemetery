@@ -77,7 +77,11 @@
                                         <label>扩建个数</label>
                                         <input class="form-control" id="extend_count" readonly>
                                     </div>
-                                    <div class="form-group">
+                                    <div class="form-group hide">
+                                        <label>生命周期（单位：天）</label>
+                                        <input class="form-control" id="lifecycle" readonly>
+                                    </div>
+                                    <div class="form-group hide">
                                         <label>模型编号</label>
                                         <input class="form-control" id="extend_model_id" readonly>
                                     </div>
@@ -116,12 +120,18 @@
                     switch (parseInt(_this.type)){
                         case 1:;case 2:;case 3:;case 4:;case 5:;
                         case 6:
-                            $("#extend_model_id").val(_this.extendAttribute)
+                            $("#lifecycle").parent("div").removeClass("hide");
+                            $("#extend_model_id").parent("div").removeClass("hide");
+
+                            $("#lifecycle").val(_this.lifecycle);
+                            $("#extend_model_id").val(_this.extendAttribute);
                             break;
                         case 7:
+                            $("#extend_storage").parent("div").removeClass("hide");
                             $("#extend_storage").val(_this.extendAttribute)
                             break;;
                         case 8:
+                            $("#extend_count").parent("div").removeClass("hide");
                             $("#extend_count").val(_this.extendAttribute)
                             break;;
                     }

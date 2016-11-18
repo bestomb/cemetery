@@ -13,6 +13,8 @@ public class GoodsOfficialBO {
 
     private Integer type;
 
+    private Integer lifecycle;
+
     private String description;
 
     private String extendAttribute;
@@ -71,5 +73,13 @@ public class GoodsOfficialBO {
 
     public void setExtendAttribute(String extendAttribute) {
         this.extendAttribute = extendAttribute;
+    }
+
+    public Integer getLifecycle() {
+        return lifecycle;
+    }
+
+    public void setLifecycle(Integer lifecycle) {
+        this.lifecycle = lifecycle;
     }
 }

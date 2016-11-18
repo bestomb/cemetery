@@ -76,6 +76,10 @@
                                         <input class="form-control" id="extend_count">
                                     </div>
                                     <div class="form-group">
+                                        <label>生命周期（单位：天）</label>
+                                        <input class="form-control" id="lifecycle" name="lifecycle">
+                                    </div>
+                                    <div class="form-group">
                                         <label>模型编号</label>
                                         <input class="form-control" id="extend_model_id" onclick="window.open('/system-manage/gotoPage?url=/goods official/model_list','','top=50,left=400,width=500,height=600');" readonly>
                                     </div>
@@ -103,9 +107,11 @@
             $("#extend_model_id").parent("div").addClass("hide");
             $("#extend_storage").parent("div").addClass("hide");
             $("#extend_count").parent("div").addClass("hide");
+            $("#lifecycle").parent("div").addClass("hide");
             switch (parseInt($(this).val())){
                 case 1:;case 2:;case 3:;case 4:;case 5:;
                 case 6:
+                    $("#lifecycle").parent("div").removeClass("hide");
                     $("#extend_model_id").parent("div").removeClass("hide");
                     break;
                 case 7:

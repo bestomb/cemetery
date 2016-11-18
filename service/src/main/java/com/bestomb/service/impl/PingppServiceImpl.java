@@ -48,7 +48,7 @@ public class PingppServiceImpl implements IPingggService {
      * @return
      * @throws Exception
      */
-    public String getCharge(int amount, String channel, Integer memberId, HttpServletRequest request) throws Exception {
+    public String getCharge(double amount, String channel, Integer memberId, HttpServletRequest request) throws Exception {
         if (StringUtils.isEmpty(channel)) {
             throw new NullPointerException("未知的支付渠道");
         }
@@ -68,7 +68,7 @@ public class PingppServiceImpl implements IPingggService {
             String clientIp = IPUtils.getIpAddr(request);
 
             //amount 单位是元，转成交易凭证金额（单位：分），需要*100
-            return PingppUtil.getCharge(amount * 100, channel, clientIp, String.valueOf(orderNo), "充值", "在线充值百思币");
+            return PingppUtil.getCharge((int) (amount * 100), channel, clientIp, String.valueOf(orderNo), "充值", "在线充值网陵交易币");
         }
 
         return StringUtils.EMPTY;
@@ -92,10 +92,10 @@ public class PingppServiceImpl implements IPingggService {
         JSONObject webHooksJSON = JSON.parseObject(webHooksPostData);
 
         //获取json中livemode（是否处于  live 模式）数据，如果为false，则支付环境为测试环境，则业务跳出
-//        Boolean livemode = (Boolean) webHooksJSON.get("livemode");
-//        if (!livemode) {
-//            return;
-//        }
+        Boolean livemode = (Boolean) webHooksJSON.get("livemode");
+        if (!livemode) {
+            return;
+        }
 
         //获取ping++回调数据中paid(是否已经付款）
         Boolean paid = (Boolean) webHooksJSON.getJSONObject("data").getJSONObject("object").get("paid");

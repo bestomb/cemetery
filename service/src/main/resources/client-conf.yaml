@@ -33,3 +33,4 @@ execute_node: 10-12
 pingpp:
   api_key: sk_live_SKC4GCCeXjbHGeXn1OnfnHWT
   app_id: app_fv9Sa1qnvL4SrjLy
+#  api_key: sk_test_5an944jrLinT8q1W5SjjLOaT
