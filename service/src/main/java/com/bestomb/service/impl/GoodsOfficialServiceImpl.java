@@ -1,22 +1,9 @@
 package com.bestomb.service.impl;
 
-import com.bestomb.common.Pager;
-import com.bestomb.common.constant.ExceptionMsgConstant;
-import com.bestomb.common.exception.EqianyuanException;
-import com.bestomb.common.request.goods.GoodsEditRequest;
-import com.bestomb.common.response.FileResponse;
-import com.bestomb.common.response.PageResponse;
-import com.bestomb.common.response.goods.GoodsBoWithCount;
-import com.bestomb.common.response.goods.GoodsOfficialBO;
-import com.bestomb.common.util.FileUtilHandle;
-import com.bestomb.common.util.yamlMapper.SystemConf;
-import com.bestomb.dao.IGoodsOfficialDao;
-import com.bestomb.entity.GoodsOfficialWithBLOBs;
-import com.bestomb.entity.Mall;
-import com.bestomb.service.IDictService;
-import com.bestomb.service.IFileService;
-import com.bestomb.service.IGoodsOfficialService;
-import org.apache.commons.lang.StringUtils;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.log4j.Logger;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,9 +11,19 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
+import com.bestomb.common.Pager;
+import com.bestomb.common.constant.ExceptionMsgConstant;
+import com.bestomb.common.exception.EqianyuanException;
+import com.bestomb.common.request.goods.GoodsEditRequest;
+import com.bestomb.common.response.FileResponse;
+import com.bestomb.common.response.PageResponse;
+import com.bestomb.common.response.goods.GoodsOfficialBO;
+import com.bestomb.common.util.FileUtilHandle;
+import com.bestomb.common.util.yamlMapper.SystemConf;
+import com.bestomb.dao.IGoodsOfficialDao;
+import com.bestomb.entity.GoodsOfficialWithBLOBs;
+import com.bestomb.entity.Mall;
+import com.bestomb.service.IGoodsOfficialService;
 
 @Service
 public class GoodsOfficialServiceImpl implements IGoodsOfficialService {
@@ -35,12 +32,6 @@ public class GoodsOfficialServiceImpl implements IGoodsOfficialService {
 
     @Autowired
     private IGoodsOfficialDao goodsOfficialDao;
-
-    @Autowired
-    private IDictService dictService;
-
-    @Autowired
-    private IFileService fileService;
 
     /**
      * 分页获取官网商城商品集合

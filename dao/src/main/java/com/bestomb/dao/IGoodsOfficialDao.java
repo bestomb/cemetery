@@ -1,12 +1,13 @@
 package com.bestomb.dao;
 
+import java.util.List;
+
+import org.apache.ibatis.annotations.Param;
+
 import com.bestomb.common.Pager;
 import com.bestomb.entity.GoodsOfficial;
 import com.bestomb.entity.GoodsOfficialWithBLOBs;
 import com.bestomb.entity.Mall;
-import org.apache.ibatis.annotations.Param;
-
-import java.util.List;
 
 public interface IGoodsOfficialDao {
 

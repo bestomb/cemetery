@@ -138,6 +138,11 @@ public class MemberServiceImpl implements IMemberService {
             //获取会员编号
             memberAccountIdBuildDao.insertSelective(memberAccountIdBuild);
             Integer memberId = memberAccountIdBuild.getId();
+            //如果账号大于9999999，则throw exception
+            if(memberId > 9999999){
+                logger.warn("register fail, because account full.");
+                throw new EqianyuanException(ExceptionMsgConstant.SYSTEM_ERROR);
+            }
 
             //检查编号是否为靓号，如果是靓号，则重新获取编号
             if (VIPIDFilterUtil.doFilter(String.valueOf(memberId))) {

@@ -1,29 +1,29 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.bestomb.dao.IGoodsOfficialDao">
     <resultMap id="BaseResultMap" type="com.bestomb.entity.GoodsOfficial">
-        <id column="id" property="id" jdbcType="VARCHAR"/>
-        <result column="name" property="name" jdbcType="VARCHAR"/>
-        <result column="price" property="price" jdbcType="DECIMAL"/>
-        <result column="images" property="images" jdbcType="VARCHAR"/>
-        <result column="type" property="type" jdbcType="INTEGER"/>
-        <result column="lifecycle" property="lifecycle" jdbcType="INTEGER"/>
+        <id column="id" jdbcType="VARCHAR" property="id" />
+        <result column="name" jdbcType="VARCHAR" property="name" />
+        <result column="price" jdbcType="DECIMAL" property="price" />
+        <result column="images" jdbcType="VARCHAR" property="images" />
+        <result column="type" jdbcType="INTEGER" property="type" />
+        <result column="lifecycle" jdbcType="INTEGER" property="lifecycle" />
     </resultMap>
-    <resultMap id="ResultMapWithBLOBs" type="com.bestomb.entity.GoodsOfficialWithBLOBs" extends="BaseResultMap">
-        <result column="description" property="description" jdbcType="LONGVARCHAR"/>
-        <result column="extend_attribute" property="extendAttribute" jdbcType="LONGVARCHAR"/>
+    <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.bestomb.entity.GoodsOfficialWithBLOBs">
+        <result column="description" jdbcType="LONGVARCHAR" property="description" />
+        <result column="extend_attribute" jdbcType="LONGVARCHAR" property="extendAttribute" />
     </resultMap>
     <sql id="Base_Column_List">
-    id, name, price, images, type, lifecycle
-  </sql>
+        id, name, price, images, type, lifecycle
+    </sql>
     <sql id="Blob_Column_List">
-    description, extend_attribute
-  </sql>
-    <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.String">
+        description, extend_attribute
+    </sql>
+    <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="ResultMapWithBLOBs">
         select
-        <include refid="Base_Column_List"/>
+        <include refid="Base_Column_List" />
         ,
-        <include refid="Blob_Column_List"/>
+        <include refid="Blob_Column_List" />
         from goods_official
         where id = #{id,jdbcType=VARCHAR}
     </select>
@@ -35,18 +35,18 @@
         </foreach>
     </delete>
     <insert id="insert" parameterType="com.bestomb.entity.GoodsOfficialWithBLOBs">
-        <selectKey keyProperty="id" resultType="String" order="BEFORE">
+        <selectKey keyProperty="id" order="BEFORE" resultType="String">
             select replace(uuid(),'-','') from dual
         </selectKey>
         insert into goods_official (id, name, price,
-        images, type,lifecycle, description,
-        extend_attribute)
+        images, type, lifecycle,
+        description, extend_attribute)
         values (#{id,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{price,jdbcType=DECIMAL},
-        #{images,jdbcType=VARCHAR}, #{type,jdbcType=INTEGER},#{lifecycle,jdbcType=INTEGER}, #{description,jdbcType=LONGVARCHAR},
-        #{extendAttribute,jdbcType=LONGVARCHAR})
+        #{images,jdbcType=VARCHAR}, #{type,jdbcType=INTEGER}, #{lifecycle,jdbcType=INTEGER},
+        #{description,jdbcType=LONGVARCHAR}, #{extendAttribute,jdbcType=LONGVARCHAR})
     </insert>
     <insert id="insertSelective" parameterType="com.bestomb.entity.GoodsOfficialWithBLOBs">
-        <selectKey keyProperty="id" resultType="String" order="BEFORE">
+        <selectKey keyProperty="id" order="BEFORE" resultType="String">
             select replace(uuid(),'-','') from dual
         </selectKey>
         insert into goods_official
@@ -131,26 +131,25 @@
         where id = #{id,jdbcType=VARCHAR}
     </update>
     <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.bestomb.entity.GoodsOfficialWithBLOBs">
-    update goods_official
-    set name = #{name,jdbcType=VARCHAR},
-      price = #{price,jdbcType=DECIMAL},
-      images = #{images,jdbcType=VARCHAR},
-      type = #{type,jdbcType=INTEGER},
-      lifecycle = #{lifecycle,jdbcType=INTEGER},
-      description = #{description,jdbcType=LONGVARCHAR},
-      extend_attribute = #{extendAttribute,jdbcType=LONGVARCHAR}
-    where id = #{id,jdbcType=VARCHAR}
-  </update>
+        update goods_official
+        set name = #{name,jdbcType=VARCHAR},
+        price = #{price,jdbcType=DECIMAL},
+        images = #{images,jdbcType=VARCHAR},
+        type = #{type,jdbcType=INTEGER},
+        lifecycle = #{lifecycle,jdbcType=INTEGER},
+        description = #{description,jdbcType=LONGVARCHAR},
+        extend_attribute = #{extendAttribute,jdbcType=LONGVARCHAR}
+        where id = #{id,jdbcType=VARCHAR}
+    </update>
     <update id="updateByPrimaryKey" parameterType="com.bestomb.entity.GoodsOfficial">
-    update goods_official
-    set name = #{name,jdbcType=VARCHAR},
-      price = #{price,jdbcType=DECIMAL},
-      images = #{images,jdbcType=VARCHAR},
-      type = #{type,jdbcType=INTEGER},
-      lifecycle = #{lifecycle,jdbcType=INTEGER}
-    where id = #{id,jdbcType=VARCHAR}
-  </update>
-
+        update goods_official
+        set name = #{name,jdbcType=VARCHAR},
+        price = #{price,jdbcType=DECIMAL},
+        images = #{images,jdbcType=VARCHAR},
+        type = #{type,jdbcType=INTEGER},
+        lifecycle = #{lifecycle,jdbcType=INTEGER}
+        where id = #{id,jdbcType=VARCHAR}
+    </update>
 
     <!-- 封装分页查询表名 -->
     <sql id="pageQueryTable">goods_official</sql>
@@ -168,30 +167,30 @@
     <!-- 根据条件查询分页列表总数 -->
     <select id="getPageListCount" resultType="java.lang.Integer">
         select count(1) from
-        <include refid="pageQueryTable"/>
-        <include refid="whereCondition"/>
+        <include refid="pageQueryTable" />
+        <include refid="whereCondition" />
     </select>
     <!-- 根据条件查询分页列表 -->
     <select id="getPageList" resultMap="ResultMapWithBLOBs">
         select
-        <include refid="Base_Column_List"/>
+        <include refid="Base_Column_List" />
         ,
-        <include refid="Blob_Column_List"/>
+        <include refid="Blob_Column_List" />
         from
-        <include refid="pageQueryTable"/>
-        <include refid="whereCondition"/>
+        <include refid="pageQueryTable" />
+        <include refid="whereCondition" />
         limit ${page.start}, ${page.pageSize}
     </select>
 
     <!-- 根据商品编号集合查找商品信息集合 -->
     <select id="selectByIds" resultMap="ResultMapWithBLOBs">
         select
-        <include refid="Base_Column_List"/>
+        <include refid="Base_Column_List" />
         ,
-        <include refid="Blob_Column_List"/>
+        <include refid="Blob_Column_List" />
         from goods_official
         where id IN
-        <foreach item="item" collection="goodsIds" open="(" separator="," close=")">
+        <foreach close=")" collection="goodsIds" item="item" open="(" separator=",">
             #{item}
         </foreach>
     </select>

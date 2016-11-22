@@ -13,6 +13,8 @@ public class UseGoods {
     private String goodsId;
     // 陵园编号
     private String cemeteryId;
+    // 墓碑编号
+    private String tombstoneId;
 	
     public Integer getMemberId() {
 		return memberId;
@@ -31,6 +33,12 @@ public class UseGoods {
 	}
 	public void setCemeteryId(String cemeteryId) {
 		this.cemeteryId = cemeteryId;
+	}
+	public String getTombstoneId() {
+		return tombstoneId;
+	}
+	public void setTombstoneId(String tombstoneId) {
+		this.tombstoneId = tombstoneId;
 	}
     
 }

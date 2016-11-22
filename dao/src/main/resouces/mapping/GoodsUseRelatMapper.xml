@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bestomb.dao.IGoodsUseRelatDao">
+  <resultMap id="BaseResultMap" type="com.bestomb.entity.GoodsUseRelat">
+    <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="type" jdbcType="INTEGER" property="type" />
+    <result column="object_id" jdbcType="VARCHAR" property="objectId" />
+    <result column="goods_id" jdbcType="VARCHAR" property="goodsId" />
+    <result column="lifecycle" jdbcType="INTEGER" property="lifecycle" />
+    <result column="member_id" jdbcType="INTEGER" property="memberId" />
+    <result column="create_time" jdbcType="INTEGER" property="createTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, type, object_id, goods_id, lifecycle, member_id, create_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from goods_use_relat
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from goods_use_relat
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.bestomb.entity.GoodsUseRelat">
+    <selectKey keyProperty="id" resultType="String" order="BEFORE">
+        select replace(uuid(),'-','') from dual
+    </selectKey>
+    insert into goods_use_relat (id, type, object_id, 
+      goods_id, lifecycle, member_id, 
+      create_time)
+    values (#{id,jdbcType=VARCHAR}, #{type,jdbcType=INTEGER}, #{objectId,jdbcType=VARCHAR}, 
+      #{goodsId,jdbcType=VARCHAR}, #{lifecycle,jdbcType=INTEGER}, #{memberId,jdbcType=INTEGER}, 
+      #{createTime,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.bestomb.entity.GoodsUseRelat">
+    <selectKey keyProperty="id" resultType="String" order="BEFORE">
+        select replace(uuid(),'-','') from dual
+    </selectKey>
+    insert into goods_use_relat
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="type != null">
+        type,
+      </if>
+      <if test="objectId != null">
+        object_id,
+      </if>
+      <if test="goodsId != null">
+        goods_id,
+      </if>
+      <if test="lifecycle != null">
+        lifecycle,
+      </if>
+      <if test="memberId != null">
+        member_id,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null">
+        #{type,jdbcType=INTEGER},
+      </if>
+      <if test="objectId != null">
+        #{objectId,jdbcType=VARCHAR},
+      </if>
+      <if test="goodsId != null">
+        #{goodsId,jdbcType=VARCHAR},
+      </if>
+      <if test="lifecycle != null">
+        #{lifecycle,jdbcType=INTEGER},
+      </if>
+      <if test="memberId != null">
+        #{memberId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.bestomb.entity.GoodsUseRelat">
+    update goods_use_relat
+    <set>
+      <if test="type != null">
+        type = #{type,jdbcType=INTEGER},
+      </if>
+      <if test="objectId != null">
+        object_id = #{objectId,jdbcType=VARCHAR},
+      </if>
+      <if test="goodsId != null">
+        goods_id = #{goodsId,jdbcType=VARCHAR},
+      </if>
+      <if test="lifecycle != null">
+        lifecycle = #{lifecycle,jdbcType=INTEGER},
+      </if>
+      <if test="memberId != null">
+        member_id = #{memberId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.bestomb.entity.GoodsUseRelat">
+    update goods_use_relat
+    set type = #{type,jdbcType=INTEGER},
+      object_id = #{objectId,jdbcType=VARCHAR},
+      goods_id = #{goodsId,jdbcType=VARCHAR},
+      lifecycle = #{lifecycle,jdbcType=INTEGER},
+      member_id = #{memberId,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=INTEGER}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  
+</mapper>
