@@ -71,6 +71,11 @@
                                         </select>
                                     </div>
                                     <div class="form-group">
+                                        <label>二级分类</label>
+                                        <select class="form-control" name="secondClassifyId">
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
                                         <label>商品描述</label>
                                         <textarea class="form-control" rows="3" name="description"></textarea>
                                     </div>
@@ -89,7 +94,9 @@
                                     </div>
                                     <div class="form-group hide">
                                         <label>模型编号</label>
-                                        <input class="form-control" id="extend_model_id" onclick="window.open('/system-manage/gotoPage?url=/goods official/model_list','','top=50,left=400,width=500,height=600');" readonly>
+                                        <input class="form-control" id="extend_model_id"
+                                               onclick="window.open('/system-manage/gotoPage?url=/goods official/model_list','','top=50,left=400,width=500,height=600');"
+                                               readonly>
                                     </div>
 
                                     <input type="button" class="btn btn-outline btn-success submit" value="添加">
@@ -109,6 +116,30 @@
 </div>
 
 <script>
+
+    //根据一级分类获取二级商品分类集合
+    var getSecondClassify = function (firstClassify) {
+        $.ajax({
+            type: "POST",
+            url: "/second_classify/getList",
+            data: {'firstClassify': firstClassify},
+            success: function (resp) {
+                if (resp.code == "200" && resp.data.length > 0) {
+
+                    var secondClassifyOption = '';
+                    $(resp.data).each(function () {
+                        secondClassifyOption += '<option value="' + this.id + '">' + this.name + '</option>';
+                    });
+
+                    $("select[name='secondClassifyId']").html(secondClassifyOption);
+                } else {
+                    $("#form-tip").removeClass("hidden alert-success").addClass("alert-warning").show().find("strong").text(resp.message);
+                    $(".submit").removeAttr("disabled");
+                }
+            }
+        });
+    }
+
     $(function () {
         $.ajax({
             type: "POST",
@@ -124,32 +155,78 @@
                     $("input[name='price']").val(_this.price);
                     $("select[name='type']").val(_this.type);
                     $("textarea[name='description']").val(_this.description);
+                    $("select[name='secondClassifyId']").html('<option value="' + _this.secondClassifyId + '">' + _this.secondClassifyName + '</option>');
 
-                    switch (parseInt(_this.type)){
-                        case 1:;case 2:;case 3:;case 4:;case 5:;
+                    switch (parseInt(_this.type)) {
+                        case 1:
+                            ;
+                        case 2:
+                            ;
+                        case 3:
+                            ;
+                        case 4:
+                            ;
+                        case 5:
+                            ;
                         case 6:
-                            var extendAttributeJSON = $.parseJSON(_this.extendAttribute);
-
                             $("#lifecycle").parent("div").removeClass("hide");
                             $("#extend_model_id").parent("div").removeClass("hide");
 
                             $("#lifecycle").val(_this.lifecycle);
-                            $("#extend_model_id").val(_this.extendAttribute)
+                            $("#extend_model_id").val(_this.extendAttribute);
                             break;
                         case 7:
                             $("#extend_storage").parent("div").removeClass("hide");
                             $("#extend_storage").val(_this.extendAttribute)
-                            break;;
+                            break;
+                            ;
                         case 8:
                             $("#extend_count").parent("div").removeClass("hide");
                             $("#extend_count").val(_this.extendAttribute)
-                            break;;
+                            break;
+                            ;
                     }
                 } else {
                     $("#form-tip").removeClass("hidden alert-warning").addClass("alert-success").show().find("strong").text(response.message);
                     //3秒后自动关闭警告框
                     setTimeout("hideOperatorTip()", 3000);
                 }
+            }
+        });
+
+        $("select[name='type']").change(function () {
+            //根据一级分类获取二级分类数据集合
+            getSecondClassify($(this).val());
+
+            $("#extend_model_id").parent("div").addClass("hide");
+            $("#extend_storage").parent("div").addClass("hide");
+            $("#extend_count").parent("div").addClass("hide");
+            $("#lifecycle").parent("div").addClass("hide");
+            switch (parseInt($(this).val())) {
+                case 1:
+                    ;
+                case 2:
+                    ;
+                case 3:
+                    ;
+                case 4:
+                    ;
+                case 5:
+                    ;
+                case 6:
+                    $("#lifecycle").parent("div").removeClass("hide");
+                    $("#extend_model_id").parent("div").removeClass("hide");
+                    break;
+                case 7:
+                    $("#extend_storage").parent("div").removeClass("hide");
+
+                    break;
+                    ;
+                case 8:
+                    $("#extend_count").parent("div").removeClass("hide");
+
+                    break;
+                    ;
             }
         });
 
@@ -163,24 +240,35 @@
             $(this).attr('disabled', "true")
 
             $("input[name='extendAttribute']").val("");
-            switch (parseInt($("select[name='type']").val())){
-                case 1:;case 2:;case 3:;case 4:;case 5:;
+            switch (parseInt($("select[name='type']").val())) {
+                case 1:
+                    ;
+                case 2:
+                    ;
+                case 3:
+                    ;
+                case 4:
+                    ;
+                case 5:
+                    ;
                 case 6:
                     $("input[name='extendAttribute']").val($("#extend_model_id").val())
                     break;
                 case 7:
                     $("input[name='extendAttribute']").val($("#extend_storage").val());
-                    break;;
+                    break;
+                    ;
                 case 8:
                     $("input[name='extendAttribute']").val($("#extend_count").val());
-                    break;;
+                    break;
+                    ;
             }
 
             //异步提交表单
             $.ajax({
                 type: "POST",
                 url: "/goodsOfficial/update",
-                data: new FormData($( "form" )[0]),
+                data: new FormData($("form")[0]),
                 cache: false,
                 contentType: false, //改变默认文本传输，允许文件传输
                 processData: false, //允许data传递对象

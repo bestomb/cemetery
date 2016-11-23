@@ -8,6 +8,8 @@
         <result column="images" jdbcType="VARCHAR" property="images" />
         <result column="type" jdbcType="INTEGER" property="type" />
         <result column="lifecycle" jdbcType="INTEGER" property="lifecycle" />
+        <result column="second_classify_id" jdbcType="INTEGER" property="secondClassifyId" />
+        <result column="second_classify_name" jdbcType="VARCHAR" property="secondClassifyName" />
     </resultMap>
     <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.bestomb.entity.GoodsOfficialWithBLOBs">
         <result column="description" jdbcType="LONGVARCHAR" property="description" />
@@ -21,11 +23,10 @@
     </sql>
     <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="ResultMapWithBLOBs">
         select
-        <include refid="Base_Column_List" />
-        ,
-        <include refid="Blob_Column_List" />
-        from goods_official
-        where id = #{id,jdbcType=VARCHAR}
+        go.id, go.name, go.price, go.images, go.type, go.lifecycle , go.description, go.extend_attribute ,sc.id as second_classify_id, sc.name second_classify_name
+        from goods_official go left join second_classification_goods_relat scgr on (go.id = scgr.goods_id)
+        left join second_classification sc on (scgr.classification_id = sc.id)
+        where go.id = #{id,jdbcType=VARCHAR}
     </select>
     <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
         delete from goods_official

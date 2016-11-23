@@ -65,6 +65,11 @@
                                         </select>
                                     </div>
                                     <div class="form-group">
+                                        <label>二级分类</label>
+                                        <select class="form-control" name="secondClassify" readonly>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
                                         <label>商品描述</label>
                                         <textarea class="form-control" rows="3" name="description" readonly></textarea>
                                     </div>
@@ -116,9 +121,19 @@
                     $("input[name='price']").val(_this.price);
                     $("select[name='type']").val(_this.type);
                     $("textarea[name='description']").val(_this.description);
+                    $("select[name='secondClassify']").html('<option>' + _this.secondClassifyName + '</option>');
 
-                    switch (parseInt(_this.type)){
-                        case 1:;case 2:;case 3:;case 4:;case 5:;
+                    switch (parseInt(_this.type)) {
+                        case 1:
+                            ;
+                        case 2:
+                            ;
+                        case 3:
+                            ;
+                        case 4:
+                            ;
+                        case 5:
+                            ;
                         case 6:
                             $("#lifecycle").parent("div").removeClass("hide");
                             $("#extend_model_id").parent("div").removeClass("hide");
@@ -129,11 +144,13 @@
                         case 7:
                             $("#extend_storage").parent("div").removeClass("hide");
                             $("#extend_storage").val(_this.extendAttribute)
-                            break;;
+                            break;
+                            ;
                         case 8:
                             $("#extend_count").parent("div").removeClass("hide");
                             $("#extend_count").val(_this.extendAttribute)
-                            break;;
+                            break;
+                            ;
                     }
                 } else {
                     $("#form-tip").removeClass("hidden alert-warning").addClass("alert-success").show().find("strong").text(response.message);

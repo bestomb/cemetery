@@ -282,6 +282,8 @@ public class ExceptionMsgConstant {
     public static final String GOODS_COUNT_IS_NOT_ENOUGH = "30001007";
     //商品发布失败
     public static final String GOODS_PUBLISH_FAIL = "30001008";
+    //自定义分类数据不存在
+    public static final String CUSTOM_CLASSIFY_DATA_NOT_EXISTS = "30001009";
     /***
      * 动植物
      */

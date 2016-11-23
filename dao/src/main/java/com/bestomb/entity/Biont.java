@@ -1,5 +1,7 @@
 package com.bestomb.entity;
 
+import java.math.BigDecimal;
+
 public class Biont {
 	
 	// 主键
@@ -7,7 +9,7 @@ public class Biont {
 	// 名称
     private String name;
     // 售价
-    private Double price;
+    private BigDecimal price;
     // 图片
     private String images;
     // 模型地址
@@ -42,10 +44,10 @@ public class Biont {
 	public void setName(String name) {
 		this.name = name;
 	}
-	public Double getPrice() {
+	public BigDecimal getPrice() {
 		return price;
 	}
-	public void setPrice(Double price) {
+	public void setPrice(BigDecimal price) {
 		this.price = price;
 	}
 	public String getImages() {

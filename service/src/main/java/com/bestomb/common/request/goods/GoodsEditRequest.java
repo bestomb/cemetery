@@ -15,6 +15,7 @@ public class GoodsEditRequest {
     private String description; // 详细描述
     private String extendAttribute; // 商品扩展属性
     private MultipartFile imageFile;    //商品图片文件流对象
+    private Integer secondClassifyId;     //二级分类
 
     public String getId() {
         return id;
@@ -86,5 +87,13 @@ public class GoodsEditRequest {
 
     public void setLifecycle(String lifecycle) {
         this.lifecycle = lifecycle;
+    }
+
+    public Integer getSecondClassifyId() {
+        return secondClassifyId;
+    }
+
+    public void setSecondClassifyId(Integer secondClassifyId) {
+        this.secondClassifyId = secondClassifyId;
     }
 }

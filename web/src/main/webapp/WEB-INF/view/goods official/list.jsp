@@ -143,13 +143,42 @@
                                 if (this.remark != null && this.remark.length > 30) {
                                     subRemark = this.remark.substring(0, 30) + " ... ";
                                 }
+
+                                var firstClassifyName = '';
+                                switch (this.type) {
+                                    case 1:
+                                        firstClassifyName = "大门";
+                                        break;
+                                    case 2:
+                                        firstClassifyName = "墓碑";
+                                        break;
+                                    case 3:
+                                        firstClassifyName = "祭品（香）";
+                                        break;
+                                    case 4:
+                                        firstClassifyName = "祭品（蜡烛）";
+                                        break;
+                                    case 5:
+                                        firstClassifyName = "祭品（花）";
+                                        break;
+                                    case 6:
+                                        firstClassifyName = "普通祭品";
+                                        break;
+                                    case 7:
+                                        firstClassifyName = "扩展陵园存储容量";
+                                        break;
+                                    case 8:
+                                        firstClassifyName = "增加可建陵园数";
+                                        break;
+                                }
+
                                 tableBody += '<tr>'
                                         + '<td><input type="checkbox" class="itemCheck" value="' + this.id + '"/></td>'
                                         + '<td>' + this.id + '</td>'
                                         + '<td><img src="' + this.images + '" width="40px" height="40px"/></td>'
                                         + '<td>' + this.name + '</td>'
                                         + '<td>' + this.price + '</td>'
-                                        + '<td>' + this.type + '</td>'
+                                        + '<td>' + firstClassifyName + '</td>'
                                         + '<td>'
                                         + '<button type="button" class="btn btn-outline btn-info detail">详情</button>&nbsp;'
                                         + '<button type="button" class="btn btn-outline btn-warning update">修改</button>&nbsp;'

@@ -1,16 +1,5 @@
 package com.bestomb.service.impl;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.apache.log4j.Logger;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
-import org.springframework.util.ObjectUtils;
-
 import com.bestomb.common.Pager;
 import com.bestomb.common.constant.ExceptionMsgConstant;
 import com.bestomb.common.exception.EqianyuanException;
@@ -21,9 +10,22 @@ import com.bestomb.common.response.goods.GoodsOfficialBO;
 import com.bestomb.common.util.FileUtilHandle;
 import com.bestomb.common.util.yamlMapper.SystemConf;
 import com.bestomb.dao.IGoodsOfficialDao;
+import com.bestomb.dao.ISecondClassificationGoodsRelatDao;
 import com.bestomb.entity.GoodsOfficialWithBLOBs;
 import com.bestomb.entity.Mall;
+import com.bestomb.entity.SecondClassificationGoodsRelat;
 import com.bestomb.service.IGoodsOfficialService;
+import org.apache.log4j.Logger;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
+import org.springframework.util.ObjectUtils;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class GoodsOfficialServiceImpl implements IGoodsOfficialService {
@@ -32,6 +34,9 @@ public class GoodsOfficialServiceImpl implements IGoodsOfficialService {
 
     @Autowired
     private IGoodsOfficialDao goodsOfficialDao;
+
+    @Autowired
+    private ISecondClassificationGoodsRelatDao secondClassificationGoodsRelatDao;
 
     /**
      * 分页获取官网商城商品集合
@@ -88,6 +93,7 @@ public class GoodsOfficialServiceImpl implements IGoodsOfficialService {
      * @param goodsEditRequest
      * @throws EqianyuanException
      */
+    @Transactional(rollbackFor = Exception.class)
     public void add(GoodsEditRequest goodsEditRequest) throws EqianyuanException {
         //商品图片上传
         FileResponse fileResponse = FileUtilHandle.upload(goodsEditRequest.getImageFile());
@@ -111,6 +117,14 @@ public class GoodsOfficialServiceImpl implements IGoodsOfficialService {
         //持久化商品数据
         goodsOfficialDao.insertSelective(goodsOfficialWithBLOBs);
 
+        //构建二级分类与商品的关系数据
+        SecondClassificationGoodsRelat secondClassificationGoodsRelat = new SecondClassificationGoodsRelat();
+        secondClassificationGoodsRelat.setGoodsId(goodsOfficialWithBLOBs.getId());
+        secondClassificationGoodsRelat.setClassificationId(goodsEditRequest.getSecondClassifyId());
+
+        //将商品与二级分类关系数据进行持久化
+        secondClassificationGoodsRelatDao.insertSelective(secondClassificationGoodsRelat);
+
         //将商品图片文件从临时上传目录移动到持久目录
         FileUtilHandle.moveFile(fileResponse.getFilePath(), imagePath);
     }
@@ -121,6 +135,7 @@ public class GoodsOfficialServiceImpl implements IGoodsOfficialService {
      * @param goodsEditRequest
      * @throws EqianyuanException
      */
+    @Transactional(rollbackFor = Exception.class)
     public void modify(GoodsEditRequest goodsEditRequest) throws EqianyuanException {
         //根据商品编号查询商品信息
         GoodsOfficialWithBLOBs goodsOfficialWithBLOBs = goodsOfficialDao.selectByPrimaryKey(goodsEditRequest.getId());
@@ -152,6 +167,17 @@ public class GoodsOfficialServiceImpl implements IGoodsOfficialService {
         goodsOfficialWithBLOBs.setExtendAttribute(goodsEditRequest.getExtendAttribute());
         //持久化商品数据
         goodsOfficialDao.updateByPrimaryKeySelective(goodsOfficialWithBLOBs);
+
+        //构建二级分类与商品的关系数据
+        SecondClassificationGoodsRelat secondClassificationGoodsRelat = new SecondClassificationGoodsRelat();
+        secondClassificationGoodsRelat.setGoodsId(goodsEditRequest.getId());
+        secondClassificationGoodsRelat.setClassificationId(goodsEditRequest.getSecondClassifyId());
+
+        //根据商品编号删除与二级分类的关系数据
+        secondClassificationGoodsRelatDao.deleteByGoodsId(goodsEditRequest.getId());
+
+        //将商品与二级分类关系数据进行持久化
+        secondClassificationGoodsRelatDao.insertSelective(secondClassificationGoodsRelat);
 
         if (fileResponse != null) {
             //将商品图片文件从临时上传目录移动到持久目录

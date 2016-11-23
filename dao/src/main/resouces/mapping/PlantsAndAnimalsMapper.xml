@@ -4,7 +4,7 @@
     <resultMap id="BaseResultMap" type="com.bestomb.entity.PlantsAndAnimals">
         <id column="id" property="id" jdbcType="VARCHAR"/>
         <result column="name" property="name" jdbcType="VARCHAR"/>
-        <result column="price" property="price" jdbcType="DECIMAL"/>
+        <result column="price" property="price" jdbcType="DECIMAL" />
         <result column="images" property="images" jdbcType="VARCHAR"/>
         <result column="model_id" property="modelId" jdbcType="VARCHAR"/>
         <result column="type" property="type" jdbcType="INTEGER"/>
@@ -172,9 +172,9 @@
 
     <!-- 查询动植物详情 -->
     <select id="getDetail" resultMap="ResultMapWithBiont" parameterType="java.lang.String">
-	  	select a.id, a.name, a.price, a.images, a.model_id, a.type, a.grouping, a.phase, a.description, b.goodsId, b.cemeteryId, b.growingDays, b.lifeValue
+	  	select a.id, a.name, a.price, a.images, a.model_id, a.type, a.grouping, a.phase, a.description, b.goods_id, b.cemetery_id, b.growing_days, b.life_value
 	    from plants_and_animals a, park b
-	    where a.id = b.goodsId and b.goodsId = #{goodsId,jdbcType=VARCHAR}
+	    where a.id = b.goods_id and b.goods_id = #{goodsId, jdbcType=VARCHAR}
   </select>
 
     <!-- 根据商品编号集合查找商品信息集合 -->

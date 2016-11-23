@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bestomb.dao.ISecondClassificationGoodsRelatDao" >
+  <resultMap id="BaseResultMap" type="com.bestomb.entity.SecondClassificationGoodsRelat" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="goods_id" property="goodsId" jdbcType="VARCHAR" />
+    <result column="classification_id" property="classificationId" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, goods_id, classification_id
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from second_classification_goods_relat
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from second_classification_goods_relat
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.bestomb.entity.SecondClassificationGoodsRelat" >
+    insert into second_classification_goods_relat (id, goods_id, classification_id
+      )
+    values (#{id,jdbcType=INTEGER}, #{goodsId,jdbcType=VARCHAR}, #{classificationId,jdbcType=INTEGER}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.bestomb.entity.SecondClassificationGoodsRelat" >
+    insert into second_classification_goods_relat
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="goodsId != null" >
+        goods_id,
+      </if>
+      <if test="classificationId != null" >
+        classification_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="goodsId != null" >
+        #{goodsId,jdbcType=VARCHAR},
+      </if>
+      <if test="classificationId != null" >
+        #{classificationId,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.bestomb.entity.SecondClassificationGoodsRelat" >
+    update second_classification_goods_relat
+    <set >
+      <if test="goodsId != null" >
+        goods_id = #{goodsId,jdbcType=VARCHAR},
+      </if>
+      <if test="classificationId != null" >
+        classification_id = #{classificationId,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.bestomb.entity.SecondClassificationGoodsRelat" >
+    update second_classification_goods_relat
+    set goods_id = #{goodsId,jdbcType=VARCHAR},
+      classification_id = #{classificationId,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <delete id="deleteByGoodsId" parameterType="java.lang.String" >
+    delete from second_classification_goods_relat
+    where goods_id = #{goods_id,jdbcType=VARCHAR}
+  </delete>
+</mapper>

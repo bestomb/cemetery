@@ -19,6 +19,10 @@ public class GoodsOfficialBO {
 
     private String extendAttribute;
 
+    private String secondClassifyName;
+
+    private Integer secondClassifyId;
+
     public String getId() {
         return id;
     }
@@ -81,5 +85,21 @@ public class GoodsOfficialBO {
 
     public void setLifecycle(Integer lifecycle) {
         this.lifecycle = lifecycle;
+    }
+
+    public String getSecondClassifyName() {
+        return secondClassifyName;
+    }
+
+    public void setSecondClassifyName(String secondClassifyName) {
+        this.secondClassifyName = secondClassifyName;
+    }
+
+    public Integer getSecondClassifyId() {
+        return secondClassifyId;
+    }
+
+    public void setSecondClassifyId(Integer secondClassifyId) {
+        this.secondClassifyId = secondClassifyId;
     }
 }
