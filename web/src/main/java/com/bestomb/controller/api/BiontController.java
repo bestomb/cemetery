@@ -36,7 +36,7 @@ public class BiontController extends BaseController {
      */
     @RequestMapping(value = "/bionts", method = {RequestMethod.GET, RequestMethod.POST})
     @ResponseBody
-    public ServerResponse getBiontPageList(@RequestBody Biont biont, @RequestBody Pager page) throws EqianyuanException {
+    public ServerResponse getBiontPageList(@RequestBody Biont biont, @ModelAttribute Pager page) throws EqianyuanException {
         PageResponse pageResponse = biontService.getPageList(biont, page);
         return new ServerResponse.ResponseBuilder().data(pageResponse).build();
     }
@@ -50,8 +50,7 @@ public class BiontController extends BaseController {
      */
     @RequestMapping(value = "/bionts/{id}", method = {RequestMethod.GET, RequestMethod.POST})
     @ResponseBody
-    public ServerResponse getGoodsDetail(@PathVariable String id, @RequestBody Biont biont) throws EqianyuanException {
-        biont.setGoodsId(id);
+    public ServerResponse getGoodsDetail(@PathVariable String id) throws EqianyuanException {
         BiontBo biontBo = biontService.getDetail(id);
         return new ServerResponse.ResponseBuilder().data(biontBo).build();
     }

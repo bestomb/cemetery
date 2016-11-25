@@ -6,8 +6,8 @@
         <result column="name" property="name" jdbcType="VARCHAR"/>
         <result column="portrait" property="portrait" jdbcType="VARCHAR"/>
         <result column="tombstone_id" property="tombstoneId" jdbcType="VARCHAR"/>
-        <result column="birthday" property="birthday" jdbcType="INTEGER"/>
-        <result column="death_time" property="deathTime" jdbcType="INTEGER"/>
+        <result column="birthday" property="birthday" jdbcType="VARCHAR"/>
+        <result column="death_time" property="deathTime" jdbcType="VARCHAR"/>
         <result column="sort" property="sort" jdbcType="INTEGER"/>
     </resultMap>
     <resultMap id="ResultMapWithBLOBs" type="com.bestomb.entity.MasterWithBLOBs" extends="BaseResultMap">
@@ -41,7 +41,7 @@
       sort, life_introduce, last_wish
       )
     values (#{id,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{portrait,jdbcType=VARCHAR}, 
-      #{tombstoneId,jdbcType=VARCHAR}, #{birthday,jdbcType=INTEGER}, #{deathTime,jdbcType=INTEGER}, 
+      #{tombstoneId,jdbcType=VARCHAR}, #{birthday,jdbcType=VARCHAR}, #{deathTime,jdbcType=VARCHAR},
       #{sort,jdbcType=INTEGER}, #{lifeIntroduce,jdbcType=LONGVARCHAR}, #{lastWish,jdbcType=LONGVARCHAR}
       )
   </insert>
@@ -93,10 +93,10 @@
                 #{tombstoneId,jdbcType=VARCHAR},
             </if>
             <if test="birthday != null">
-                #{birthday,jdbcType=INTEGER},
+                #{birthday,jdbcType=VARCHAR},
             </if>
             <if test="deathTime != null">
-                #{deathTime,jdbcType=INTEGER},
+                #{deathTime,jdbcType=VARCHAR},
             </if>
             <if test="sort != null">
                 #{sort,jdbcType=INTEGER},
@@ -122,10 +122,10 @@
                 tombstone_id = #{tombstoneId,jdbcType=VARCHAR},
             </if>
             <if test="birthday != null">
-                birthday = #{birthday,jdbcType=INTEGER},
+                birthday = #{birthday,jdbcType=VARCHAR},
             </if>
             <if test="deathTime != null">
-                death_time = #{deathTime,jdbcType=INTEGER},
+                death_time = #{deathTime,jdbcType=VARCHAR},
             </if>
             <if test="sort != null">
                 sort = #{sort,jdbcType=INTEGER},
@@ -144,8 +144,8 @@
     set name = #{name,jdbcType=VARCHAR},
       portrait = #{portrait,jdbcType=VARCHAR},
       tombstone_id = #{tombstoneId,jdbcType=VARCHAR},
-      birthday = #{birthday,jdbcType=INTEGER},
-      death_time = #{deathTime,jdbcType=INTEGER},
+      birthday = #{birthday,jdbcType=VARCHAR},
+      death_time = #{deathTime,jdbcType=VARCHAR},
       sort = #{sort,jdbcType=INTEGER},
       life_introduce = #{lifeIntroduce,jdbcType=LONGVARCHAR},
       last_wish = #{lastWish,jdbcType=LONGVARCHAR}
@@ -156,8 +156,8 @@
     set name = #{name,jdbcType=VARCHAR},
       portrait = #{portrait,jdbcType=VARCHAR},
       tombstone_id = #{tombstoneId,jdbcType=VARCHAR},
-      birthday = #{birthday,jdbcType=INTEGER},
-      death_time = #{deathTime,jdbcType=INTEGER},
+      birthday = #{birthday,jdbcType=VARCHAR},
+      death_time = #{deathTime,jdbcType=VARCHAR},
       sort = #{sort,jdbcType=INTEGER}
     where id = #{id,jdbcType=VARCHAR}
   </update>

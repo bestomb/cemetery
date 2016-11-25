@@ -9,9 +9,9 @@ public class Master {
 
     private String tombstoneId;
 
-    private Integer birthday;
+    private String birthday;
 
-    private Integer deathTime;
+    private String deathTime;
 
     private Integer sort;
 
@@ -47,19 +47,19 @@ public class Master {
         this.tombstoneId = tombstoneId == null ? null : tombstoneId.trim();
     }
 
-    public Integer getBirthday() {
+    public String getBirthday() {
         return birthday;
     }
 
-    public void setBirthday(Integer birthday) {
+    public void setBirthday(String birthday) {
         this.birthday = birthday;
     }
 
-    public Integer getDeathTime() {
+    public String getDeathTime() {
         return deathTime;
     }
 
-    public void setDeathTime(Integer deathTime) {
+    public void setDeathTime(String deathTime) {
         this.deathTime = deathTime;
     }
 

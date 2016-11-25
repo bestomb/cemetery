@@ -1,5 +1,7 @@
 package com.bestomb.common.response.member;
 
+import java.math.BigDecimal;
+
 /***
  * 钱包信息
  * @author qfzhang
@@ -8,7 +10,7 @@ package com.bestomb.common.response.member;
 public class WalletVo {
 	
 	private Integer integral; // 会员积分
-    private Double tradingAmount; // 交易币
+    private BigDecimal tradingAmount; // 交易币
     
 	public Integer getIntegral() {
 		return integral;
@@ -16,10 +18,10 @@ public class WalletVo {
 	public void setIntegral(Integer integral) {
 		this.integral = integral;
 	}
-	public Double getTradingAmount() {
+	public BigDecimal getTradingAmount() {
 		return tradingAmount;
 	}
-	public void setTradingAmount(Double tradingAmount) {
+	public void setTradingAmount(BigDecimal tradingAmount) {
 		this.tradingAmount = tradingAmount;
 	}
 }

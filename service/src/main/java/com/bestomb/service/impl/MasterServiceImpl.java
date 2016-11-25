@@ -149,8 +149,8 @@ public class MasterServiceImpl implements IMasterService {
         master.setName(master.getName());
         master.setPortrait(portraitPath + File.separator + fileResponse.getFileName());
         master.setTombstoneId(masterEditRequest.getTombstoneId());
-        master.setBirthday(CalendarUtil.getSecondsByDate(masterEditRequest.getBirthday()));
-        master.setDeathTime(CalendarUtil.getSecondsByDate(masterEditRequest.getDeathTime()));
+        master.setBirthday(masterEditRequest.getBirthday());
+        master.setDeathTime(masterEditRequest.getDeathTime());
         master.setLifeIntroduce(masterEditRequest.getLifeIntroduce());
         master.setLastWish(masterEditRequest.getLastWish());
         //持久化纪念人数据
@@ -194,8 +194,8 @@ public class MasterServiceImpl implements IMasterService {
 
         master.setSort(masterEditRequest.getSort());
         master.setName(masterEditRequest.getName());
-        master.setBirthday(CalendarUtil.getSecondsByDate(masterEditRequest.getBirthday()));
-        master.setDeathTime(CalendarUtil.getSecondsByDate(masterEditRequest.getDeathTime()));
+        master.setBirthday(masterEditRequest.getBirthday());
+        master.setDeathTime(masterEditRequest.getDeathTime());
         master.setLifeIntroduce(masterEditRequest.getLifeIntroduce());
         master.setLastWish(masterEditRequest.getLastWish());
         //持久化纪念人数据
