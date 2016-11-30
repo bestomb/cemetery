@@ -146,7 +146,7 @@ public class BackpackImpl implements IBackpackService {
                 // 1：大门、2：墓碑、3：：祭品（香）、4：祭品（蜡烛）、5：祭品（花）、6：普通祭品、7：扩展陵园存储容量、8：增加可建陵园数
                 GoodsOfficialWithBLOBs goodsOfficial = goodsOfficialDao.selectByPrimaryKey(useGoods.getGoodsId());
                 // 纪念人编号是否为空
-                if ( (goodsOfficial.getType()==2 || goodsOfficial.getType()==4 || goodsOfficial.getType()==5 || goodsOfficial.getType()==6 ) && StringUtils.isEmpty(useGoods.getMasterId())) {
+                if ( (goodsOfficial.getType()==2 || goodsOfficial.getType()==3 || goodsOfficial.getType()==4 || goodsOfficial.getType()==5) && StringUtils.isEmpty(useGoods.getMasterId())) {
                     logger.warn("use fail , because marstId is null.");
                     throw new EqianyuanException(ExceptionMsgConstant.CEMETERY_MASTER_DATA_NOT_EXISTS);
                 }

@@ -8,6 +8,10 @@
         <result column="count" jdbcType="INTEGER" property="count"/>
         <result column="goods_id" jdbcType="VARCHAR" property="goodsId"/>
     </resultMap>
+    <resultMap id="BaseResultMapByClient" type="com.bestomb.entity.Backpack" extends="BaseResultMap">
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="images" jdbcType="VARCHAR" property="images"/>
+    </resultMap>
     <sql id="Base_Column_List">
     id, member_id, source, count, goods_id
   </sql>
@@ -98,25 +102,36 @@
     <sql id="whereCondition">
         <where>
             <if test="backpack.memberId != null">
-                and member_id = #{backpack.memberId,jdbcType=INTEGER}
+                and b.member_id = #{backpack.memberId,jdbcType=INTEGER}
             </if>
             <if test="backpack.source != null">
-                and source = #{backpack.source,jdbcType=INTEGER}
+                and b.source = #{backpack.source,jdbcType=INTEGER}
             </if>
         </where>
     </sql>
     <!-- 根据条件查询分页列表总数 -->
     <select id="getPageListCount" resultType="java.lang.Integer">
         select count(1) from
-        <include refid="pageQueryTable"/>
-        <include refid="whereCondition"/>
+        (
+            select b.goods_id from backpack b INNER JOIN goods_official go on (b.goods_id = go.id)
+            <include refid="whereCondition"/>
+            union
+            select b.goods_id from backpack b INNER JOIN goods_personage gp on (b.goods_id = gp.id) INNER JOIN plants_and_animals paan on (gp.plants_and_animals_id = paan.id)
+            <include refid="whereCondition"/>
+            union
+            select b.goods_id from backpack b INNER JOIN plants_and_animals paa on (b.goods_id = paa.id)
+            <include refid="whereCondition"/>
+        ) cnt
     </select>
     <!-- 根据条件查询分页列表 -->
-    <select id="getPageList" resultMap="BaseResultMap">
-        select
-        <include refid="Base_Column_List"/>
-        from
-        <include refid="pageQueryTable"/>
+    <select id="getPageList" resultMap="BaseResultMapByClient">
+        select b.goods_id, b.count, go.name, go.images from backpack b INNER JOIN goods_official go on (b.goods_id = go.id)
+        <include refid="whereCondition"/>
+        union
+        select b.goods_id, b.count, paan.name, paan.images from backpack b INNER JOIN goods_personage gp on (b.goods_id = gp.id) INNER JOIN plants_and_animals paan on (gp.plants_and_animals_id = paan.id)
+        <include refid="whereCondition"/>
+        union
+        select b.goods_id, b.count, paa.name, paa.images from backpack b INNER JOIN plants_and_animals paa on (b.goods_id = paa.id)
         <include refid="whereCondition"/>
         limit ${page.start}, ${page.pageSize}
     </select>

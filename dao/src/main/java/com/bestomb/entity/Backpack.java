@@ -4,6 +4,8 @@ public class Backpack {
     private String id;
 
     private Integer memberId;
+    private String name;
+    private String images;
 
     private Integer source; // {1：商城（官方）， 2：商城（个人）， 3：动植物园}
     private Integer count = 1;
@@ -55,5 +57,21 @@ public class Backpack {
 
     public void setGoodsId(String goodsId) {
         this.goodsId = goodsId == null ? null : goodsId.trim();
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getImages() {
+        return images;
+    }
+
+    public void setImages(String images) {
+        this.images = images;
     }
 }
