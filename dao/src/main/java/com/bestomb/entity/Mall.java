@@ -7,7 +7,7 @@ package com.bestomb.entity;
  */
 public class Mall {
     
-    // 商城类型（1：官方； 2：个人）
+    // 商城类型（1：官方； 2：个人；3：动植物商城）
 	private Integer mallType = 1;
 	// 商品编号
 	private String goodsId;

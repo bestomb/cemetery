@@ -98,7 +98,7 @@
     <sql id="whereCondition">
         <where>
             <if test="backpack.memberId != null">
-                and member_id = #{backpack.member_id,jdbcType=INTEGER}
+                and member_id = #{backpack.memberId,jdbcType=INTEGER}
             </if>
             <if test="backpack.source != null">
                 and source = #{backpack.source,jdbcType=INTEGER}

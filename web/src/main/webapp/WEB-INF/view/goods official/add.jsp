@@ -64,7 +64,7 @@
                                     </div>
                                     <div class="form-group">
                                         <label>二级分类</label>
-                                        <select class="form-control" name="secondClassify">
+                                        <select class="form-control" name="secondClassifyId">
                                         </select>
                                     </div>
                                     <div class="form-group">
@@ -122,7 +122,7 @@
                         secondClassifyOption += '<option value="' + this.id + '">' + this.name + '</option>';
                     });
 
-                    $("select[name='secondClassify']").html(secondClassifyOption);
+                    $("select[name='secondClassifyId']").html(secondClassifyOption);
                 } else {
                     $("#form-tip").removeClass("hidden alert-success").addClass("alert-warning").show().find("strong").text(resp.message);
                     $(".submit").removeAttr("disabled");

@@ -41,5 +41,14 @@ public interface IGoodsOfficialService {
      */
     void removeByIds(String... goodsId) throws EqianyuanException;
 
+    /**
+     * 根据二级分类及分页信息查询商品集合
+     *
+     * @param secondClassify
+     * @param page
+     * @return
+     * @throws EqianyuanException
+     */
+    PageResponse getGoodsBySecondClassify(Integer secondClassify, Pager page) throws EqianyuanException;
 
 }

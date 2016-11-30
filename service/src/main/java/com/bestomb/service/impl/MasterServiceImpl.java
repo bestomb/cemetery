@@ -134,30 +134,33 @@ public class MasterServiceImpl implements IMasterService {
         //检查当前登录会员是否拥有对该陵园的管理权限
         commonService.hasPermissionsByCemetery(String.valueOf(masterEditRequest.getCemeteryId()), masterEditRequest.getOperatorMemberId());
 
-        //纪念人头像上传
-        FileResponse fileResponse = FileUtilHandle.upload(masterEditRequest.getPortraitFile());
-
-        /**
-         * 构建头像文件持久化目录地址
-         * 目录结构：持久化上传目录/陵园编号/master_portrait/文件
-         */
-        String portraitPath = SystemConf.FILE_UPLOAD_FIXED_DIRECTORY.toString() + File.separator + masterEditRequest.getCemeteryId() + File.separator + "master_portrait";
-
         //构建持久化墓碑中纪念人数据
         MasterWithBLOBs master = new MasterWithBLOBs();
         master.setSort(masterEditRequest.getSort());
-        master.setName(master.getName());
-        master.setPortrait(portraitPath + File.separator + fileResponse.getFileName());
+        master.setName(masterEditRequest.getName());
         master.setTombstoneId(masterEditRequest.getTombstoneId());
         master.setBirthday(masterEditRequest.getBirthday());
         master.setDeathTime(masterEditRequest.getDeathTime());
         master.setLifeIntroduce(masterEditRequest.getLifeIntroduce());
         master.setLastWish(masterEditRequest.getLastWish());
+
+        if (!ObjectUtils.isEmpty(masterEditRequest.getPortraitFile())) {
+            //纪念人头像上传
+            FileResponse fileResponse = FileUtilHandle.upload(masterEditRequest.getPortraitFile());
+
+            /**
+             * 构建头像文件持久化目录地址
+             * 目录结构：持久化上传目录/陵园编号/master_portrait/文件
+             */
+            String portraitPath = SystemConf.FILE_UPLOAD_FIXED_DIRECTORY.toString() + File.separator + masterEditRequest.getCemeteryId() + File.separator + "master_portrait";
+            master.setPortrait(portraitPath + File.separator + fileResponse.getFileName());
+            //将纪念人头像文件从临时上传目录移动到持久目录
+            FileUtilHandle.moveFile(fileResponse.getFilePath(), portraitPath);
+        }
+
         //持久化纪念人数据
         masterDao.insertSelective(master);
 
-        //将纪念人头像文件从临时上传目录移动到持久目录
-        FileUtilHandle.moveFile(fileResponse.getFilePath(), portraitPath);
     }
 
     /**

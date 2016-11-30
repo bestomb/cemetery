@@ -199,4 +199,34 @@ public class GoodsOfficialServiceImpl implements IGoodsOfficialService {
 
         goodsOfficialDao.deleteByPrimaryKey(goodsId);
     }
+
+    /**
+     * 根据二级分类及分页信息查询商品集合
+     *
+     * @param secondClassify
+     * @param page
+     * @return
+     * @throws EqianyuanException
+     */
+    public PageResponse getGoodsBySecondClassify(Integer secondClassify, Pager page) throws EqianyuanException {
+        int dataCount = goodsOfficialDao.selectCountBySecondClassify(secondClassify);
+
+        page.setTotalRow(dataCount);
+        if (dataCount <= 0) {
+            logger.info("根据条件查询官网商城商品列表无数据");
+            return new PageResponse(page, null);
+        }
+        List<GoodsOfficialWithBLOBs> goodsOfficialList = goodsOfficialDao.selectBySecondClassify(secondClassify, page);
+        if (CollectionUtils.isEmpty(goodsOfficialList)) {
+            logger.info("pageNo [" + page.getPageNo() + "], pageSize [" + page.getPageSize() + "], 根据条件查询官网商城商品列表无数据");
+            return new PageResponse(page, null);
+        }
+        List<GoodsOfficialBO> goodsBOList = new ArrayList<GoodsOfficialBO>();
+        for (GoodsOfficialWithBLOBs m : goodsOfficialList) {
+            GoodsOfficialBO goodsBo = new GoodsOfficialBO();
+            BeanUtils.copyProperties(m, goodsBo);
+            goodsBOList.add(goodsBo);
+        }
+        return new PageResponse(page, goodsBOList);
+    }
 }

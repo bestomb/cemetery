@@ -11,7 +11,7 @@ import com.bestomb.entity.Mall;
 
 public interface IGoodsOfficialDao {
 
-    int deleteByPrimaryKey(@Param("id")String... id);
+    int deleteByPrimaryKey(@Param("id") String... id);
 
     int insert(GoodsOfficialWithBLOBs record);
 
@@ -49,5 +49,22 @@ public interface IGoodsOfficialDao {
      * @return
      */
     List<GoodsOfficialWithBLOBs> getPageList(@Param("mall") Mall mall, @Param("page") Pager page);
+
+    /**
+     * 根据二级商品分类查询商品总数
+     *
+     * @param secondClassify
+     * @return
+     */
+    int selectCountBySecondClassify(@Param("second_classify") Integer secondClassify);
+
+    /**
+     * 根据二级商品分类及分页信息查询商品分页数据集合
+     *
+     * @param secondClassify
+     * @param page
+     * @return
+     */
+    List<GoodsOfficialWithBLOBs> selectBySecondClassify(@Param("second_classify") Integer secondClassify, @Param("page") Pager page);
 
 }

@@ -195,4 +195,23 @@
             #{item}
         </foreach>
     </select>
+
+    <!-- 根据二级商品分类查询商品总数 -->
+    <select id="selectCountBySecondClassify" resultType="java.lang.Integer">
+        select count(1) from goods_official go LEFT JOIN second_classification_goods_relat scgr
+        on (go.id = scgr.goods_id)
+        where scgr.classification_id = #{second_classify}
+    </select>
+
+    <!-- 根据二级商品分类及分页信息查询商品分页数据集合 -->
+    <select id="selectBySecondClassify" resultMap="ResultMapWithBLOBs">
+        select
+        go.id, go.name, go.price, go.images, go.type, go.lifecycle,
+        go.description, go.extend_attribute
+        from
+        goods_official go LEFT JOIN second_classification_goods_relat scgr
+        on (go.id = scgr.goods_id)
+        where scgr.classification_id = #{second_classify}
+        limit ${page.start}, ${page.end}
+    </select>
 </mapper>

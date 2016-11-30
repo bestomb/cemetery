@@ -109,7 +109,6 @@ public class OrderServiceImpl implements IOrderService {
 
         //将购物清单json字符串转为json对象
         JSONObject goodsJSONObject = JSONObject.parseObject(goodsInfo);
-        System.out.println(JSONArray.parseArray(goodsJSONObject.getJSONArray("goods").toJSONString()));
 
         //从json中获取商品集合数据
         JSONArray goodsJSONArray = goodsJSONObject.getJSONArray("goods");
@@ -272,14 +271,19 @@ public class OrderServiceImpl implements IOrderService {
             //持久化会员背包数据
             backpackDao.insertByGoodsBuy(backpackList);
 
-            //将会员发布商品销售额叠加到会员账户
-            memberAccountDao.batchUpdateBySale(memberSaleList);
+            if(!CollectionUtils.isEmpty(memberSaleList)){
+                //将会员发布商品销售额叠加到会员账户
+                memberAccountDao.batchUpdateBySale(memberSaleList);
+            }
 
-            //会员商城商品库存扣减
-            int updateRow = goodsPersonageDao.batchUpdateByRepertory(repertory);
-            if (updateRow < repertory.size()) {
-                logger.error("批量更新会员商品库存失败");
-                throw new Exception("批量更新会员商品库存失败");
+            if(!CollectionUtils.isEmpty(repertory)){
+                //会员商城商品库存扣减
+                int updateRow = goodsPersonageDao.batchUpdateByRepertory(repertory);
+
+                if (updateRow < repertory.size()) {
+                    logger.error("批量更新会员商品库存失败");
+                    throw new Exception("批量更新会员商品库存失败");
+                }
             }
         }
 
