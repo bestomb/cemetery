@@ -11,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Map;
 
@@ -34,8 +35,8 @@ public class WebsiteMasterController extends BaseController {
      */
     @RequestMapping("/addMaster")
     @ResponseBody
-    public ServerResponse addMaster(MasterEditRequest masterEditRequest) throws EqianyuanException {
-        websiteMasterService.addMaster(masterEditRequest);
+    public ServerResponse addMaster(MasterEditRequest masterEditRequest, HttpServletRequest httpServletRequest) throws EqianyuanException {
+        websiteMasterService.addMaster(masterEditRequest, httpServletRequest);
         return new ServerResponse();
     }
 
@@ -48,8 +49,8 @@ public class WebsiteMasterController extends BaseController {
      */
     @RequestMapping("/modifyMaster")
     @ResponseBody
-    public ServerResponse modifyMaster(MasterEditRequest masterEditRequest) throws EqianyuanException {
-        websiteMasterService.modifyMaster(masterEditRequest);
+    public ServerResponse modifyMaster(MasterEditRequest masterEditRequest, HttpServletRequest httpServletRequest) throws EqianyuanException {
+        websiteMasterService.modifyMaster(masterEditRequest, httpServletRequest);
         return new ServerResponse();
     }
 

@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * 陵园纪念人专辑视频API控制器
  * Created by jason on 2016-10-18.
@@ -34,8 +36,8 @@ public class WebsiteVideoController extends BaseController {
      */
     @RequestMapping("/add")
     @ResponseBody
-    public ServerResponse add(VideoEditRequest videoEditRequest) throws EqianyuanException {
-        websiteVideoService.add(videoEditRequest);
+    public ServerResponse add(VideoEditRequest videoEditRequest, HttpServletRequest httpServletRequest) throws EqianyuanException {
+        websiteVideoService.add(videoEditRequest, httpServletRequest);
         return new ServerResponse();
     }
 

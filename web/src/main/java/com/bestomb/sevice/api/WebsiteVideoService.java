@@ -13,6 +13,8 @@ import com.bestomb.service.IVideoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * Created by jason on 2016-10-18.
  */
@@ -28,11 +30,11 @@ public class WebsiteVideoService {
      * @param videoEditRequest
      * @throws EqianyuanException
      */
-    public void add(VideoEditRequest videoEditRequest) throws EqianyuanException {
+    public void add(VideoEditRequest videoEditRequest, HttpServletRequest httpServletRequest) throws EqianyuanException {
         /**
          * 从session池中获取系统用户信息
          */
-        MemberLoginVo memberLoginVo = (MemberLoginVo) SessionUtil.getAttribute(SessionContextUtil.getInstance().getSession(SessionUtil.getSessionByHeader()), SystemConf.WEBSITE_SESSION_MEMBER.toString());
+        MemberLoginVo memberLoginVo = (MemberLoginVo) SessionUtil.getAttribute(SessionContextUtil.getInstance().getSession(SessionUtil.getSessionByHeader(httpServletRequest)), SystemConf.WEBSITE_SESSION_MEMBER.toString());
         videoEditRequest.setMemberId(memberLoginVo.getMemberId());
         videoService.add(videoEditRequest);
     }

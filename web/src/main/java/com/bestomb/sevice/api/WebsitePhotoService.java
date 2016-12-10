@@ -13,6 +13,8 @@ import com.bestomb.service.IPhotoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * Created by jason on 2016-10-18.
  */
@@ -28,11 +30,11 @@ public class WebsitePhotoService {
      * @param photoEditRequest
      * @throws EqianyuanException
      */
-    public void add(PhotoEditRequest photoEditRequest) throws EqianyuanException {
+    public void add(PhotoEditRequest photoEditRequest, HttpServletRequest httpServletRequest) throws EqianyuanException {
         /**
          * 从session池中获取系统用户信息
          */
-        MemberLoginVo memberLoginVo = (MemberLoginVo) SessionUtil.getAttribute(SessionContextUtil.getInstance().getSession(SessionUtil.getSessionByHeader()), SystemConf.WEBSITE_SESSION_MEMBER.toString());
+        MemberLoginVo memberLoginVo = (MemberLoginVo) SessionUtil.getAttribute(SessionContextUtil.getInstance().getSession(SessionUtil.getSessionByHeader(httpServletRequest)), SystemConf.WEBSITE_SESSION_MEMBER.toString());
         photoEditRequest.setMemberId(memberLoginVo.getMemberId());
         photoService.add(photoEditRequest);
     }

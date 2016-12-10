@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * 陵园纪念人相册相片API控制器
  * Created by jason on 2016-10-18.
@@ -34,8 +36,8 @@ public class WebsitePhotoController extends BaseController {
      */
     @RequestMapping("/add")
     @ResponseBody
-    public ServerResponse add(PhotoEditRequest photoEditRequest) throws EqianyuanException {
-        websitePhotoService.add(photoEditRequest);
+    public ServerResponse add(PhotoEditRequest photoEditRequest, HttpServletRequest httpServletRequest) throws EqianyuanException {
+        websitePhotoService.add(photoEditRequest, httpServletRequest);
         return new ServerResponse();
     }
 

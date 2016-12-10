@@ -8,6 +8,7 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 /**
@@ -33,6 +34,14 @@ public class SessionUtil {
         }
     }
 
+    public static String getSessionByHeader(HttpServletRequest httpServletRequest) {
+        String sessionId = httpServletRequest.getParameter("jsessionid");
+        if (StringUtils.isEmpty(sessionId)) {
+            sessionId = getSessionByHeader();
+        }
+        return sessionId;
+    }
+
     /**
      * 从request请求header中获取JSESSIONID
      *
@@ -49,7 +58,7 @@ public class SessionUtil {
             sessionId = getSessionByCookie();
         }
 
-        if(StringUtils.isEmpty(sessionId)){
+        if (StringUtils.isEmpty(sessionId)) {
             return null;
         }
 

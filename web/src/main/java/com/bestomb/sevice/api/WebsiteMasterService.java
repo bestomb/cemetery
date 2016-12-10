@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -31,11 +32,11 @@ public class WebsiteMasterService {
      * @param masterEditRequest
      * @throws EqianyuanException
      */
-    public void addMaster(MasterEditRequest masterEditRequest) throws EqianyuanException {
+    public void addMaster(MasterEditRequest masterEditRequest, HttpServletRequest httpServletRequest) throws EqianyuanException {
         /**
          * 从session池中获取系统用户信息
          */
-        MemberLoginVo memberLoginVo = (MemberLoginVo) SessionUtil.getAttribute(SessionContextUtil.getInstance().getSession(SessionUtil.getSessionByHeader()), SystemConf.WEBSITE_SESSION_MEMBER.toString());
+        MemberLoginVo memberLoginVo = (MemberLoginVo) SessionUtil.getAttribute(SessionContextUtil.getInstance().getSession(SessionUtil.getSessionByHeader(httpServletRequest)), SystemConf.WEBSITE_SESSION_MEMBER.toString());
         masterEditRequest.setOperatorMemberId(memberLoginVo.getMemberId());
         masterService.addMaster(masterEditRequest);
     }
@@ -46,11 +47,11 @@ public class WebsiteMasterService {
      * @param masterEditRequest
      * @throws EqianyuanException
      */
-    public void modifyMaster(MasterEditRequest masterEditRequest) throws EqianyuanException {
+    public void modifyMaster(MasterEditRequest masterEditRequest, HttpServletRequest httpServletRequest) throws EqianyuanException {
         /**
          * 从session池中获取系统用户信息
          */
-        MemberLoginVo memberLoginVo = (MemberLoginVo) SessionUtil.getAttribute(SessionContextUtil.getInstance().getSession(SessionUtil.getSessionByHeader()), SystemConf.WEBSITE_SESSION_MEMBER.toString());
+        MemberLoginVo memberLoginVo = (MemberLoginVo) SessionUtil.getAttribute(SessionContextUtil.getInstance().getSession(SessionUtil.getSessionByHeader(httpServletRequest)), SystemConf.WEBSITE_SESSION_MEMBER.toString());
         masterEditRequest.setOperatorMemberId(memberLoginVo.getMemberId());
         masterService.modifyMaster(masterEditRequest);
     }

@@ -191,6 +191,9 @@ public class MasterServiceImpl implements IMasterService {
             throw new EqianyuanException(ExceptionMsgConstant.CEMETERY_MASTER_DATA_NOT_EXISTS);
         }
 
+        //获取就头像地址信息
+        String oldPortrait = master.getPortrait();
+
         /**
          * 构建头像文件持久化目录地址
          * 目录结构：持久化上传目录/陵园编号/master_portrait/文件
@@ -219,7 +222,7 @@ public class MasterServiceImpl implements IMasterService {
             //将纪念人头像文件从临时上传目录移动到持久目录
             FileUtilHandle.moveFile(fileResponse.getFilePath(), portraitPath);
             //将纪念人旧头像文件从持久目录删除
-            FileUtilHandle.deleteFile(SessionUtil.getSession().getServletContext().getRealPath("/") + master.getPortrait());
+            FileUtilHandle.deleteFile(SessionUtil.getSession().getServletContext().getRealPath("/") + oldPortrait);
         }
     }
 

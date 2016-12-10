@@ -4,6 +4,7 @@ import com.bestomb.common.exception.EqianyuanException;
 import com.bestomb.common.response.FileResponse;
 import com.bestomb.common.util.FileUtilHandle;
 import com.bestomb.service.IFileService;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 import org.springframework.util.MultiValueMap;
@@ -29,8 +30,6 @@ public class FileServerImpl implements IFileService {
      * @return
      */
     public List<FileResponse> upload(HttpServletRequest request, String fileType) throws EqianyuanException {
-        //todo 判断文件类型是否为允许上传的类型 fileType
-
         MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;// 转换请求
         MultiValueMap<String, MultipartFile> multiFiles = multipartRequest.getMultiFileMap();
         List<FileResponse> fileResponses = FileUtilHandle.upload(multiFiles);
