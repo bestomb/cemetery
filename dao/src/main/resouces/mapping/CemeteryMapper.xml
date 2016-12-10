@@ -2,33 +2,42 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.bestomb.dao.ICemeteryDao">
     <resultMap id="BaseResultMap" type="com.bestomb.entity.Cemetery">
-        <id column="id" property="id" jdbcType="INTEGER"/>
-        <result column="name" property="name" jdbcType="VARCHAR"/>
-        <result column="province_id" property="provinceId" jdbcType="VARCHAR"/>
-        <result column="county_id" property="countyId" jdbcType="VARCHAR"/>
-        <result column="city_id" property="cityId" jdbcType="VARCHAR"/>
-        <result column="town_id" property="townId" jdbcType="VARCHAR"/>
-        <result column="village_id" property="villageId" jdbcType="VARCHAR"/>
-        <result column="community_id" property="communityId" jdbcType="VARCHAR"/>
-        <result column="password" property="password" jdbcType="VARCHAR"/>
+    <id column="id" property="id" jdbcType="INTEGER"/>
+    <result column="name" property="name" jdbcType="VARCHAR"/>
+    <result column="province_id" property="provinceId" jdbcType="VARCHAR"/>
+    <result column="county_id" property="countyId" jdbcType="VARCHAR"/>
+    <result column="city_id" property="cityId" jdbcType="VARCHAR"/>
+    <result column="town_id" property="townId" jdbcType="VARCHAR"/>
+    <result column="village_id" property="villageId" jdbcType="VARCHAR"/>
+    <result column="community_id" property="communityId" jdbcType="VARCHAR"/>
+    <result column="password" property="password" jdbcType="VARCHAR"/>
 
-        <result column="member_id" property="memberId" jdbcType="INTEGER"/>
+    <result column="member_id" property="memberId" jdbcType="INTEGER"/>
 
-        <result column="is_open" property="isOpen" jdbcType="INTEGER"/>
-        <result column="remaining_storage_size" property="remainingStorageSize" jdbcType="INTEGER"/>
-        <result column="storage_size" property="storageSize" jdbcType="INTEGER"/>
-        <result column="create_time" property="createTime" jdbcType="INTEGER"/>
+    <result column="is_open" property="isOpen" jdbcType="INTEGER"/>
+    <result column="remaining_storage_size" property="remainingStorageSize" jdbcType="INTEGER"/>
+    <result column="storage_size" property="storageSize" jdbcType="INTEGER"/>
+    <result column="create_time" property="createTime" jdbcType="INTEGER"/>
+</resultMap>
+    <!-- 自定义模型结果封装 -->
+    <resultMap id="BaseResultByCustomModel" type="com.bestomb.entity.Cemetery" extends="BaseResultMap">
+        <result column="file_address" property="modelAddress" jdbcType="VARCHAR"/>
     </resultMap>
     <sql id="Base_Column_List">
     id, name, province_id, county_id, city_id, town_id, village_id, community_id, password, 
     member_id, is_open, remaining_storage_size, storage_size, create_time
   </sql>
-    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
-    select
-    <include refid="Base_Column_List"/>
-    from cemetery
-    where id = #{id,jdbcType=INTEGER}
- </select>
+    <select id="selectByPrimaryKey" resultMap="BaseResultByCustomModel" parameterType="java.lang.String">
+        select
+        c.id, c.name, c.province_id, c.county_id, c.city_id, c.town_id, c.village_id, c.community_id, c.password,
+        c.member_id, c.is_open, c.remaining_storage_size, c.storage_size, c.create_time
+        ,m.file_address
+        from
+        cemetery c LEFT JOIN goods_use_relat gur on (c.id = gur.object_id)
+        LEFT JOIN goods_official go on (gur.goods_id = go.id)
+        left JOIN model m on (go.extend_attribute = m.id)
+        where c.id = #{id,jdbcType=INTEGER}
+    </select>
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from cemetery
     where id = #{id,jdbcType=INTEGER}
@@ -202,16 +211,21 @@
             </if>
         </where>
     </select>
-    <select id="selectByPagination" resultMap="BaseResultMap">
+    <select id="selectByPagination" resultMap="BaseResultByCustomModel">
         select
-        <include refid="Base_Column_List"/>
-        from cemetery
+        c.id, c.name, c.province_id, c.county_id, c.city_id, c.town_id, c.village_id, c.community_id, c.password,
+        c.member_id, c.is_open, c.remaining_storage_size, c.storage_size, c.create_time
+        ,m.file_address modelAddress
+        from
+        cemetery c LEFT JOIN goods_use_relat gur on (c.id = gur.object_id)
+        LEFT JOIN goods_official go on (gur.goods_id = go.id)
+        left JOIN model m on (go.extend_attribute = m.id)
         <where>
             <if test="community_id != null and community_id != ''">
                 community_id = #{community_id}
             </if>
         </where>
-        order by create_time asc
+        order by c.create_time asc
         limit ${page.pageNo}, ${page.pageSize}
     </select>
     <select id="selectByAreaPagination" resultMap="BaseResultMap">
@@ -250,12 +264,17 @@
           select id from cemetery where community_id = #{community_id} limit ${page.pageNo}, ${page.pageSize}
         ) a
     </select>
-    <select id="selectByMemberId" resultMap="BaseResultMap">
+    <select id="selectByMemberId" resultMap="BaseResultByCustomModel">
         select
-        <include refid="Base_Column_List"/>
-        from cemetery
-        where member_id = ${member_id}
-        order by create_time asc
+        c.id, c.name, c.province_id, c.county_id, c.city_id, c.town_id, c.village_id, c.community_id, c.password,
+        c.member_id, c.is_open, c.remaining_storage_size, c.storage_size, c.create_time
+        ,m.file_address
+        from
+        cemetery c LEFT JOIN goods_use_relat gur on (c.id = gur.object_id)
+        LEFT JOIN goods_official go on (gur.goods_id = go.id)
+        left JOIN model m on (go.extend_attribute = m.id)
+        where c.member_id = ${member_id}
+        order by c.create_time asc
     </select>
 
     <select id="selectMemberIdByCemeteryIds" resultMap="BaseResultMap">

@@ -5,6 +5,8 @@ import java.math.BigDecimal;
 public class PlantsAndAnimals {
     private String id;
 
+    private String goodsIdByPerson;
+
     private String name;
 
     private BigDecimal price;
@@ -27,6 +29,14 @@ public class PlantsAndAnimals {
 
     public void setId(String id) {
         this.id = id == null ? null : id.trim();
+    }
+
+    public String getGoodsIdByPerson() {
+        return goodsIdByPerson;
+    }
+
+    public void setGoodsIdByPerson(String goodsIdByPerson) {
+        this.goodsIdByPerson = goodsIdByPerson;
     }
 
     public String getName() {

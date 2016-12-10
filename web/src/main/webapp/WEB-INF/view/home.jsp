@@ -14,7 +14,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>百思网 - 百思陵园管理系统</title>
+    <title>百思网 - 中国网陵管理系统</title>
     <link rel="stylesheet" href="http://apps.bdimg.com/libs/bootstrap/3.3.0/css/bootstrap.min.css">
     <link href="/css/style.css" rel="stylesheet">
     <link href="/css/view/common.css" rel="stylesheet">
@@ -29,7 +29,7 @@
     <!-- Navigation -->
     <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
         <div class="navbar-header">
-            <a class="navbar-brand">百思陵园管理系统</a>
+            <a class="navbar-brand">中国网陵管理系统</a>
         </div>
 
         <ul class="nav navbar-top-links navbar-right">

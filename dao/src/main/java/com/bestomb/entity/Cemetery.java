@@ -29,7 +29,9 @@ public class Cemetery {
 
     private Integer createTime;
 
-    public Integer getMemberId() {
+    private String modelAddress;    //陵园模型地址
+
+  public Integer getMemberId() {
         return memberId;
     }
 
@@ -139,5 +141,13 @@ public class Cemetery {
 
     public void setCreateTime(Integer createTime) {
         this.createTime = createTime;
+    }
+
+    public String getModelAddress() {
+        return modelAddress;
+    }
+
+    public void setModelAddress(String modelAddress) {
+        this.modelAddress = modelAddress;
     }
 }

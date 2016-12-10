@@ -113,7 +113,6 @@ public class TombstoneServiceImpl implements ITombstoneService {
      * @throws EqianyuanException
      */
     public PageResponse getListByCondition(Tombstone tombstone, Pager page) throws EqianyuanException {
-        // 根据条件查询音乐列表
         int dataCount = tombstoneDao.countByCondition(tombstone);
         page.setTotalRow(dataCount);
         if (dataCount <= 0) {

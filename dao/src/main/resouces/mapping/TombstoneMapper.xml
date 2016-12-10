@@ -10,6 +10,10 @@
     <result column="species" property="species" jdbcType="INTEGER" />
     <result column="create_time" property="createTime" jdbcType="INTEGER" />
   </resultMap>
+  <!-- 自定义模型结果封装 -->
+  <resultMap id="BaseResultByCustomModel" type="com.bestomb.entity.Tombstone" extends="BaseResultMap">
+    <result column="file_address" property="modelAddress" jdbcType="VARCHAR"/>
+  </resultMap>
   <sql id="Base_Column_List" >
     id, sort, cemetery_id, member_id, type, species, create_time
   </sql>
@@ -142,10 +146,24 @@
   <!-- 根据查询条件查询陵园墓碑列表 -->
   <select id="selectByCondition" resultMap="BaseResultMap">
     select
-    <include refid="Base_Column_List"/>
-    from tombstone
-    <include refid="whereCondition" />
-    order by sort asc
+    t.id, t.sort, t.cemetery_id, t.member_id, t.type, t.species, t.create_time
+    ,m.file_address
+    from
+    tombstone t LEFT JOIN goods_use_relat gur on (t.id = gur.object_id)
+    LEFT JOIN goods_official go on (gur.goods_id = go.id)
+    left JOIN model m on (go.extend_attribute = m.id)
+    <where>
+      <if test="tombstone.species != null">
+        and t.species = #{tombstone.species, jdbcType=INTEGER}
+      </if>
+      <if test="tombstone.type != null">
+        and t.type = #{tombstone.type, jdbcType=INTEGER}
+      </if>
+      <if test="tombstone.cemeteryId != null">
+        and t.cemetery_id = #{tombstone.cemeteryId, jdbcType=VARCHAR}
+      </if>
+    </where>
+    order by t.sort asc
     limit ${page.start}, ${page.pageSize}
   </select>
 </mapper>

@@ -7,7 +7,6 @@ import com.bestomb.common.request.tombstone.master.MasterEditRequest;
 import com.bestomb.common.response.FileResponse;
 import com.bestomb.common.response.PageResponse;
 import com.bestomb.common.response.master.MasterBo;
-import com.bestomb.common.util.CalendarUtil;
 import com.bestomb.common.util.FileUtilHandle;
 import com.bestomb.common.util.SessionUtil;
 import com.bestomb.common.util.yamlMapper.SystemConf;
@@ -27,6 +26,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class MasterServiceImpl implements IMasterService {
@@ -122,6 +122,17 @@ public class MasterServiceImpl implements IMasterService {
             masterBos.add(masterBo);
         }
         return masterBos;
+    }
+
+    /**
+     * 根据纪念人信息查询贡品信息集合
+     *
+     * @param masterId 纪念人编号集合
+     * @return
+     * @throws EqianyuanException
+     */
+    public List<Map<String, String>> getOblationByMasterId(List<String> masterId) throws EqianyuanException {
+        return masterDao.getOblationByMasterId(masterId);
     }
 
     /**

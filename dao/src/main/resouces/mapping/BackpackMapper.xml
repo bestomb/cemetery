@@ -11,6 +11,8 @@
     <resultMap id="BaseResultMapByClient" type="com.bestomb.entity.Backpack" extends="BaseResultMap">
         <result column="name" jdbcType="VARCHAR" property="name"/>
         <result column="images" jdbcType="VARCHAR" property="images"/>
+        <result column="type" jdbcType="INTEGER" property="type"/>
+        <result column="file_address" jdbcType="VARCHAR" property="modelAddress"/>
     </resultMap>
     <sql id="Base_Column_List">
     id, member_id, source, count, goods_id
@@ -113,26 +115,42 @@
     <select id="getPageListCount" resultType="java.lang.Integer">
         select count(1) from
         (
-            select b.goods_id from backpack b INNER JOIN goods_official go on (b.goods_id = go.id)
-            <include refid="whereCondition"/>
-            union
-            select b.goods_id from backpack b INNER JOIN goods_personage gp on (b.goods_id = gp.id) INNER JOIN plants_and_animals paan on (gp.plants_and_animals_id = paan.id)
-            <include refid="whereCondition"/>
-            union
-            select b.goods_id from backpack b INNER JOIN plants_and_animals paa on (b.goods_id = paa.id)
-            <include refid="whereCondition"/>
+        select b.goods_id from backpack b INNER JOIN goods_official go on (b.goods_id = go.id)
+        left JOIN model m on (go.extend_attribute = m.id)
+        <include refid="whereCondition"/>
+        union
+        select b.goods_id from backpack b INNER JOIN goods_personage gp on (b.goods_id = gp.id) INNER JOIN
+        plants_and_animals paan on (gp.plants_and_animals_id = paan.id)
+        left JOIN model m on (paan.model_id = m.id)
+        <include refid="whereCondition"/>
+        union
+        select b.goods_id from backpack b INNER JOIN plants_and_animals paa on (b.goods_id = paa.id)
+        left JOIN model m on (paa.model_id = m.id)
+        <include refid="whereCondition"/>
         ) cnt
     </select>
     <!-- 根据条件查询分页列表 -->
     <select id="getPageList" resultMap="BaseResultMapByClient">
-        select b.goods_id, b.count, go.name, go.images from backpack b INNER JOIN goods_official go on (b.goods_id = go.id)
+        select * from (
+        select b.goods_id, sum(b.count) count, go.name, go.images, go.type, m.file_address from backpack b INNER JOIN
+        goods_official go on (b.goods_id = go.id)
+        left JOIN model m on (go.extend_attribute = m.id)
         <include refid="whereCondition"/>
+        group by goods_id
         union
-        select b.goods_id, b.count, paan.name, paan.images from backpack b INNER JOIN goods_personage gp on (b.goods_id = gp.id) INNER JOIN plants_and_animals paan on (gp.plants_and_animals_id = paan.id)
+        select b.goods_id, sum(b.count) count, paan.name, paan.images, paan.type, m.file_address from backpack b INNER
+        JOIN goods_personage gp on (b.goods_id = gp.id) INNER JOIN plants_and_animals paan on (gp.plants_and_animals_id
+        = paan.id)
+        left JOIN model m on (paan.model_id = m.id)
         <include refid="whereCondition"/>
+        group by goods_id
         union
-        select b.goods_id, b.count, paa.name, paa.images from backpack b INNER JOIN plants_and_animals paa on (b.goods_id = paa.id)
+        select b.goods_id, sum(b.count) count, paa.name, paa.images, paa.type, m.file_address from backpack b INNER JOIN
+        plants_and_animals paa on (b.goods_id = paa.id)
+        left JOIN model m on (paa.model_id = m.id)
         <include refid="whereCondition"/>
+        group by goods_id
+        ) bp
         limit ${page.start}, ${page.pageSize}
     </select>
 
@@ -144,16 +162,18 @@
         id,member_id,source,count,goods_id
         ) values
         <foreach item="item" collection="backpackList" separator=",">
-            ((select replace(uuid(),'-','') from dual),#{item.memberId,jdbcType=INTEGER},#{item.source,jdbcType=INTEGER},#{item.count,jdbcType=INTEGER},#{item.goodsId,jdbcType=VARCHAR})
+            ((select replace(uuid(),'-','') from
+            dual),#{item.memberId,jdbcType=INTEGER},#{item.source,jdbcType=INTEGER},#{item.count,jdbcType=INTEGER},#{item.goodsId,jdbcType=VARCHAR})
         </foreach>
     </insert>
 
     <!-- 根据条件查询背包商品 -->
     <select id="selectByCondition" resultMap="BaseResultMap">
         select
-        <include refid="Base_Column_List" />
+        <include refid="Base_Column_List"/>
         from backpack
         where member_id = #{memberId,jdbcType=INTEGER}
         and goods_id = #{goodsId,jdbcType=VARCHAR}
+        limit 0, 1
     </select>
 </mapper>

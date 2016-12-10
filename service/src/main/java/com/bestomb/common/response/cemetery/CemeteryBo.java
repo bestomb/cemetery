@@ -52,6 +52,8 @@ public class CemeteryBo {
 
     private String createTimeForStr;
 
+    private String modelAddress;    //陵园模型地址
+
     public Integer getMemberId() {
         return memberId;
     }
@@ -226,5 +228,13 @@ public class CemeteryBo {
 
     public void setMemberName(String memberName) {
         this.memberName = memberName;
+    }
+
+    public String getModelAddress() {
+        return modelAddress;
+    }
+
+    public void setModelAddress(String modelAddress) {
+        this.modelAddress = modelAddress;
     }
 }

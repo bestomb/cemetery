@@ -4,7 +4,7 @@
     <resultMap id="BaseResultMap" type="com.bestomb.entity.PlantsAndAnimals">
         <id column="id" property="id" jdbcType="VARCHAR"/>
         <result column="name" property="name" jdbcType="VARCHAR"/>
-        <result column="price" property="price" jdbcType="DECIMAL" />
+        <result column="price" property="price" jdbcType="DECIMAL"/>
         <result column="images" property="images" jdbcType="VARCHAR"/>
         <result column="model_id" property="modelId" jdbcType="VARCHAR"/>
         <result column="type" property="type" jdbcType="INTEGER"/>
@@ -195,6 +195,8 @@
     <!-- 封装商城商品查询条件 -->
     <sql id="whereCondition">
         <where>
+            <!-- 仅查询生长阶段为第一阶段的数据 -->
+            phase=1
             <if test="mall.name != null">
                 and name like '%${mall.name,jdbcType=VARCHAR}%'
             </if>

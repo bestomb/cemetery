@@ -6,6 +6,7 @@ import com.bestomb.entity.MasterWithBLOBs;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import java.util.Map;
 
 public interface IMasterDao {
     int deleteByPrimaryKey(String id);
@@ -41,4 +42,12 @@ public interface IMasterDao {
      * @return
      */
     List<Master> selectByTombstone(@Param("tombstoneId") String tombstoneId);
+
+    /**
+     * 根据纪念人编号查询贡品集合
+     *
+     * @param masterId
+     * @return
+     */
+    List<Map<String, String>> getOblationByMasterId(@Param("masterIds") List<String> masterId);
 }

@@ -145,8 +145,12 @@ public class BackpackImpl implements IBackpackService {
             } else { // 根据不同的商品类型做不同处理。
                 // 1：大门、2：墓碑、3：：祭品（香）、4：祭品（蜡烛）、5：祭品（花）、6：普通祭品、7：扩展陵园存储容量、8：增加可建陵园数
                 GoodsOfficialWithBLOBs goodsOfficial = goodsOfficialDao.selectByPrimaryKey(useGoods.getGoodsId());
-                // 纪念人编号是否为空
-                if ( (goodsOfficial.getType()==2 || goodsOfficial.getType()==3 || goodsOfficial.getType()==4 || goodsOfficial.getType()==5) && StringUtils.isEmpty(useGoods.getMasterId())) {
+                // 使用对象是墓碑，墓碑编号是否为空
+                if (goodsOfficial.getType()==2 && StringUtils.isEmpty(useGoods.getTombstoneId())) {
+                    logger.warn("use fail , because tombstoneId is null.");
+                    throw new EqianyuanException(ExceptionMsgConstant.CEMETERY_MASTER_DATA_NOT_EXISTS);
+                }else if ( (goodsOfficial.getType()==3 || goodsOfficial.getType()==4 || goodsOfficial.getType()==5) && StringUtils.isEmpty(useGoods.getMasterId())) {
+                    // 使用对象是纪念人，纪念人编号是否为空
                     logger.warn("use fail , because marstId is null.");
                     throw new EqianyuanException(ExceptionMsgConstant.CEMETERY_MASTER_DATA_NOT_EXISTS);
                 }
@@ -155,8 +159,8 @@ public class BackpackImpl implements IBackpackService {
                     case 2:{
                         // 类型为1、2的商品使用后需要插入商品使用信息关联表（无时间限制），该商品在背包表中数量不变
                         String objectId = useGoods.getCemeteryId();
-                        // 如果纪念人编号不为空，则使用纪念人编号
-                        if (!StringUtils.isEmpty(useGoods.getMasterId())) { objectId = useGoods.getMasterId(); }
+                        // 如果墓碑编号不为空，则使用墓碑编号
+                        if (!StringUtils.isEmpty(useGoods.getTombstoneId())) { objectId = useGoods.getTombstoneId(); }
                         GoodsUseRelat goodsUseRelat = new GoodsUseRelat(goodsOfficial.getType(), useGoods.getMemberId(), useGoods.getGoodsId(), objectId, CalendarUtil.getSystemSeconds(), goodsOfficial.getLifecycle());
                         flag = goodsUseRelatDao.insertSelective(goodsUseRelat)>0;
                         if (!flag) {

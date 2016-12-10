@@ -34,11 +34,11 @@ public class PingppController {
      */
     @RequestMapping("/getCharge")
     @ResponseBody
-    public String getCharge(double amount, String channel, HttpServletRequest request) throws Exception {
+    public String getCharge(double amount, String channel, String jsessionId, HttpServletRequest request) throws Exception {
         /**
          * 从session池中获取系统用户信息
          */
-        MemberLoginVo memberLoginVo = (MemberLoginVo) SessionUtil.getAttribute(SessionContextUtil.getInstance().getSession(SessionUtil.getSessionByHeader()), SystemConf.WEBSITE_SESSION_MEMBER.toString());
+        MemberLoginVo memberLoginVo = (MemberLoginVo) SessionUtil.getAttribute(SessionContextUtil.getInstance().getSession(jsessionId), SystemConf.WEBSITE_SESSION_MEMBER.toString());
         return pingggService.getCharge(amount, channel, memberLoginVo.getMemberId(), request);
     }
 

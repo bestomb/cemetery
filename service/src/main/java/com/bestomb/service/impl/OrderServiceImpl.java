@@ -104,7 +104,7 @@ public class OrderServiceImpl implements IOrderService {
     public void goodsBuy(String goodsInfo, Integer memberId) throws Exception {
         if (StringUtils.isEmpty(goodsInfo)) {
             logger.warn("不存在购物商品");
-            return;
+            throw new EqianyuanException(ExceptionMsgConstant.GOODS_DATA_NOT_EXISTS);
         }
 
         //将购物清单json字符串转为json对象
@@ -114,7 +114,7 @@ public class OrderServiceImpl implements IOrderService {
         JSONArray goodsJSONArray = goodsJSONObject.getJSONArray("goods");
         if (CollectionUtils.isEmpty(goodsJSONArray)) {
             logger.warn("不存在购物商品");
-            return;
+            throw new EqianyuanException(ExceptionMsgConstant.GOODS_DATA_NOT_EXISTS);
         }
 
         //申明商品编号集合对象
@@ -131,7 +131,7 @@ public class OrderServiceImpl implements IOrderService {
             if (goodsSource == 1) {
                 goodsIdsForOfficial.add(goodsId);
             } else if (goodsSource == 2) {
-                goodsIdsForPersonage.add(goodsId);
+                goodsIdsForPersonage.add(goodsInfoJSONObject.getString("goodsIdByPerson"));
             } else if (goodsSource == 3) {
                 goodsIdsForPlantsAndAnimals.add(goodsId);
             }
@@ -154,8 +154,10 @@ public class OrderServiceImpl implements IOrderService {
         }
 
         //如果没有查询到商城商品，返回空
-        if (CollectionUtils.isEmpty(goodsOfficialWithBLOBses) && CollectionUtils.isEmpty(goodsPersonageInfoList) && CollectionUtils.isEmpty(plantsAndAnimalses)) {
-            return;
+        if (CollectionUtils.isEmpty(goodsOfficialWithBLOBses)
+                && CollectionUtils.isEmpty(goodsPersonageInfoList)
+                && CollectionUtils.isEmpty(plantsAndAnimalses)) {
+            throw new EqianyuanException(ExceptionMsgConstant.GOODS_DATA_NOT_EXISTS);
         }
 
         //构建会员背包数据集合
@@ -197,14 +199,14 @@ public class OrderServiceImpl implements IOrderService {
 
             if (!isCalculate && StringUtils.equals(goodsJson.getString("source"), "2")) {
                 for (GoodsPersonageInfo goodsPersonageInfo : goodsPersonageInfoList) {
-                    if (!StringUtils.equals(goodsPersonageInfo.getId(), goodsJson.getString("goods_id"))) {
+                    if (!StringUtils.equals(goodsPersonageInfo.getId(), goodsJson.getString("goodsIdByPerson"))) {
                         continue;
                     }
 
                     goodsAmount += calculateGoodsAmount(goodsPersonageInfo.getPrice(), buyCount);
 
                     //构建背包数据
-                    backpackList.add(buildBackpack(memberId, 2, buyCount, goodsPersonageInfo.getId()));
+                    backpackList.add(buildBackpack(memberId, 2, buyCount, goodsPersonageInfo.getPlantsAndAnimalsId()));
                     //构建订单商品数据
                     orderGoodsList.add(buildOrderGoods(buyCount, goodsPersonageInfo.getName(), goodsPersonageInfo.getPrice().doubleValue()));
                     //构建库存扣减数据
@@ -258,6 +260,16 @@ public class OrderServiceImpl implements IOrderService {
          */
         int updateMemberAccount = memberAccountDao.updateByGoodsBuy(goodsAmount, deduction * 100, memberId);
         if (updateMemberAccount > 0) {
+            if(!CollectionUtils.isEmpty(repertory)){
+                //会员商城商品库存扣减
+                int updateRow = goodsPersonageDao.batchUpdateByRepertory(repertory);
+
+                if (updateRow <= 0) {
+                    logger.error("批量更新会员商品库存失败，库存不足");
+                    throw new EqianyuanException(ExceptionMsgConstant.GOODS_REPERTORY_NOT_ENOUGH);
+                }
+            }
+
             //持久化会员购物订单数据
             PurchaseOrder purchaseOrder = new PurchaseOrder();
             purchaseOrder.setMemberId(memberId);
@@ -275,16 +287,9 @@ public class OrderServiceImpl implements IOrderService {
                 //将会员发布商品销售额叠加到会员账户
                 memberAccountDao.batchUpdateBySale(memberSaleList);
             }
-
-            if(!CollectionUtils.isEmpty(repertory)){
-                //会员商城商品库存扣减
-                int updateRow = goodsPersonageDao.batchUpdateByRepertory(repertory);
-
-                if (updateRow < repertory.size()) {
-                    logger.error("批量更新会员商品库存失败");
-                    throw new Exception("批量更新会员商品库存失败");
-                }
-            }
+        }else{
+            logger.debug("会员账户没有足够的交易币或积分");
+            throw new EqianyuanException(ExceptionMsgConstant.TRADING_OR_INTEGRAL_IS_NOT_ENOUGH);
         }
 
         //todo 将每一笔交易币变动和积分变动都持久化记录，将不同错误提示写完整，例如：账户余额不足...

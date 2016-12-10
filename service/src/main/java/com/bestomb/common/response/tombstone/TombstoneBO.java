@@ -15,6 +15,10 @@ public class TombstoneBO {
 
     private Integer createTime;
 
+
+    //模型文件地址
+    private String modelAddress;
+
     public String getId() {
         return id;
     }
@@ -69,5 +73,13 @@ public class TombstoneBO {
 
     public void setCreateTime(Integer createTime) {
         this.createTime = createTime;
+    }
+
+    public String getModelAddress() {
+        return modelAddress;
+    }
+
+    public void setModelAddress(String modelAddress) {
+        this.modelAddress = modelAddress;
     }
 }

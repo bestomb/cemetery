@@ -10,8 +10,11 @@ import com.bestomb.common.util.yamlMapper.SystemConf;
 import com.bestomb.service.IMasterService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by jason on 2016-10-18.
@@ -76,5 +79,40 @@ public class WebsiteMasterService {
      */
     public List<MasterBo> queryByTombstone(String tombstoneId) throws EqianyuanException {
         return masterService.queryByTombstone(tombstoneId);
+    }
+
+    /**
+     * 根据纪念人编号查询祭品集合
+     *
+     * @param masterId
+     * @return
+     * @throws EqianyuanException
+     */
+    public List<Map<String, String>> getOblationByMasterId(String masterId) throws EqianyuanException {
+        List<String> masterIds = new ArrayList<String>();
+        masterIds.add(masterId);
+        return masterService.getOblationByMasterId(masterIds);
+    }
+
+    /**
+     * 根据条件陵园墓碑编号查询墓中纪念人祭品集合
+     *
+     * @param tombstoneId
+     * @return
+     * @throws EqianyuanException
+     */
+    public List<Map<String, String>> getOblationByTombstoneId(String tombstoneId) throws EqianyuanException {
+        //根据墓碑编号查询墓中纪念人信息
+        List<MasterBo> masters = masterService.queryByTombstone(tombstoneId);
+
+        if (CollectionUtils.isEmpty(masters)) {
+            return null;
+        }
+
+        List<String> masterId = new ArrayList<String>();
+        for (MasterBo master : masters) {
+            masterId.add(master.getId());
+        }
+        return masterService.getOblationByMasterId(masterId);
     }
 }

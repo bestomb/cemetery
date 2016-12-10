@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 陵园墓碑纪念人API控制器
@@ -64,6 +65,34 @@ public class WebsiteMasterController extends BaseController {
     public ServerResponse getMasterByTombstone(String tombstoneId) throws EqianyuanException {
         List<MasterBo> masterBos = websiteMasterService.queryByTombstone(tombstoneId);
         return new ServerResponse.ResponseBuilder().data(masterBos).build();
+    }
+
+    /***
+     * 根据条件纪念人编号查询祭品集合
+     *
+     * @param masterId 纪念人编号
+     * @return
+     * @throws EqianyuanException
+     */
+    @RequestMapping("/getOblationByMasterId")
+    @ResponseBody
+    public ServerResponse getOblationByMasterId(String masterId) throws EqianyuanException {
+        List<Map<String, String>> oblations = websiteMasterService.getOblationByMasterId(masterId);
+        return new ServerResponse.ResponseBuilder().data(oblations).build();
+    }
+
+    /***
+     * 根据条件陵园墓碑编号查询墓中纪念人祭品集合
+     *
+     * @param tombstoneId 墓碑编号
+     * @return
+     * @throws EqianyuanException
+     */
+    @RequestMapping("/getOblationByTombstoneId")
+    @ResponseBody
+    public ServerResponse getOblationByTombstoneId(String tombstoneId) throws EqianyuanException {
+        List<Map<String, String>> oblations = websiteMasterService.getOblationByTombstoneId(tombstoneId);
+        return new ServerResponse.ResponseBuilder().data(oblations).build();
     }
 
     /***

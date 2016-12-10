@@ -9,6 +9,22 @@
         <result column="plants_and_animals_id" property="plantsAndAnimalsId" jdbcType="VARCHAR"/>
     </resultMap>
 
+    <!--个人商城查询-->
+    <resultMap id="BaseResultMapByPerson" type="com.bestomb.entity.PlantsAndAnimals">
+        <id column="id" property="id" jdbcType="VARCHAR"/>
+        <id column="goods_id_by_person" property="goodsIdByPerson" jdbcType="VARCHAR"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="price" property="price" jdbcType="DECIMAL"/>
+        <result column="images" property="images" jdbcType="VARCHAR"/>
+        <result column="model_id" property="modelId" jdbcType="VARCHAR"/>
+        <result column="type" property="type" jdbcType="INTEGER"/>
+        <result column="grouping" property="grouping" jdbcType="INTEGER"/>
+        <result column="phase" property="phase" jdbcType="INTEGER"/>
+    </resultMap>
+    <resultMap id="ResultMapWithBLOBsByPerson" type="com.bestomb.entity.PlantsAndAnimals" extends="BaseResultMapByPerson">
+        <result column="description" property="description" jdbcType="LONGVARCHAR"/>
+    </resultMap>
+
     <!-- 个人售卖商品详细 -->
     <resultMap id="ResultMapWithInfo" type="com.bestomb.entity.GoodsPersonageInfo" extends="BaseResultMap">
         <result column="name" property="name" jdbcType="VARCHAR"/>
@@ -116,15 +132,18 @@
     <!-- 根据条件查询分页列表总数 -->
     <select id="getPageListCount" resultType="java.lang.Integer">
         select count(1) from
-        <include refid="pageQueryTable"/>
+        (
+        select
+        paa.id
+        from goods_personage gp left join plants_and_animals paa on (gp.plants_and_animals_id = paa.id)
         <include refid="whereCondition"/>
+        ) cnt
     </select>
     <!-- 根据条件查询分页列表 -->
-    <select id="getPageList" resultMap="BaseResultMap">
+    <select id="getPageList" resultMap="ResultMapWithBLOBsByPerson">
         select
-        <include refid="Base_Column_List"/>
-        from
-        <include refid="pageQueryTable"/>
+        gp.id goods_id_by_person, paa.name, gp.price, paa.id , paa.images, paa.model_id, paa.type, paa.grouping, paa.phase
+        from goods_personage gp left join plants_and_animals paa on (gp.plants_and_animals_id = paa.id)
         <include refid="whereCondition"/>
         limit ${page.start}, ${page.pageSize}
     </select>
@@ -150,7 +169,7 @@
             update goods_personage
             set repertory = repertory - #{item.repertory,jdbcType=INTEGER}
             where id = #{item.id,jdbcType=VARCHAR}
-            and repertory > #{item.repertory,jdbcType=INTEGER}
+            and repertory >= #{item.repertory,jdbcType=INTEGER}
         </foreach>
     </delete>
 </mapper>

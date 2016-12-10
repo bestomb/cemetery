@@ -11,6 +11,8 @@ public class Backpack {
     private Integer count = 1;
 
     private String goodsId;
+    private Integer type; //1：动物、2：植物
+    private String modelAddress;    //模型地址
 
     public Backpack(){};
     public Backpack(Integer memberId, Integer source, String goodsId){
@@ -73,5 +75,21 @@ public class Backpack {
 
     public void setImages(String images) {
         this.images = images;
+    }
+
+    public Integer getType() {
+        return type;
+    }
+
+    public void setType(Integer type) {
+        this.type = type;
+    }
+
+    public String getModelAddress() {
+        return modelAddress;
+    }
+
+    public void setModelAddress(String modelAddress) {
+        this.modelAddress = modelAddress;
     }
 }

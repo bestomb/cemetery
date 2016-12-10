@@ -6,6 +6,7 @@ import com.bestomb.common.response.PageResponse;
 import com.bestomb.common.response.master.MasterBo;
 
 import java.util.List;
+import java.util.Map;
 
 public interface IMasterService {
 
@@ -31,6 +32,15 @@ public interface IMasterService {
      * @throws EqianyuanException
      */
     List<MasterBo> queryByTombstone(String tombstoneId) throws EqianyuanException;
+
+    /**
+     * 根据纪念人信息查询贡品信息集合
+     *
+     * @param masterId  纪念人编号集合
+     * @return
+     * @throws EqianyuanException
+     */
+    List<Map<String, String>> getOblationByMasterId(List<String> masterId) throws EqianyuanException;
 
     /**
      * 添加墓碑纪念人

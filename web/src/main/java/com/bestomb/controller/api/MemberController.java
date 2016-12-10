@@ -272,7 +272,7 @@ public class MemberController extends BaseController {
      */
     @RequestMapping(value = "/backpackGoods/use", method = {RequestMethod.GET, RequestMethod.POST})
     @ResponseBody
-    public ServerResponse useBackpackGoods(@RequestBody UseGoods useGoods) throws EqianyuanException {
+    public ServerResponse useBackpackGoods(UseGoods useGoods) throws EqianyuanException {
         int memberId = getLoginMember().getMemberId();
         useGoods.setMemberId(memberId);
         boolean flag = memberService.useBackpackGoods(useGoods);

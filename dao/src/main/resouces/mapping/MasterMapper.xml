@@ -194,4 +194,17 @@
         from master
         where tombstone_id = #{tombstoneId,jdbcType=VARCHAR}
     </select>
+
+    <!-- 根据纪念人编号查询贡品集合 -->
+    <select id="getOblationByMasterId" resultType="java.util.HashMap">
+        select gur.lifecycle,go.name, go.type,m.file_address
+        from
+        goods_use_relat gur LEFT JOIN goods_official go on (gur.goods_id = go.id)
+        left JOIN model m on (go.extend_attribute = m.id)
+        where gur.object_id in
+        <foreach item="item" collection="masterIds" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
 </mapper>

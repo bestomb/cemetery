@@ -14,7 +14,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>百思网 - 百思陵园管理系统</title>
+    <title>百思网 - 中国网陵管理系统</title>
 
     <link rel="stylesheet" href="http://apps.bdimg.com/libs/bootstrap/3.3.0/css/bootstrap.min.css">
     <link href="/css/style.css" rel="stylesheet">
@@ -29,7 +29,7 @@
         <div class="col-md-4 col-md-offset-4">
             <div class="login-panel panel panel-default">
                 <div class="panel-heading">
-                    <h3 class="panel-title">百思陵园管理系统</h3>
+                    <h3 class="panel-title">中国网陵管理系统</h3>
                 </div>
                 <div class="panel-body">
                     <label class="login_fail_tip"></label>

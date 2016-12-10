@@ -141,6 +141,8 @@ public class ExceptionMsgConstant {
     public static final String MEMBERSHIP_NUMBER_IS_EMPTY = "20000010";
     // 会员交易币为空
     public static final String TRADING_IS_EMPTY = "20000011";
+    //会员交易币或积分不足
+    public static final String TRADING_OR_INTEGRAL_IS_NOT_ENOUGH = "20000012";
     /***** 会员 *****/
     
     /***** 订单 *****/
@@ -284,6 +286,8 @@ public class ExceptionMsgConstant {
     public static final String GOODS_PUBLISH_FAIL = "30001008";
     //自定义分类数据不存在
     public static final String CUSTOM_CLASSIFY_DATA_NOT_EXISTS = "30001009";
+    //库存不足
+    public static final String GOODS_REPERTORY_NOT_ENOUGH = "30001010";
     /***
      * 动植物
      */
