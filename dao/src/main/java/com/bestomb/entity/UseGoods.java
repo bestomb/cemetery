@@ -17,6 +17,8 @@ public class UseGoods {
     private String tombstoneId;
 	//纪念人编号
 	private String masterId;
+	//动植物编号
+	private String parkId;
 	
     public Integer getMemberId() {
 		return memberId;
@@ -49,5 +51,13 @@ public class UseGoods {
 
 	public void setMasterId(String masterId) {
 		this.masterId = masterId;
+	}
+
+	public String getParkId() {
+		return parkId;
+	}
+
+	public void setParkId(String parkId) {
+		this.parkId = parkId;
 	}
 }

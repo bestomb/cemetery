@@ -162,6 +162,12 @@
                                     case 8:
                                         firstClassifyName = "增加可建陵园数";
                                         break;
+                                    case 9:
+                                        firstClassifyName = "动物饲料";
+                                        break;
+                                    case 10:
+                                        firstClassifyName = "植物肥料";
+                                        break;
                                 }
 
                                 tableBody += '<tr>'

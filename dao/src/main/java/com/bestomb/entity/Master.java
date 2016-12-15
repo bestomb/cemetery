@@ -15,6 +15,8 @@ public class Master {
 
     private Integer sort;
 
+    private Integer age;
+
     public String getId() {
         return id;
     }
@@ -69,5 +71,13 @@ public class Master {
 
     public void setSort(Integer sort) {
         this.sort = sort;
+    }
+
+    public Integer getAge() {
+        return age;
+    }
+
+    public void setAge(Integer age) {
+        this.age = age;
     }
 }

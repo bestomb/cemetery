@@ -23,6 +23,14 @@ public interface ICemeteryService {
     void add(CemeteryByEditRequest cemeteryByEditRequest) throws EqianyuanException;
 
     /**
+     * 修改陵园
+     *
+     * @param cemeteryByEditRequest
+     * @throws EqianyuanException
+     */
+    void update(CemeteryByEditRequest cemeteryByEditRequest) throws EqianyuanException;
+
+    /**
      * 根据地区信息和分页信息查询陵园集合
      *
      * @param cemeteryByAreaListRequest

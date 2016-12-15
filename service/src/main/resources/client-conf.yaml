@@ -20,6 +20,7 @@ init_storage_size: 30000000
 
 ### 处理多人在线消息服务端通信套接字配置 ###
 serverSocketByMsgAddress: 139.196.149.131
+#serverSocketByMsgAddress: 114.119.8.225
 serverSocketByMsgPort: 59466
 serverSocketByMsgBackLog: 500
 

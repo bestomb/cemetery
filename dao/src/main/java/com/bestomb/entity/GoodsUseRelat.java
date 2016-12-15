@@ -3,7 +3,7 @@ package com.bestomb.entity;
 public class GoodsUseRelat {
     
 	private String id;
-    private Integer type; // 1：大门、2：墓碑、3：祭品（香）、4：祭品（蜡烛）、5：祭品（花）、6：普通祭品、7：扩展陵园存储容量、8：增加可建陵园数
+    private Integer type; // 1：大门、2：墓碑、3：祭品（香）、4：祭品（蜡烛）、5：祭品（花）、6：普通祭品、7：扩展陵园存储容量、8：增加可建陵园数、9：动物饲料、10：植物肥料
     private String objectId; // 如果对象是陵园，则该数据为陵园编号，如果对象是墓碑，则该数据为墓碑编号，如果对象为纪念人，则数据为纪念人编号
     private String goodsId;
     private Integer lifecycle; // 生命周期

@@ -30,6 +30,8 @@ public class Biont {
     private Integer growingDays;
     // 生命值
     private Integer lifeValue;
+	//模型文件地址
+	private String modelAddress;
 	
     
 	public String getId() {
@@ -110,5 +112,12 @@ public class Biont {
 	public void setLifeValue(Integer lifeValue) {
 		this.lifeValue = lifeValue;
 	}
-    
+
+	public String getModelAddress() {
+		return modelAddress;
+	}
+
+	public void setModelAddress(String modelAddress) {
+		this.modelAddress = modelAddress;
+	}
 }

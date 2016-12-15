@@ -1,7 +1,14 @@
 package com.bestomb.service.impl;
 
-import java.util.List;
-
+import com.bestomb.common.Pager;
+import com.bestomb.common.constant.ExceptionMsgConstant;
+import com.bestomb.common.exception.EqianyuanException;
+import com.bestomb.common.response.PageResponse;
+import com.bestomb.common.util.CalendarUtil;
+import com.bestomb.dao.*;
+import com.bestomb.entity.*;
+import com.bestomb.service.IBackpackService;
+import com.bestomb.service.IGoodsService;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,31 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 
-import com.bestomb.common.Pager;
-import com.bestomb.common.constant.ExceptionMsgConstant;
-import com.bestomb.common.exception.EqianyuanException;
-import com.bestomb.common.response.PageResponse;
-import com.bestomb.common.util.CalendarUtil;
-import com.bestomb.dao.IBackpackDao;
-import com.bestomb.dao.ICemeteryDao;
-import com.bestomb.dao.IGoodsOfficialDao;
-import com.bestomb.dao.IGoodsPersonageDao;
-import com.bestomb.dao.IGoodsUseRelatDao;
-import com.bestomb.dao.IMemberAccountDao;
-import com.bestomb.dao.IParkDao;
-import com.bestomb.dao.IPlantsAndAnimalsDao;
-import com.bestomb.entity.Backpack;
-import com.bestomb.entity.Cemetery;
-import com.bestomb.entity.GoodsOfficialWithBLOBs;
-import com.bestomb.entity.GoodsPersonage;
-import com.bestomb.entity.GoodsUseRelat;
-import com.bestomb.entity.Mall;
-import com.bestomb.entity.MemberAccount;
-import com.bestomb.entity.Park;
-import com.bestomb.entity.PlantsAndAnimals;
-import com.bestomb.entity.UseGoods;
-import com.bestomb.service.IBackpackService;
-import com.bestomb.service.IGoodsService;
+import java.util.List;
 
 /***
  * 背包接口实现类
@@ -143,26 +126,28 @@ public class BackpackImpl implements IBackpackService {
             if (!ObjectUtils.isEmpty(plantsAndAnimals)) {
                 flag = pushParkAndModifyBackpack(useGoods, entity);
             } else { // 根据不同的商品类型做不同处理。
-                // 1：大门、2：墓碑、3：：祭品（香）、4：祭品（蜡烛）、5：祭品（花）、6：普通祭品、7：扩展陵园存储容量、8：增加可建陵园数
+                // 1：大门、2：墓碑、3：：祭品（香）、4：祭品（蜡烛）、5：祭品（花）、6：普通祭品、7：扩展陵园存储容量、8：增加可建陵园数、9：动物饲料、10：植物肥料
                 GoodsOfficialWithBLOBs goodsOfficial = goodsOfficialDao.selectByPrimaryKey(useGoods.getGoodsId());
                 // 使用对象是墓碑，墓碑编号是否为空
-                if (goodsOfficial.getType()==2 && StringUtils.isEmpty(useGoods.getTombstoneId())) {
+                if (goodsOfficial.getType() == 2 && StringUtils.isEmpty(useGoods.getTombstoneId())) {
                     logger.warn("use fail , because tombstoneId is null.");
                     throw new EqianyuanException(ExceptionMsgConstant.CEMETERY_MASTER_DATA_NOT_EXISTS);
-                }else if ( (goodsOfficial.getType()==3 || goodsOfficial.getType()==4 || goodsOfficial.getType()==5) && StringUtils.isEmpty(useGoods.getMasterId())) {
+                } else if ((goodsOfficial.getType() == 3 || goodsOfficial.getType() == 4 || goodsOfficial.getType() == 5) && StringUtils.isEmpty(useGoods.getMasterId())) {
                     // 使用对象是纪念人，纪念人编号是否为空
                     logger.warn("use fail , because marstId is null.");
                     throw new EqianyuanException(ExceptionMsgConstant.CEMETERY_MASTER_DATA_NOT_EXISTS);
                 }
                 switch (goodsOfficial.getType()) {
                     case 1:
-                    case 2:{
+                    case 2: {
                         // 类型为1、2的商品使用后需要插入商品使用信息关联表（无时间限制），该商品在背包表中数量不变
                         String objectId = useGoods.getCemeteryId();
                         // 如果墓碑编号不为空，则使用墓碑编号
-                        if (!StringUtils.isEmpty(useGoods.getTombstoneId())) { objectId = useGoods.getTombstoneId(); }
+                        if (!StringUtils.isEmpty(useGoods.getTombstoneId())) {
+                            objectId = useGoods.getTombstoneId();
+                        }
                         GoodsUseRelat goodsUseRelat = new GoodsUseRelat(goodsOfficial.getType(), useGoods.getMemberId(), useGoods.getGoodsId(), objectId, CalendarUtil.getSystemSeconds(), goodsOfficial.getLifecycle());
-                        flag = goodsUseRelatDao.insertSelective(goodsUseRelat)>0;
+                        flag = goodsUseRelatDao.insertSelective(goodsUseRelat) > 0;
                         if (!flag) {
                             logger.error("会员（" + useGoods.getMemberId() + "）使用商品（" + useGoods.getGoodsId() + "）时，插入商品使用信息关联表失败。");
                         }
@@ -171,64 +156,91 @@ public class BackpackImpl implements IBackpackService {
                     case 3:
                     case 4:
                     case 5:
-                    case 6:{
+                    case 6: {
                         // 类型为3、4、5、6的商品使用后需要插入商品使用信息关联表
                         String objectId = useGoods.getCemeteryId();
-                        // 如果纪念人编号不为空，则使用纪念人编号
-                        if (!StringUtils.isEmpty(useGoods.getMasterId())) { objectId = useGoods.getMasterId(); }
+                        if(goodsOfficial.getType() != 6){
+                            // 如果纪念人编号不为空，则使用纪念人编号
+                            if (!StringUtils.isEmpty(useGoods.getMasterId())) {
+                                objectId = useGoods.getMasterId();
+                            }
+                        }
+
                         GoodsUseRelat goodsUseRelat = new GoodsUseRelat(goodsOfficial.getType(), useGoods.getMemberId(), useGoods.getGoodsId(), objectId, CalendarUtil.getSystemSeconds(), goodsOfficial.getLifecycle());
-                        flag = goodsUseRelatDao.insertSelective(goodsUseRelat)>0;
+                        flag = goodsUseRelatDao.insertSelective(goodsUseRelat) > 0;
                         if (flag) {
                             // 成功后需要修改该商品在背包表中的数量
                             flag = modifyBackpackCount(useGoods, entity);
                             if (!flag) {
                                 logger.error("会员（" + useGoods.getMemberId() + "）使用祭品（" + useGoods.getGoodsId() + "）时，修改该商品在背包表中的数量失败。");
                             }
-                        }else{
+                        } else {
                             logger.error("会员（" + useGoods.getMemberId() + "）使用祭品（" + useGoods.getGoodsId() + "）时，插入商品使用信息关联表失败。");
                         }
                         break;
                     }
-                    case 7:{
+                    case 7: {
                         // 增加陵园信息表cemetery中的剩余存储容量和总存储容量，并修改该商品在背包表中的数量
                         int extraStorage = Integer.valueOf(goodsOfficial.getExtendAttribute());
                         Cemetery oldCemetery = cemeteryDao.selectByPrimaryKey(useGoods.getCemeteryId());
                         Cemetery newCemetery = new Cemetery();
                         newCemetery.setId(Integer.valueOf(useGoods.getCemeteryId()));
-                        newCemetery.setRemainingStorageSize(oldCemetery.getRemainingStorageSize()+extraStorage); // 增加剩余存储容量
-                        newCemetery.setStorageSize(oldCemetery.getStorageSize()+extraStorage); // 增加总存储容量
+                        newCemetery.setRemainingStorageSize(oldCemetery.getRemainingStorageSize() + extraStorage); // 增加剩余存储容量
+                        newCemetery.setStorageSize(oldCemetery.getStorageSize() + extraStorage); // 增加总存储容量
                         // 修改陵园信息表
-                        flag = cemeteryDao.updateByPrimaryKeySelective(newCemetery)>0;
+                        flag = cemeteryDao.updateByPrimaryKeySelective(newCemetery) > 0;
                         if (flag) {
                             // 成功后修改该商品在背包表中的数量
                             flag = modifyBackpackCount(useGoods, entity);
                             if (!flag) {
-                                logger.error("会员（" + useGoods.getMemberId() + "）使用商品（" + useGoods.getGoodsId() + "）扩展陵园（"+useGoods.getCemeteryId()+"）存储容量时，修改该商品在背包表中的数量失败。");
+                                logger.error("会员（" + useGoods.getMemberId() + "）使用商品（" + useGoods.getGoodsId() + "）扩展陵园（" + useGoods.getCemeteryId() + "）存储容量时，修改该商品在背包表中的数量失败。");
                             }
-                        }else{
-                            logger.error("会员（" + useGoods.getMemberId() + "）使用商品（" + useGoods.getGoodsId() + "）扩展陵园（"+useGoods.getCemeteryId()+"）存储容量时，修改陵园信息表失败，扩展容量为："+extraStorage+" 字节");
+                        } else {
+                            logger.error("会员（" + useGoods.getMemberId() + "）使用商品（" + useGoods.getGoodsId() + "）扩展陵园（" + useGoods.getCemeteryId() + "）存储容量时，修改陵园信息表失败，扩展容量为：" + extraStorage + " 字节");
                         }
                         break;
                     }
-                    case 8:{
+                    case 8: {
                         MemberAccount oldMemberAccount = memberAccountDao.selectByPrimaryKey(useGoods.getMemberId());
                         MemberAccount newMemberAccount = new MemberAccount();
                         newMemberAccount.setMemberId(useGoods.getMemberId());
-                        newMemberAccount.setConstructionCount(oldMemberAccount.getConstructionCount()+1);
+                        newMemberAccount.setConstructionCount(oldMemberAccount.getConstructionCount() + 1);
                         // 将会员帐号信息表member_account中的可建设陵园总数+1
-                        flag = memberAccountDao.updateByPrimaryKeySelective(newMemberAccount)>0;
+                        flag = memberAccountDao.updateByPrimaryKeySelective(newMemberAccount) > 0;
                         if (flag) {
                             // 并修改该商品在背包表中的数量
                             flag = modifyBackpackCount(useGoods, entity);
                             if (!flag) {
                                 logger.error("会员（" + useGoods.getMemberId() + "）使用商品（" + useGoods.getGoodsId() + "）扩展可建设陵园总数时，修改该商品在背包表中的数量失败");
                             }
-                        }else{
+                        } else {
                             logger.error("会员（" + useGoods.getMemberId() + "）使用商品（" + useGoods.getGoodsId() + "）扩展可建设陵园总数时，修改会员帐号信息表失败");
                         }
                         break;
                     }
-                    default: break;
+                    case 9:
+                    case 10: {
+                        Park park = parkDao.selectByPrimaryKey(useGoods.getParkId());
+                        if (ObjectUtils.isEmpty(park)) {
+                            logger.warn("动植物喂养失败，因为不存在喂养对象");
+                            throw new EqianyuanException(ExceptionMsgConstant.PARK_OBJECT_IS_EMPTY);
+                        }
+                        //生命值加1
+                        park.setLifeValue(park.getLifeValue() + 1);
+                        flag = parkDao.updateByPrimaryKeySelective(park) > 0;
+                        if (flag) {
+                            // 成功后修改该商品在背包表中的数量
+                            flag = modifyBackpackCount(useGoods, entity);
+                            if (!flag) {
+                                logger.error("会员（" + useGoods.getMemberId() + "）使用商品（" + useGoods.getGoodsId() + "）喂养/饲养时，修改该商品在背包表中的数量失败。");
+                            }
+                        } else {
+                            logger.error("会员（" + useGoods.getMemberId() + "）使用商品（" + useGoods.getGoodsId() + "）喂养/饲养时，修改动植物生命周期失败");
+                        }
+                        break;
+                    }
+                    default:
+                        break;
                 }
             }
         }

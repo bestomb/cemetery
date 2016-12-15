@@ -222,6 +222,8 @@ public class ExceptionMsgConstant {
     public static final String CEMETERY_VIDEO_DATA_NOT_EXISTS = "20010030";
     //墓碑纪念人作品不存在
     public static final String CEMETERY_LIFE_WORKS_DATA_NOT_EXISTS = "20010031";
+    //动植物喂养/饲养失败，不存在对象
+    public static final String PARK_OBJECT_IS_EMPTY = "20010032";
     /***** 陵园 *****/
     
     /***** 留言 *****/

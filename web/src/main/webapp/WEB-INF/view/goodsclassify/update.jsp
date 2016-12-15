@@ -55,6 +55,8 @@
                                             <option value="6">普通祭品</option>
                                             <option value="7">扩展陵园存储容量</option>
                                             <option value="8">增加可建陵园数</option>
+                                            <option value="9">动物饲料</option>
+                                            <option value="10">植物肥料</option>
                                         </select>
                                     </div>
 

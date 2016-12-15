@@ -19,6 +19,7 @@
         <result column="cemeteryId" property="cemeteryId" jdbcType="VARCHAR"/>
         <result column="growingDays" property="growingDays" jdbcType="INTEGER"/>
         <result column="lifeValue" property="lifeValue" jdbcType="INTEGER"/>
+        <result column="file_address" property="modelAddress" jdbcType="VARCHAR"/>
     </resultMap>
 
     <sql id="Base_Column_List">
@@ -172,9 +173,10 @@
 
     <!-- 查询动植物详情 -->
     <select id="getDetail" resultMap="ResultMapWithBiont" parameterType="java.lang.String">
-	  	select a.id, a.name, a.price, a.images, a.model_id, a.type, a.grouping, a.phase, a.description, b.goods_id, b.cemetery_id, b.growing_days, b.life_value
-	    from plants_and_animals a, park b
+	  	select a.id, a.name, a.price, a.images, a.model_id, a.type, a.grouping, a.phase, a.description, b.goods_id, b.cemetery_id, b.growing_days, b.life_value, m.file_address
+	    from plants_and_animals a, park b, model m
 	    where a.id = b.goods_id and b.goods_id = #{goodsId, jdbcType=VARCHAR}
+	    a.model_id = m.id
   </select>
 
     <!-- 根据商品编号集合查找商品信息集合 -->

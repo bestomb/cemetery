@@ -173,7 +173,7 @@ public class ServerSocketByCemetery {
                     osw = new OutputStreamWriter(client.getOutputStream());
                     bw = new BufferedWriter(osw);
                     PrintWriter pw = new PrintWriter(osw);
-                    pw.println("协议连接建立成功");
+                    pw.println("协议连接建立成功<end>");
                     pw.flush();
 
                     ConcurrentLinkedQueue<Socket> clients = clientMapByCemetery.get(cemeteryId);

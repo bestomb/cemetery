@@ -57,6 +57,24 @@ public class WebsiteCemeteryController extends BaseController {
     }
 
     /**
+     * 修改陵园
+     *
+     * @param cemeteryByEditRequest
+     * @return
+     */
+    @RequestMapping("/modify")
+    @ResponseBody
+    public ServerResponse modify(CemeteryByEditRequest cemeteryByEditRequest) throws EqianyuanException {
+        /**
+         * 从session池中获取系统用户信息
+         */
+        MemberLoginVo memberLoginVo = (MemberLoginVo) SessionUtil.getAttribute(SessionContextUtil.getInstance().getSession(SessionUtil.getSessionByHeader()), SystemConf.WEBSITE_SESSION_MEMBER.toString());
+        cemeteryByEditRequest.setMemberId(String.valueOf(memberLoginVo.getMemberId()));
+        websiteCemeteryService.modify(cemeteryByEditRequest);
+        return new ServerResponse();
+    }
+
+    /**
      * 根据地区信息查询陵园分页集合
      *
      * @param cemeteryByAreaListRequest 陵园地区查询对象

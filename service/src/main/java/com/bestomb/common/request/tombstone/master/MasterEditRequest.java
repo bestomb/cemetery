@@ -36,6 +36,9 @@ public class MasterEditRequest {
     //墓碑所属陵园编号
     private Integer cemeteryId;
 
+    //纪念人年龄
+    private Integer age;
+
     public String getId() {
         return id;
     }
@@ -122,5 +125,13 @@ public class MasterEditRequest {
 
     public void setCemeteryId(Integer cemeteryId) {
         this.cemeteryId = cemeteryId;
+    }
+
+    public Integer getAge() {
+        return age;
+    }
+
+    public void setAge(Integer age) {
+        this.age = age;
     }
 }

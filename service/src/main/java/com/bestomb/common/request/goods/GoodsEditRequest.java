@@ -10,7 +10,7 @@ public class GoodsEditRequest {
     private String name;
     private BigDecimal price;
     private String images; // 图片json信息
-    private String type; // 商品类型 （1：大门、2：墓碑、3：祭品（香）、4：祭品（蜡烛）、5：祭品（花）、6：普通祭品、7：扩展陵园存储容量、8：增加可建陵园数）
+    private String type; // 商品类型 （1：大门、2：墓碑、3：祭品（香）、4：祭品（蜡烛）、5：祭品（花）、6：普通祭品、7：扩展陵园存储容量、8：增加可建陵园数、9：动物饲料、10：植物肥料）
     private String lifecycle;//生命周期
     private String description; // 详细描述
     private String extendAttribute; // 商品扩展属性

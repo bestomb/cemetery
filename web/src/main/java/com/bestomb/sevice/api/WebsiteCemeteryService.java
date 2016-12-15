@@ -52,6 +52,15 @@ public class WebsiteCemeteryService {
     }
 
     /**
+     * 修改陵园
+     *
+     * @param cemeteryByEditRequest
+     */
+    public void modify(CemeteryByEditRequest cemeteryByEditRequest) throws EqianyuanException {
+        cemeteryService.update(cemeteryByEditRequest);
+    }
+
+    /**
      * 根据地区信息及分页信息查找陵园集合
      *
      * @param cemeteryByAreaListRequest 地区信息

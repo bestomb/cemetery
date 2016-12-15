@@ -154,6 +154,7 @@ public class MasterServiceImpl implements IMasterService {
         master.setDeathTime(masterEditRequest.getDeathTime());
         master.setLifeIntroduce(masterEditRequest.getLifeIntroduce());
         master.setLastWish(masterEditRequest.getLastWish());
+        master.setAge(masterEditRequest.getAge());
 
         if (!ObjectUtils.isEmpty(masterEditRequest.getPortraitFile())) {
             //纪念人头像上传
@@ -215,6 +216,7 @@ public class MasterServiceImpl implements IMasterService {
         master.setDeathTime(masterEditRequest.getDeathTime());
         master.setLifeIntroduce(masterEditRequest.getLifeIntroduce());
         master.setLastWish(masterEditRequest.getLastWish());
+        master.setAge(masterEditRequest.getAge());
         //持久化纪念人数据
         masterDao.updateByPrimaryKeySelective(master);
 

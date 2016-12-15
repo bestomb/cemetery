@@ -19,6 +19,8 @@ public class MasterBo {
 
     private String lastWish;
 
+    private Integer age;
+
     public String getId() {
         return id;
     }
@@ -89,5 +91,13 @@ public class MasterBo {
 
     public void setLastWish(String lastWish) {
         this.lastWish = lastWish;
+    }
+
+    public Integer getAge() {
+        return age;
+    }
+
+    public void setAge(Integer age) {
+        this.age = age;
     }
 }

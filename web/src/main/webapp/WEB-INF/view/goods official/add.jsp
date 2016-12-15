@@ -60,6 +60,8 @@
                                             <option value="6">普通祭品</option>
                                             <option value="7">扩展陵园存储容量</option>
                                             <option value="8">增加可建陵园数</option>
+                                            <option value="9">动物饲料</option>
+                                            <option value="10">植物肥料</option>
                                         </select>
                                     </div>
                                     <div class="form-group">
@@ -162,12 +164,14 @@
                     $("#extend_storage").parent("div").removeClass("hide");
 
                     break;
-                    ;
                 case 8:
                     $("#extend_count").parent("div").removeClass("hide");
 
                     break;
-                    ;
+                case 9:;
+                case 10:
+                    $("#extend_model_id").parent("div").removeClass("hide");
+                    break;
             }
         });
 
@@ -192,17 +196,19 @@
                     ;
                 case 5:
                     ;
+                case 9:
+                    ;
+                case 10:
+                    ;
                 case 6:
                     $("input[name='extendAttribute']").val($("#extend_model_id").val());
                     break;
                 case 7:
                     $("input[name='extendAttribute']").val($("#extend_storage").val());
                     break;
-                    ;
                 case 8:
                     $("input[name='extendAttribute']").val($("#extend_count").val());
                     break;
-                    ;
             }
             //异步提交表单
             $.ajax({

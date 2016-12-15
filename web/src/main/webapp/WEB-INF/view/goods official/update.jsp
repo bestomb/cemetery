@@ -68,6 +68,8 @@
                                             <option value="6">普通祭品</option>
                                             <option value="7">扩展陵园存储容量</option>
                                             <option value="8">增加可建陵园数</option>
+                                            <option value="9">动物饲料</option>
+                                            <option value="10">植物肥料</option>
                                         </select>
                                     </div>
                                     <div class="form-group">
@@ -179,12 +181,15 @@
                             $("#extend_storage").parent("div").removeClass("hide");
                             $("#extend_storage").val(_this.extendAttribute)
                             break;
-                            ;
                         case 8:
                             $("#extend_count").parent("div").removeClass("hide");
                             $("#extend_count").val(_this.extendAttribute)
                             break;
-                            ;
+                        case 9:
+                            $("#extend_model_id").parent("div").removeClass("hide");
+
+                            $("#extend_model_id").val(_this.extendAttribute);
+                            break;
                     }
                 } else {
                     $("#form-tip").removeClass("hidden alert-warning").addClass("alert-success").show().find("strong").text(response.message);
@@ -221,12 +226,14 @@
                     $("#extend_storage").parent("div").removeClass("hide");
 
                     break;
-                    ;
                 case 8:
                     $("#extend_count").parent("div").removeClass("hide");
 
                     break;
-                    ;
+                case 9:;
+                case 10:
+                    $("#extend_model_id").parent("div").removeClass("hide");
+                    break;
             }
         });
 
@@ -257,11 +264,13 @@
                 case 7:
                     $("input[name='extendAttribute']").val($("#extend_storage").val());
                     break;
-                    ;
                 case 8:
                     $("input[name='extendAttribute']").val($("#extend_count").val());
                     break;
-                    ;
+                case 9:;
+                case 10:
+                    $("input[name='extendAttribute']").val($("#extend_model_id").val())
+                    break;
             }
 
             //异步提交表单
