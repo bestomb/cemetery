@@ -4,7 +4,6 @@ import com.bestomb.common.Pager;
 import com.bestomb.common.constant.ExceptionMsgConstant;
 import com.bestomb.common.exception.EqianyuanException;
 import com.bestomb.common.request.tombstone.master.photoAlbum.photo.PhotoEditRequest;
-import com.bestomb.common.response.FileResponse;
 import com.bestomb.common.response.PageResponse;
 import com.bestomb.common.response.master.photoAlbum.photo.PhotoBo;
 import com.bestomb.common.util.CalendarUtil;
@@ -56,19 +55,16 @@ public class PhotoServiceImpl implements IPhotoService {
         //检查当前登录会员是否拥有对该陵园的管理权限
         Cemetery cemetery = commonService.hasPermissionsByCemetery(photoEditRequest.getCemeteryId(), photoEditRequest.getMemberId());
 
+        //将纪念人头像文件从临时上传目录移动到持久目录
+        String absoluteDirectory = SessionUtil.getSession().getServletContext().getRealPath("/");
+
         //获得当前陵园剩余容量(bit)
         int remainingStorageSize = cemetery.getRemainingStorageSize();
-        if (remainingStorageSize <= 0 || remainingStorageSize < photoEditRequest.getPhotoFile().getSize()) {
+        long fileSize = FileUtilHandle.getFileSize(absoluteDirectory + SystemConf.FILE_UPLOAD_TEMP_DIRECTORY.toString() + File.separator + photoEditRequest.getPhotoName());
+        if (remainingStorageSize <= 0 || remainingStorageSize < fileSize) {
             logger.info("陵园【" + cemetery.getName() + "】的可用容量不足");
             throw new EqianyuanException(ExceptionMsgConstant.CEMETERY_STORAGE_SIZE_INSUFFICIENT);
         }
-
-        //相片上传
-        FileResponse fileResponse = FileUtilHandle.upload(photoEditRequest.getPhotoFile());
-
-        //扣减陵园剩余容量
-        cemetery.setRemainingStorageSize((int) (remainingStorageSize - photoEditRequest.getPhotoFile().getSize()));
-        cemeteryDao.updateByPrimaryKeySelective(cemetery);
 
         /**
          * 构建相片文件持久化目录地址
@@ -76,17 +72,21 @@ public class PhotoServiceImpl implements IPhotoService {
          */
         String phoptoPath = SystemConf.FILE_UPLOAD_FIXED_DIRECTORY.toString() + File.separator + photoEditRequest.getCemeteryId() + File.separator + photoEditRequest.getMasterId() + File.separator + "photo";
 
+        //扣减陵园剩余容量
+        cemetery.setRemainingStorageSize((int) (remainingStorageSize - fileSize));
+        cemeteryDao.updateByPrimaryKeySelective(cemetery);
+
         //插入相片数据
         Photo photo = new Photo();
         photo.setName(photoEditRequest.getName());
         photo.setAlbumId(photoEditRequest.getAlbumId());
-        photo.setFileSize((int) photoEditRequest.getPhotoFile().getSize());
-        photo.setUrl(phoptoPath + File.separator + fileResponse.getFileName());
+        photo.setFileSize((int) fileSize);
+        photo.setUrl(phoptoPath + File.separator + photoEditRequest.getPhotoName());
         photo.setCreateTime(CalendarUtil.getSystemSeconds());
         photoDao.insertSelective(photo);
 
         //将相片文件从临时上传目录移动到持久目录
-        FileUtilHandle.moveFile(fileResponse.getFilePath(), phoptoPath);
+        FileUtilHandle.moveFile(absoluteDirectory + SystemConf.FILE_UPLOAD_TEMP_DIRECTORY.toString() + File.separator + photoEditRequest.getPhotoName(), phoptoPath);
     }
 
     /**

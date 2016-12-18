@@ -168,4 +168,26 @@ public class FileUtilHandle {
             throw new EqianyuanException(ExceptionMsgConstant.FILE_DELETE_ERROR);
         }
     }
+
+    /**
+     * 获取文件体积
+     *
+     * @param filePath
+     * @return
+     * @throws EqianyuanException
+     */
+    public static long getFileSize(String filePath) throws EqianyuanException {
+        if (StringUtils.isEmpty(filePath)) {
+            logger.info("deleteFile fail , because filePath is empty");
+            return 0;
+        }
+
+        File file = new File(filePath);
+        if (!file.exists() || !file.isFile()) {
+            logger.info("deleteFile fail , because file no exists");
+            return 0;
+        }
+
+        return file.length();
+    }
 }

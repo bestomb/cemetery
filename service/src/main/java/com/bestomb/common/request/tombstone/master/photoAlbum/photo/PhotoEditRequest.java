@@ -12,6 +12,8 @@ public class PhotoEditRequest {
     //相片文件
     private MultipartFile photoFile;
 
+    private String photoName;
+
     //相片归属相册编号
     private String albumId;
 
@@ -100,5 +102,13 @@ public class PhotoEditRequest {
 
     public void setMasterId(String masterId) {
         this.masterId = masterId;
+    }
+
+    public String getPhotoName() {
+        return photoName;
+    }
+
+    public void setPhotoName(String photoName) {
+        this.photoName = photoName;
     }
 }

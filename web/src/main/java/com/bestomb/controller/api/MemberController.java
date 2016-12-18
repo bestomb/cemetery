@@ -128,7 +128,7 @@ public class MemberController extends BaseController {
      */
     @RequestMapping(value = "/edit", method = {RequestMethod.PUT, RequestMethod.POST})
     @ResponseBody
-    public ServerResponse editMemberInfo(@RequestBody MemberAccount memberAccount) throws EqianyuanException {
+    public ServerResponse editMemberInfo(MemberAccount memberAccount) throws EqianyuanException {
         // 从session池中获取系统用户信息
         memberAccount.setMemberId(getLoginMember().getMemberId());
         boolean flag = memberService.edit(memberAccount);
@@ -257,7 +257,7 @@ public class MemberController extends BaseController {
      */
     @RequestMapping(value = "/backpackGoods/{id}", method = {RequestMethod.GET, RequestMethod.POST})
     @ResponseBody
-    public ServerResponse getBackpackGoodsDetail(@PathVariable String id, @RequestBody Backpack backpack) throws EqianyuanException {
+    public ServerResponse getBackpackGoodsDetail(@PathVariable String id, Backpack backpack) throws EqianyuanException {
         backpack.setGoodsId(id);
         Object goods = memberService.getBackpackGoodsDetail(backpack);
         return new ServerResponse.ResponseBuilder().data(goods).build();
@@ -288,7 +288,7 @@ public class MemberController extends BaseController {
      */
     @RequestMapping(value = "/backpackGoods/sell", method = {RequestMethod.GET, RequestMethod.POST})
     @ResponseBody
-    public ServerResponse sellBackpackGoods(@RequestBody SellGoods sellGoods) throws EqianyuanException {
+    public ServerResponse sellBackpackGoods(SellGoods sellGoods) throws EqianyuanException {
         int memberId = getLoginMember().getMemberId();
         sellGoods.setMemberId(memberId);
         boolean flag = memberService.sellBackpackGoods(sellGoods);

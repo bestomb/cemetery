@@ -1,15 +1,5 @@
 package com.bestomb.sevice.api;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.apache.log4j.Logger;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
-import org.springframework.util.ObjectUtils;
-
 import com.bestomb.common.Pager;
 import com.bestomb.common.constant.ExceptionMsgConstant;
 import com.bestomb.common.exception.EqianyuanException;
@@ -27,6 +17,15 @@ import com.bestomb.common.util.yamlMapper.SystemConf;
 import com.bestomb.entity.MemberAuthorization;
 import com.bestomb.service.IAuthService;
 import com.bestomb.service.ICemeteryService;
+import org.apache.log4j.Logger;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
+import org.springframework.util.ObjectUtils;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 网站陵园业务调用类
@@ -34,9 +33,9 @@ import com.bestomb.service.ICemeteryService;
  */
 @Service
 public class WebsiteCemeteryService {
-	
-	private Logger logger = Logger.getLogger(this.getClass());
-	
+
+    private Logger logger = Logger.getLogger(this.getClass());
+
     @Autowired
     private ICemeteryService cemeteryService;
     @Autowired
@@ -69,7 +68,7 @@ public class WebsiteCemeteryService {
      * @return
      */
     @SuppressWarnings("unchecked")
-	public PageResponse getListByArea(CemeteryByAreaListRequest cemeteryByAreaListRequest, int pageNo, int pageSize) throws EqianyuanException {
+    public PageResponse getListByArea(CemeteryByAreaListRequest cemeteryByAreaListRequest, int pageNo, int pageSize) throws EqianyuanException {
         PageResponse pageResponse = cemeteryService.getListByArea(cemeteryByAreaListRequest, pageNo, pageSize);
         List<CemeteryBo> cemeteryBos = (List<CemeteryBo>) pageResponse.getList();
         if (!CollectionUtils.isEmpty(cemeteryBos)) {
@@ -89,7 +88,7 @@ public class WebsiteCemeteryService {
     public PageResponse getListByCemetery(String cemeteryId, int pageNo, int pageSize) throws EqianyuanException {
         PageResponse pageResponse = cemeteryService.getListByCemeteryId(cemeteryId, pageNo, pageSize);
         @SuppressWarnings("unchecked")
-		List<CemeteryBo> cemeteryBos = (List<CemeteryBo>) pageResponse.getList();
+        List<CemeteryBo> cemeteryBos = (List<CemeteryBo>) pageResponse.getList();
         if (!CollectionUtils.isEmpty(cemeteryBos)) {
             setListByPageResponse(pageResponse, cemeteryBos);
         }
@@ -109,7 +108,7 @@ public class WebsiteCemeteryService {
     public PageResponse arbitraryDoor(CemeteryByAreaListRequest cemeteryByAreaListRequest, String behavior, String pageNo, int pageSize) throws EqianyuanException {
         PageResponse pageResponse = cemeteryService.getListByArbitraryDoor(cemeteryByAreaListRequest, behavior, pageNo, pageSize);
         @SuppressWarnings("unchecked")
-		List<CemeteryBo> cemeteryBos = (List<CemeteryBo>) pageResponse.getList();
+        List<CemeteryBo> cemeteryBos = (List<CemeteryBo>) pageResponse.getList();
         if (!CollectionUtils.isEmpty(cemeteryBos)) {
             setListByPageResponse(pageResponse, cemeteryBos);
         }
@@ -175,47 +174,60 @@ public class WebsiteCemeteryService {
 
         pageResponse.setList(cemeteryByAreaVos);
     }
-    
+
     /***
      * 授权他人管理陵园
+     *
      * @param MemberAuthorization
      * @return
      * @throws EqianyuanException
      */
-    public boolean authToMember(MemberAuthorization memberAuth) throws EqianyuanException{
-    	return authService.authCemeteryToMember(memberAuth);
+    public boolean authToMember(MemberAuthorization memberAuth) throws EqianyuanException {
+        return authService.authCemeteryToMember(memberAuth);
     }
-    
+
     /***
      * 根据当前会员ID获取已授权会员分页列表
+     *
      * @param memberId
      * @param page
      * @return
      * @throws EqianyuanException
      */
     public List<MemberAuthorization> getAuthMembersPageList(int memberId, Pager page) throws EqianyuanException {
-    	// 查询当前会员拥有的陵园
-    	List<CemeteryBo> cemeteryBos = cemeteryService.getListByMemberId(memberId);
-		if (ObjectUtils.isEmpty(cemeteryBos)) {
-			logger.warn("会员ID "+memberId+" 未拥有任何陵园");
-			throw new EqianyuanException(ExceptionMsgConstant.CEMETERY_DATA_NOT_EXISTS); 
-		}
-		List<Integer> cemeteryIds = new ArrayList<Integer>();
-		for (CemeteryBo cemeteryBo : cemeteryBos) {
-			cemeteryIds.add(cemeteryBo.getId());
-		}
-		
-		return authService.getAuthMembersPageList(cemeteryIds, page);
+        // 查询当前会员拥有的陵园
+        List<CemeteryBo> cemeteryBos = cemeteryService.getListByMemberId(memberId);
+        if (ObjectUtils.isEmpty(cemeteryBos)) {
+            logger.warn("会员ID " + memberId + " 未拥有任何陵园");
+            throw new EqianyuanException(ExceptionMsgConstant.CEMETERY_DATA_NOT_EXISTS);
+        }
+        List<Integer> cemeteryIds = new ArrayList<Integer>();
+        for (CemeteryBo cemeteryBo : cemeteryBos) {
+            cemeteryIds.add(cemeteryBo.getId());
+        }
+
+        return authService.getAuthMembersPageList(cemeteryIds, page);
     }
-    
+
     /***
      * 回收给会员代管理陵园的权限
+     *
      * @param id
      * @return
      * @throws EqianyuanException
      */
-    public boolean removeCemeteryAuthToMember(String id) throws EqianyuanException{
-    	return authService.removeCemeteryAuthToMember(id);
+    public boolean removeCemeteryAuthToMember(String id) throws EqianyuanException {
+        return authService.removeCemeteryAuthToMember(id);
     }
-    
+
+    /**
+     * 检查当前系统登录会员是否拥有对陵园的管理权限
+     *
+     * @param cemeteryId
+     * @param memberId
+     * @return
+     */
+    public boolean hasOperationAuth(String cemeteryId, Integer memberId) {
+        return authService.hasOperationAuth(cemeteryId, memberId);
+    }
 }

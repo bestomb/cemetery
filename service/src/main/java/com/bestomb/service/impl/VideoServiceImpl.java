@@ -4,7 +4,6 @@ import com.bestomb.common.Pager;
 import com.bestomb.common.constant.ExceptionMsgConstant;
 import com.bestomb.common.exception.EqianyuanException;
 import com.bestomb.common.request.tombstone.master.videoAlbum.video.VideoEditRequest;
-import com.bestomb.common.response.FileResponse;
 import com.bestomb.common.response.PageResponse;
 import com.bestomb.common.response.master.videoAlbum.video.VideoBo;
 import com.bestomb.common.util.CalendarUtil;
@@ -56,18 +55,19 @@ public class VideoServiceImpl implements IVideoService {
         //检查当前登录会员是否拥有对该陵园的管理权限
         Cemetery cemetery = commonService.hasPermissionsByCemetery(videoEditRequest.getCemeteryId(), videoEditRequest.getMemberId());
 
+        //将纪念人头像文件从临时上传目录移动到持久目录
+        String absoluteDirectory = SessionUtil.getSession().getServletContext().getRealPath("/");
+
         //获得当前陵园剩余容量(bit)
         int remainingStorageSize = cemetery.getRemainingStorageSize();
-        if (remainingStorageSize <= 0 || remainingStorageSize < videoEditRequest.getVideoFile().getSize()) {
+        long fileSize = FileUtilHandle.getFileSize(absoluteDirectory + SystemConf.FILE_UPLOAD_TEMP_DIRECTORY.toString() + File.separator + videoEditRequest.getVideoName());
+        if (remainingStorageSize <= 0 || remainingStorageSize < fileSize) {
             logger.info("陵园【" + cemetery.getName() + "】的可用容量不足");
             throw new EqianyuanException(ExceptionMsgConstant.CEMETERY_STORAGE_SIZE_INSUFFICIENT);
         }
 
-        //视频上传
-        FileResponse fileResponse = FileUtilHandle.upload(videoEditRequest.getVideoFile());
-
         //扣减陵园剩余容量
-        cemetery.setRemainingStorageSize((int) (remainingStorageSize - videoEditRequest.getVideoFile().getSize()));
+        cemetery.setRemainingStorageSize((int) (remainingStorageSize - fileSize));
         cemeteryDao.updateByPrimaryKeySelective(cemetery);
 
         /**
@@ -81,13 +81,13 @@ public class VideoServiceImpl implements IVideoService {
         Video video = new Video();
         video.setName(videoEditRequest.getName());
         video.setAlbumId(videoEditRequest.getAlbumId());
-        video.setFileSize((int) videoEditRequest.getVideoFile().getSize());
-        video.setUrl(videoPath + File.separator + fileResponse.getFileName());
+        video.setFileSize((int) fileSize);
+        video.setUrl(videoPath + File.separator + videoEditRequest.getVideoName());
         video.setCreateTime(CalendarUtil.getSystemSeconds());
         videoDao.insertSelective(video);
 
         //将视频文件从临时上传目录移动到持久目录
-        FileUtilHandle.moveFile(fileResponse.getFilePath(), videoPath);
+        FileUtilHandle.moveFile(absoluteDirectory + SystemConf.FILE_UPLOAD_TEMP_DIRECTORY.toString() + File.separator + videoEditRequest.getVideoName(), videoPath);
     }
 
     /**

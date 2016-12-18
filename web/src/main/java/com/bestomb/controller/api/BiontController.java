@@ -36,7 +36,7 @@ public class BiontController extends BaseController {
      */
     @RequestMapping(value = "/bionts", method = {RequestMethod.GET, RequestMethod.POST})
     @ResponseBody
-    public ServerResponse getBiontPageList(@RequestBody Biont biont, @ModelAttribute Pager page) throws EqianyuanException {
+    public ServerResponse getBiontPageList(Biont biont, Pager page) throws EqianyuanException {
         PageResponse pageResponse = biontService.getPageList(biont, page);
         return new ServerResponse.ResponseBuilder().data(pageResponse).build();
     }
@@ -64,7 +64,7 @@ public class BiontController extends BaseController {
      */
     @RequestMapping(value = "/bionts/upgrade", method = {RequestMethod.GET, RequestMethod.POST})
     @ResponseBody
-    public ServerResponse upgrade(@RequestBody Biont biont) throws EqianyuanException {
+    public ServerResponse upgrade(Biont biont) throws EqianyuanException {
         boolean flag = biontService.upgrade(biont);
         return new ServerResponse.ResponseBuilder().data(flag).build();
     }
@@ -78,7 +78,7 @@ public class BiontController extends BaseController {
      */
     @RequestMapping(value = "/bionts/pickUp", method = {RequestMethod.GET, RequestMethod.POST})
     @ResponseBody
-    public ServerResponse pickUp(@RequestBody Biont biont) throws EqianyuanException {
+    public ServerResponse pickUp(Biont biont) throws EqianyuanException {
         int memberId = getLoginMember().getMemberId();
         boolean flag = biontService.pickUp(biont, memberId);
         return new ServerResponse.ResponseBuilder().data(flag).build();

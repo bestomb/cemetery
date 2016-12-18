@@ -33,6 +33,8 @@ public class MasterEditRequest {
     //纪念人头像附件
     private MultipartFile portraitFile;
 
+    private String portraitName;
+
     //墓碑所属陵园编号
     private Integer cemeteryId;
 
@@ -133,5 +135,13 @@ public class MasterEditRequest {
 
     public void setAge(Integer age) {
         this.age = age;
+    }
+
+    public String getPortraitName() {
+        return portraitName;
+    }
+
+    public void setPortraitName(String portraitName) {
+        this.portraitName = portraitName;
     }
 }

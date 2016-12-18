@@ -4,7 +4,6 @@ import com.bestomb.common.Page;
 import com.bestomb.common.constant.ExceptionMsgConstant;
 import com.bestomb.common.exception.EqianyuanException;
 import com.bestomb.common.request.tombstone.master.MasterEditRequest;
-import com.bestomb.common.response.FileResponse;
 import com.bestomb.common.response.PageResponse;
 import com.bestomb.common.response.master.MasterBo;
 import com.bestomb.common.util.FileUtilHandle;
@@ -156,19 +155,29 @@ public class MasterServiceImpl implements IMasterService {
         master.setLastWish(masterEditRequest.getLastWish());
         master.setAge(masterEditRequest.getAge());
 
-        if (!ObjectUtils.isEmpty(masterEditRequest.getPortraitFile())) {
-            //纪念人头像上传
-            FileResponse fileResponse = FileUtilHandle.upload(masterEditRequest.getPortraitFile());
+//        if (!ObjectUtils.isEmpty(masterEditRequest.getPortraitFile())) {
+//            //纪念人头像上传
+//            FileResponse fileResponse = FileUtilHandle.upload(masterEditRequest.getPortraitFile());
+//
+//            /**
+//             * 构建头像文件持久化目录地址
+//             * 目录结构：持久化上传目录/陵园编号/master_portrait/文件
+//             */
+//            String portraitPath = SystemConf.FILE_UPLOAD_FIXED_DIRECTORY.toString() + File.separator + masterEditRequest.getCemeteryId() + File.separator + "master_portrait";
+//            master.setPortrait(portraitPath + File.separator + fileResponse.getFileName());
+//            //将纪念人头像文件从临时上传目录移动到持久目录
+//            FileUtilHandle.moveFile(fileResponse.getFilePath(), portraitPath);
+//        }
 
-            /**
-             * 构建头像文件持久化目录地址
-             * 目录结构：持久化上传目录/陵园编号/master_portrait/文件
-             */
-            String portraitPath = SystemConf.FILE_UPLOAD_FIXED_DIRECTORY.toString() + File.separator + masterEditRequest.getCemeteryId() + File.separator + "master_portrait";
-            master.setPortrait(portraitPath + File.separator + fileResponse.getFileName());
-            //将纪念人头像文件从临时上传目录移动到持久目录
-            FileUtilHandle.moveFile(fileResponse.getFilePath(), portraitPath);
-        }
+        /**
+         * 构建头像文件持久化目录地址
+         * 目录结构：持久化上传目录/陵园编号/master_portrait/文件
+         */
+        String portraitPath = SystemConf.FILE_UPLOAD_FIXED_DIRECTORY.toString() + File.separator + masterEditRequest.getCemeteryId() + File.separator + "master_portrait";
+        master.setPortrait(portraitPath + File.separator + masterEditRequest.getPortraitName());
+        //将纪念人头像文件从临时上传目录移动到持久目录
+        String absoluteDirectory = SessionUtil.getSession().getServletContext().getRealPath("/");
+        FileUtilHandle.moveFile(absoluteDirectory + SystemConf.FILE_UPLOAD_TEMP_DIRECTORY.toString() + File.separator + masterEditRequest.getPortraitName(), portraitPath);
 
         //持久化纪念人数据
         masterDao.insertSelective(master);
@@ -192,23 +201,25 @@ public class MasterServiceImpl implements IMasterService {
             throw new EqianyuanException(ExceptionMsgConstant.CEMETERY_MASTER_DATA_NOT_EXISTS);
         }
 
-        //获取就头像地址信息
-        String oldPortrait = master.getPortrait();
-
         /**
          * 构建头像文件持久化目录地址
          * 目录结构：持久化上传目录/陵园编号/master_portrait/文件
          */
         String portraitPath = SystemConf.FILE_UPLOAD_FIXED_DIRECTORY.toString() + File.separator + masterEditRequest.getCemeteryId() + File.separator + "master_portrait";
 
-        FileResponse fileResponse = null;
-        try {
-            //纪念人头像上传
-            fileResponse = FileUtilHandle.upload(masterEditRequest.getPortraitFile());
-            master.setPortrait(portraitPath + File.separator + fileResponse.getFileName());
-        } catch (EqianyuanException e) {
-            logger.info("纪念人头像上传失败");
-        }
+        //获取旧头像地址信息
+        String oldPortrait = master.getPortrait();
+        //新头像地址
+        String newProtrait = portraitPath + File.separator + masterEditRequest.getPortraitName();
+
+//        FileResponse fileResponse = null;
+//        try {
+//            //纪念人头像上传
+//            fileResponse = FileUtilHandle.upload(masterEditRequest.getPortraitFile());
+//            master.setPortrait(portraitPath + File.separator + fileResponse.getFileName());
+//        } catch (EqianyuanException e) {
+//            logger.info("纪念人头像上传失败");
+//        }
 
         master.setSort(masterEditRequest.getSort());
         master.setName(masterEditRequest.getName());
@@ -220,9 +231,11 @@ public class MasterServiceImpl implements IMasterService {
         //持久化纪念人数据
         masterDao.updateByPrimaryKeySelective(master);
 
-        if (fileResponse != null) {
+        //检查新老图片信息是否一致，不一致说明有更新
+        if (newProtrait.equals(oldPortrait)) {
             //将纪念人头像文件从临时上传目录移动到持久目录
-            FileUtilHandle.moveFile(fileResponse.getFilePath(), portraitPath);
+            String absoluteDirectory = SessionUtil.getSession().getServletContext().getRealPath("/");
+            FileUtilHandle.moveFile(absoluteDirectory + SystemConf.FILE_UPLOAD_TEMP_DIRECTORY.toString() + File.separator + masterEditRequest.getPortraitName(), portraitPath);
             //将纪念人旧头像文件从持久目录删除
             FileUtilHandle.deleteFile(SessionUtil.getSession().getServletContext().getRealPath("/") + oldPortrait);
         }

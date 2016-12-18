@@ -51,7 +51,7 @@ public class MallController extends BaseController {
      */
     @RequestMapping(value="/goods/{id}", method={RequestMethod.GET, RequestMethod.POST})
     @ResponseBody
-    public ServerResponse getGoodsDetail(@PathVariable String id, @RequestBody Mall mall) throws EqianyuanException {
+    public ServerResponse getGoodsDetail(@PathVariable String id, Mall mall) throws EqianyuanException {
     	mall.setGoodsId(id);
     	Object goods = mallService.getGoodsDetail(mall);
     	return new ServerResponse.ResponseBuilder().data(goods).build();

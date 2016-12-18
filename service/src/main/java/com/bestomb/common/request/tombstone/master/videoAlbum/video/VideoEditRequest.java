@@ -10,6 +10,8 @@ public class VideoEditRequest {
     //视频文件
     private MultipartFile videoFile;
 
+    private String videoName;
+
     private String albumId;
 
     private Integer createTime;
@@ -95,5 +97,13 @@ public class VideoEditRequest {
 
     public void setMasterId(String masterId) {
         this.masterId = masterId;
+    }
+
+    public String getVideoName() {
+        return videoName;
+    }
+
+    public void setVideoName(String videoName) {
+        this.videoName = videoName;
     }
 }
