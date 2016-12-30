@@ -209,9 +209,9 @@ public class WebsiteCemeteryController extends BaseController {
      * @param cemeteryId
      * @return
      */
-    @RequestMapping(value = "/hasOperationAuth/{cemeteryId}")
+    @RequestMapping(value = "/hasOperationAuth")
     @ResponseBody
-    public boolean hasOperationAuth(@PathVariable String cemeteryId) {
+    public boolean hasOperationAuth(String cemeteryId) {
         MemberLoginVo memberLoginVo = (MemberLoginVo) SessionUtil.getAttribute(SystemConf.WEBSITE_SESSION_MEMBER.toString());
         return websiteCemeteryService.hasOperationAuth(cemeteryId, memberLoginVo.getMemberId());
     }
