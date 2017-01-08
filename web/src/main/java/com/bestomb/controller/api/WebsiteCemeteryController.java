@@ -212,7 +212,7 @@ public class WebsiteCemeteryController extends BaseController {
     @RequestMapping(value = "/hasOperationAuth")
     @ResponseBody
     public boolean hasOperationAuth(String cemeteryId) {
-        MemberLoginVo memberLoginVo = (MemberLoginVo) SessionUtil.getAttribute(SystemConf.WEBSITE_SESSION_MEMBER.toString());
+        MemberLoginVo memberLoginVo = (MemberLoginVo) SessionUtil.getAttribute(SessionContextUtil.getInstance().getSession(SessionUtil.getSessionByHeader()), SystemConf.WEBSITE_SESSION_MEMBER.toString());
         return websiteCemeteryService.hasOperationAuth(cemeteryId, memberLoginVo.getMemberId());
     }
 

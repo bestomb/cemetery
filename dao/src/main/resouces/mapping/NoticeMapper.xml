@@ -119,7 +119,9 @@
   </select>
   <select id="selectByPagination" resultMap="BaseResultMap">
     select
-    <include refid="Base_Column_List"/>
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
     from notice
     <where>
       <if test="cemetery_id != null and cemetery_id != ''">

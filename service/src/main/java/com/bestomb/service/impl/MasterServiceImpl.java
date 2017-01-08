@@ -228,8 +228,6 @@ public class MasterServiceImpl implements IMasterService {
         master.setLifeIntroduce(masterEditRequest.getLifeIntroduce());
         master.setLastWish(masterEditRequest.getLastWish());
         master.setAge(masterEditRequest.getAge());
-        //持久化纪念人数据
-        masterDao.updateByPrimaryKeySelective(master);
 
         //检查新老图片信息是否一致，不一致说明有更新
         if (!newProtrait.equals(oldPortrait)) {
@@ -238,7 +236,11 @@ public class MasterServiceImpl implements IMasterService {
             FileUtilHandle.moveFile(absoluteDirectory + SystemConf.FILE_UPLOAD_TEMP_DIRECTORY.toString() + File.separator + masterEditRequest.getPortraitName(), portraitPath);
             //将纪念人旧头像文件从持久目录删除
             FileUtilHandle.deleteFile(SessionUtil.getSession().getServletContext().getRealPath("/") + oldPortrait);
+            master.setPortrait(newProtrait);
         }
+
+        //持久化纪念人数据
+        masterDao.updateByPrimaryKeySelective(master);
     }
 
     /**
