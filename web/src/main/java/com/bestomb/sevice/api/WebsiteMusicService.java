@@ -70,7 +70,7 @@ public class WebsiteMusicService {
      * @param cemeteryId
      * @throws EqianyuanException
      */
-    public void uploadMusic(MultipartFile musicFile, String name, String cemeteryId) throws EqianyuanException {
+    public void uploadMusic(String musicFile, String name, String cemeteryId) throws EqianyuanException {
         musicService.uploadMusic(musicFile, name, cemeteryId, getLoginUserId());
     }
 

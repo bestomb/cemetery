@@ -127,22 +127,21 @@ public class MusicServiceImpl implements IMusicService {
      * @throws EqianyuanException
      */
     @Transactional(rollbackFor = Exception.class)
-    public void uploadMusic(MultipartFile musicFile, String name, String cemeteryId, Integer memberId) throws EqianyuanException {
+    public void uploadMusic(String musicFile, String name, String cemeteryId, Integer memberId) throws EqianyuanException {
         //检查当前登录会员是否拥有对该陵园的管理权限
         Cemetery cemetery = commonService.hasPermissionsByCemetery(cemeteryId, memberId);
 
         //获得当前陵园剩余容量(bit)
         int remainingStorageSize = cemetery.getRemainingStorageSize();
-        if (remainingStorageSize <= 0 || remainingStorageSize < musicFile.getSize()) {
+        String absoluteDirectory = SessionUtil.getSession().getServletContext().getRealPath("/");
+        long fileSize = FileUtilHandle.getFileSize(absoluteDirectory + SystemConf.FILE_UPLOAD_TEMP_DIRECTORY.toString() + File.separator + musicFile);
+        if (remainingStorageSize <= 0 || remainingStorageSize < fileSize) {
             logger.info("uploadMusic fail , because cemeteryId [" + cemeteryId + "] storage size insufficient");
             throw new EqianyuanException(ExceptionMsgConstant.CEMETERY_STORAGE_SIZE_INSUFFICIENT);
         }
 
-        //音乐上传
-        FileResponse fileResponse = FileUtilHandle.upload(musicFile);
-
         //扣减陵园剩余容量
-        cemetery.setRemainingStorageSize((int) (remainingStorageSize - musicFile.getSize()));
+        cemetery.setRemainingStorageSize((int) (remainingStorageSize - fileSize));
         cemeteryDao.updateByPrimaryKeySelective(cemetery);
 
         /**
@@ -155,12 +154,12 @@ public class MusicServiceImpl implements IMusicService {
         Music music = new Music();
         music.setName(name);
         music.setCemeteryId(cemeteryId);
-        music.setFileSize((int) musicFile.getSize());
-        music.setFileAddress(musicPath + File.separator + fileResponse.getFileName());
+        music.setFileSize((int)fileSize);
+        music.setFileAddress(musicPath + File.separator + musicFile);
         music.setType(2);
         musicDao.insertSelective(music);
 
         //将音乐文件从临时上传目录移动到持久目录
-        FileUtilHandle.moveFile(fileResponse.getFilePath(), musicPath);
+        FileUtilHandle.moveFile(absoluteDirectory + SystemConf.FILE_UPLOAD_TEMP_DIRECTORY.toString() + File.separator + musicFile, musicPath);
     }
 }

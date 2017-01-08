@@ -64,7 +64,7 @@ public class WebsiteMusicController extends BaseController {
      */
     @RequestMapping("/uploadMusic")
     @ResponseBody
-    public ServerResponse uploadMusic(MultipartFile musicFile,
+    public ServerResponse uploadMusic(String musicFile,
                                       String name,
                                       String cemeteryId) throws EqianyuanException {
         websiteMusicService.uploadMusic(musicFile, name, cemeteryId);

@@ -232,7 +232,7 @@ public class MasterServiceImpl implements IMasterService {
         masterDao.updateByPrimaryKeySelective(master);
 
         //检查新老图片信息是否一致，不一致说明有更新
-        if (newProtrait.equals(oldPortrait)) {
+        if (!newProtrait.equals(oldPortrait)) {
             //将纪念人头像文件从临时上传目录移动到持久目录
             String absoluteDirectory = SessionUtil.getSession().getServletContext().getRealPath("/");
             FileUtilHandle.moveFile(absoluteDirectory + SystemConf.FILE_UPLOAD_TEMP_DIRECTORY.toString() + File.separator + masterEditRequest.getPortraitName(), portraitPath);

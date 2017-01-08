@@ -41,7 +41,7 @@ public interface IMusicService {
      * @param memberId
      * @throws EqianyuanException
      */
-    void uploadMusic(MultipartFile musicFile, String name, String cemeteryId, Integer memberId) throws EqianyuanException;
+    void uploadMusic(String musicFile, String name, String cemeteryId, Integer memberId) throws EqianyuanException;
 
 
 }
