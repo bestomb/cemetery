@@ -33,10 +33,11 @@
         c.member_id, c.is_open, c.remaining_storage_size, c.storage_size, c.create_time
         ,m.file_address
         from
-        cemetery c LEFT JOIN goods_use_relat gur on (c.id = gur.object_id)
+        cemetery c LEFT JOIN goods_use_relat gur on (c.id = gur.object_id and gur.type=1)
         LEFT JOIN goods_official go on (gur.goods_id = go.id)
         left JOIN model m on (go.extend_attribute = m.id)
         where c.id = #{id,jdbcType=INTEGER}
+        group by c.id
     </select>
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from cemetery
@@ -217,7 +218,7 @@
         c.member_id, c.is_open, c.remaining_storage_size, c.storage_size, c.create_time
         ,m.file_address modelAddress
         from
-        cemetery c LEFT JOIN goods_use_relat gur on (c.id = gur.object_id)
+        cemetery c LEFT JOIN goods_use_relat gur on (c.id = gur.object_id and gur.type=1)
         LEFT JOIN goods_official go on (gur.goods_id = go.id)
         left JOIN model m on (go.extend_attribute = m.id)
         <where>
@@ -225,6 +226,7 @@
                 community_id = #{community_id}
             </if>
         </where>
+        group by c.id
         order by c.create_time asc
         limit ${page.pageNo}, ${page.pageSize}
     </select>
@@ -270,10 +272,11 @@
         c.member_id, c.is_open, c.remaining_storage_size, c.storage_size, c.create_time
         ,m.file_address
         from
-        cemetery c LEFT JOIN goods_use_relat gur on (c.id = gur.object_id)
+        cemetery c LEFT JOIN goods_use_relat gur on (c.id = gur.object_id and gur.type=1)
         LEFT JOIN goods_official go on (gur.goods_id = go.id)
         left JOIN model m on (go.extend_attribute = m.id)
         where c.member_id = ${member_id}
+        group by c.id
         order by c.create_time asc
     </select>
 

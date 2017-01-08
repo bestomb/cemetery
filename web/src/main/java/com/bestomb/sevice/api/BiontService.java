@@ -40,8 +40,8 @@ public class BiontService {
      * @return
      * @throws EqianyuanException
      */
-    public BiontBo getDetail(String goodsId) throws EqianyuanException {
-        return parkService.getDetail(goodsId);
+    public BiontBo getDetail(String id) throws EqianyuanException {
+        return parkService.getDetail(id);
     }
 
 

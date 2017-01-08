@@ -158,7 +158,7 @@ public class BackpackImpl implements IBackpackService {
                     case 5:
                     case 6: {
                         // 类型为3、4、5、6的商品使用后需要插入商品使用信息关联表
-                        String objectId = useGoods.getCemeteryId();
+                        String objectId = useGoods.getMasterId();
                         if(goodsOfficial.getType() != 6){
                             // 如果纪念人编号不为空，则使用纪念人编号
                             if (!StringUtils.isEmpty(useGoods.getMasterId())) {

@@ -175,8 +175,8 @@
     <select id="getDetail" resultMap="ResultMapWithBiont" parameterType="java.lang.String">
 	  	select a.id, a.name, a.price, a.images, a.model_id, a.type, a.grouping, a.phase, a.description, b.goods_id, b.cemetery_id, b.growing_days, b.life_value, m.file_address
 	    from plants_and_animals a, park b, model m
-	    where a.id = b.goods_id and b.goods_id = #{goodsId, jdbcType=VARCHAR}
-	    a.model_id = m.id
+	    where a.id = b.goods_id and b.id = #{id, jdbcType=VARCHAR}
+	    and a.model_id = m.id
   </select>
 
     <!-- 根据商品编号集合查找商品信息集合 -->

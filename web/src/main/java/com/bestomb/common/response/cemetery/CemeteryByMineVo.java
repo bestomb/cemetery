@@ -12,6 +12,8 @@ public class CemeteryByMineVo {
 
     private String createTimeForStr;
 
+    private String modelAddress;
+
     public Integer getId() {
         return id;
     }
@@ -42,5 +44,13 @@ public class CemeteryByMineVo {
 
     public void setCreateTimeForStr(String createTimeForStr) {
         this.createTimeForStr = createTimeForStr;
+    }
+
+    public String getModelAddress() {
+        return modelAddress;
+    }
+
+    public void setModelAddress(String modelAddress) {
+        this.modelAddress = modelAddress;
     }
 }

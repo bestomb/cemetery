@@ -31,7 +31,7 @@ public interface IPlantsAndAnimalsDao {
      * @param biont
      * @return
      */
-    Biont getDetail(String goodsId);
+    Biont getDetail(String id);
 
     int updateByPrimaryKeySelective(PlantsAndAnimals record);
 

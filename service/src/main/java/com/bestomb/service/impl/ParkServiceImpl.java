@@ -58,13 +58,8 @@ public class ParkServiceImpl implements IParkService {
 		return new PageResponse(page,  entityList);
 	}
 
-	public BiontBo getDetail(String goodsId) throws EqianyuanException {
-		// 商品编号是否为空
-		if (ObjectUtils.isEmpty(goodsId)) {
-            logger.warn("getDetail fail , because goodsId is null.");
-            throw new EqianyuanException(ExceptionMsgConstant.GOODSID_IS_EMPTY);
-        }
-		Biont entity = plantsAndAnimalsDao.getDetail(goodsId);
+	public BiontBo getDetail(String id) throws EqianyuanException {
+		Biont entity = plantsAndAnimalsDao.getDetail(id);
 		// 动植物是否存在
 		if (ObjectUtils.isEmpty(entity)) {
             logger.warn("getDetail fail , because data is null.");
