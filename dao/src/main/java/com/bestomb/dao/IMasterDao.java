@@ -50,4 +50,13 @@ public interface IMasterDao {
      * @return
      */
     List<Map<String, String>> getOblationByMasterId(@Param("masterIds") List<String> masterId);
+
+    /**
+     * 时间范围内新增了多少纪念人
+     *
+     * @param beginTime
+     * @param endTime
+     * @return
+     */
+    long countByTime(@Param("beginTime") Integer beginTime, @Param("endTime") Integer endTime);
 }

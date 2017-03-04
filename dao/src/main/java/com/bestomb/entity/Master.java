@@ -17,6 +17,36 @@ public class Master {
 
     private Integer age;
 
+    private String creater;
+
+    private String createTime;
+
+    private Integer dataTime;
+
+    public Integer getDataTime() {
+        return dataTime;
+    }
+
+    public void setDataTime(Integer dataTime) {
+        this.dataTime = dataTime;
+    }
+
+    public String getCreater() {
+        return creater;
+    }
+
+    public void setCreater(String creater) {
+        this.creater = creater;
+    }
+
+    public String getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(String createTime) {
+        this.createTime = createTime;
+    }
+
     public String getId() {
         return id;
     }

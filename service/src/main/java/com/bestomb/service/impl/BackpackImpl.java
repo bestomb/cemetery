@@ -126,13 +126,17 @@ public class BackpackImpl implements IBackpackService {
             if (!ObjectUtils.isEmpty(plantsAndAnimals)) {
                 flag = pushParkAndModifyBackpack(useGoods, entity);
             } else { // 根据不同的商品类型做不同处理。
-                // 1：大门、2：墓碑、3：：祭品（香）、4：祭品（蜡烛）、5：祭品（花）、6：普通祭品、7：扩展陵园存储容量、8：增加可建陵园数、9：动物饲料、10：植物肥料
+                // 1：大门、2：墓碑、3：祭品（香）、4：祭品（蜡烛）、5：祭品（花）、6：普通祭品、7：扩展陵园存储容量、8：增加可建陵园数、9：动物饲料、10：植物肥料、11：祭品（广场）、12：祭品（湖泊）、13：祭品（盆栽植物）、14：祭品（食品）、15：祭品（用品）、16：祭品（金钱）、17：祭品（特色）、18：祭品（守护）、19:：祭品（休闲娱乐）、20：祭品（儿童用品）
                 GoodsOfficialWithBLOBs goodsOfficial = goodsOfficialDao.selectByPrimaryKey(useGoods.getGoodsId());
                 // 使用对象是墓碑，墓碑编号是否为空
                 if (goodsOfficial.getType() == 2 && StringUtils.isEmpty(useGoods.getTombstoneId())) {
                     logger.warn("use fail , because tombstoneId is null.");
                     throw new EqianyuanException(ExceptionMsgConstant.CEMETERY_MASTER_DATA_NOT_EXISTS);
-                } else if ((goodsOfficial.getType() == 3 || goodsOfficial.getType() == 4 || goodsOfficial.getType() == 5) && StringUtils.isEmpty(useGoods.getMasterId())) {
+                } else if ((goodsOfficial.getType() == 3 || goodsOfficial.getType() == 4 || goodsOfficial.getType() == 5
+                        || goodsOfficial.getType() == 6 || goodsOfficial.getType() == 11 || goodsOfficial.getType() == 12
+                        || goodsOfficial.getType() == 13 || goodsOfficial.getType() == 14 || goodsOfficial.getType() == 15
+                        || goodsOfficial.getType() == 16 || goodsOfficial.getType() == 17 || goodsOfficial.getType() == 18
+                        || goodsOfficial.getType() == 19 || goodsOfficial.getType() == 20) && StringUtils.isEmpty(useGoods.getMasterId())) {
                     // 使用对象是纪念人，纪念人编号是否为空
                     logger.warn("use fail , because marstId is null.");
                     throw new EqianyuanException(ExceptionMsgConstant.CEMETERY_MASTER_DATA_NOT_EXISTS);
@@ -156,15 +160,25 @@ public class BackpackImpl implements IBackpackService {
                     case 3:
                     case 4:
                     case 5:
+                    case 11:
+                    case 12:
+                    case 13:
+                    case 14:
+                    case 15:
+                    case 16:
+                    case 17:
+                    case 18:
+                    case 19:
+                    case 20:
                     case 6: {
-                        // 类型为3、4、5、6的商品使用后需要插入商品使用信息关联表
+                        // 类型为3、4、5、6、11、12/13/14/15/16/17/18/19/20的商品使用后需要插入商品使用信息关联表
                         String objectId = useGoods.getMasterId();
-                        if(goodsOfficial.getType() != 6){
-                            // 如果纪念人编号不为空，则使用纪念人编号
-                            if (!StringUtils.isEmpty(useGoods.getMasterId())) {
-                                objectId = useGoods.getMasterId();
-                            }
-                        }
+//                        if(goodsOfficial.getType() != 6){
+//                            // 如果纪念人编号不为空，则使用纪念人编号
+//                            if (!StringUtils.isEmpty(useGoods.getMasterId())) {
+//                                objectId = useGoods.getMasterId();
+//                            }
+//                        }
 
                         GoodsUseRelat goodsUseRelat = new GoodsUseRelat(goodsOfficial.getType(), useGoods.getMemberId(), useGoods.getGoodsId(), objectId, CalendarUtil.getSystemSeconds(), goodsOfficial.getLifecycle());
                         flag = goodsUseRelatDao.insertSelective(goodsUseRelat) > 0;

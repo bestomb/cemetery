@@ -22,4 +22,12 @@ public interface IMemorialRecordDao {
     int countByCondition(@Param("masterId") String masterId);
 
     List<MemorialRecord> selectByCondition(@Param("masterId") String masterId, @Param("page") Pager page);
+
+    /**
+     * 时间范围内陵园参拜总数
+     * @param beginTime
+     * @param endTime
+     * @return
+     */
+    long countByTime(@Param("beginTime") Integer beginTime, @Param("endTime") Integer endTime);
 }

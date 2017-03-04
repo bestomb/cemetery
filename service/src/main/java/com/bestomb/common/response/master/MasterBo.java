@@ -21,6 +21,26 @@ public class MasterBo {
 
     private Integer age;
 
+    private String creater;
+
+    private String createTime;
+
+    public String getCreater() {
+        return creater;
+    }
+
+    public void setCreater(String creater) {
+        this.creater = creater;
+    }
+
+    public String getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(String createTime) {
+        this.createTime = createTime;
+    }
+
     public String getId() {
         return id;
     }

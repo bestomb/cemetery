@@ -224,6 +224,8 @@ public class ExceptionMsgConstant {
     public static final String CEMETERY_LIFE_WORKS_DATA_NOT_EXISTS = "20010031";
     //动植物喂养/饲养失败，不存在对象
     public static final String PARK_OBJECT_IS_EMPTY = "20010032";
+    //墓碑建设时，所建设的位置已经被占用
+    public static final String TOMBSTON_POSITION_IS_NOT_EMPTY = "20010033";
     /***** 陵园 *****/
     
     /***** 留言 *****/

@@ -46,6 +46,13 @@ public class TombstoneServiceImpl implements ITombstoneService {
         //检查当前登录会员是否拥有对该陵园的管理权限
         commonService.hasPermissionsByCemetery(String.valueOf(tombstoneEditRequest.getCemeteryId()), tombstoneEditRequest.getMemberId());
 
+        //根据陵园编号、墓碑种类和所建设墓碑的位置查询该陵园的墓碑类型下的建设位置有没有墓碑数据，如果有数据，则说明这个位置已经被使用，提示无法建设
+        int positionCnt = tombstoneDao.selectByPosition(tombstoneEditRequest.getCemeteryId(), tombstoneEditRequest.getSpecies(), tombstoneEditRequest.getSort());
+        if(positionCnt > 0){
+            logger.info("当前位置已被使用");
+            throw new EqianyuanException(ExceptionMsgConstant.TOMBSTON_POSITION_IS_NOT_EMPTY);
+        }
+
         //构建持久化墓碑数据
         Tombstone tombstone = new Tombstone();
         tombstone.setCemeteryId(tombstoneEditRequest.getCemeteryId());

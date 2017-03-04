@@ -89,6 +89,8 @@
                     }
                     obj.append('<li class="next"><a href="javascript:;">&raquo;</a></li>');
                 }
+
+                obj.append('<li><input type="text" style="width:34px;height:34px;margin-left:5px" id="paging_value"/><input type="button" value="跳转" style="width: 50px;height: 34px;" id="paging_href"/></li>');
             })();
         },
         //绑定事件
@@ -115,6 +117,19 @@
                     ms.fillHtml(obj, {"current": current + 1, "pageCount": args.pageCount});
                     if (typeof(args.backFn) == "function") {
                         args.backFn(current + 1);
+                    }
+                });
+                //跳转
+                obj.on("click", "#paging_href", function(){
+                    var paging_value = $("#paging_value").val();
+                    if(paging_value != ""){
+                        if(paging_value > args.pageCount){
+                            paging_value = args.pageCount;
+                        }
+                        ms.fillHtml(obj, {"current": paging_value, "pageCount": args.pageCount});
+                        if (typeof(args.backFn) == "function") {
+                            args.backFn(paging_value);
+                        }
                     }
                 });
             })();

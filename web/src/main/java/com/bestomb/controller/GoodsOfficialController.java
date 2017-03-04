@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
@@ -32,8 +33,10 @@ public class GoodsOfficialController extends BaseController {
      */
     @RequestMapping("/getList")
     @ResponseBody
-    public ServerResponse getList(@ModelAttribute Pager page) throws EqianyuanException {
-        PageResponse pageResponse = goodsOfficialService.getList(page);
+    public ServerResponse getList(@RequestParam(value = "firstClass", required = false) String firstClass,
+                                  @RequestParam(value = "secondClass", required = false) String secondClass,
+                                  @ModelAttribute Pager page) throws EqianyuanException {
+        PageResponse pageResponse = goodsOfficialService.getList(firstClass, secondClass, page);
         return new ServerResponse.ResponseBuilder().data(pageResponse).build();
     }
 

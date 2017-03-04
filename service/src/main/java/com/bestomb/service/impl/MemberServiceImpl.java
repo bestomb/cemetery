@@ -50,9 +50,10 @@ public class MemberServiceImpl implements IMemberService {
      * @param loginPassword   登录密码
      * @param confirmPassword 确认密码
      * @param inviterId       邀请者编号
+     * @param nickName        昵称
      */
     @Transactional(rollbackFor = Exception.class)
-    public void register(String mobile, String verifyCode, String loginPassword, String confirmPassword, String inviterId) throws EqianyuanException {
+    public void register(String mobile, String verifyCode, String loginPassword, String confirmPassword, String inviterId, String nickName) throws EqianyuanException {
         //手机号码是否为空
         if (StringUtils.isEmpty(mobile)) {
             logger.warn("register fail , because mobile is null.");
@@ -139,7 +140,7 @@ public class MemberServiceImpl implements IMemberService {
             memberAccountIdBuildDao.insertSelective(memberAccountIdBuild);
             Integer memberId = memberAccountIdBuild.getId();
             //如果账号大于9999999，则throw exception
-            if(memberId > 9999999){
+            if (memberId > 9999999) {
                 logger.warn("register fail, because account full.");
                 throw new EqianyuanException(ExceptionMsgConstant.SYSTEM_ERROR);
             }
@@ -164,6 +165,7 @@ public class MemberServiceImpl implements IMemberService {
         memberAccount.setLoginPassword(encryptionPwd);
         memberAccount.setConstructionCount(Integer.parseInt(String.valueOf(constructionCount)));
         memberAccount.setCreateTime(CalendarUtil.getSystemSeconds());
+        memberAccount.setNickName(nickName);
 
         memberAccountDao.insertSelective(memberAccount);
         SessionUtil.removeAttribute(SystemConf.VERIFY_CODE.toString());
@@ -259,33 +261,33 @@ public class MemberServiceImpl implements IMemberService {
         }
         return new PageResponse(pageNo, pageSize, dataCount, memberAccountBoList);
     }
-    
+
     /**
      * 修改会员资料
-     * 
+     *
      * @param memberAccount
      * @return
      * @throws EqianyuanException
      */
-	public int edit(MemberAccount memberAccount) throws EqianyuanException {
-		// 会员编号是否为空
+    public int edit(MemberAccount memberAccount) throws EqianyuanException {
+        // 会员编号是否为空
         if (ObjectUtils.isEmpty(memberAccount.getMemberId())) {
             logger.warn("edit fail , because memberId is null");
             throw new EqianyuanException(ExceptionMsgConstant.MEMBERSHIP_NUMBER_IS_EMPTY);
         }
         // 必填请求参数是否为空
-        if ( memberAccount.isEmptyEditRequest() ) {
-        	logger.warn("edit fail , because necessary requestParam is all null");
-        	throw new EqianyuanException(ExceptionMsgConstant.SYSTEM_LACK_OF_REQUEST_PARAMETER);
-		}
+        if (memberAccount.isEmptyEditRequest()) {
+            logger.warn("edit fail , because necessary requestParam is all null");
+            throw new EqianyuanException(ExceptionMsgConstant.SYSTEM_LACK_OF_REQUEST_PARAMETER);
+        }
         // 登录密码做MD5加密处理
         if (!StringUtils.isEmpty(memberAccount.getLoginPassword())) {
-        	memberAccount.setLoginPassword(Md5Util.MD5By32(StringUtils.lowerCase(memberAccount.getLoginPassword())));
-		}
+            memberAccount.setLoginPassword(Md5Util.MD5By32(StringUtils.lowerCase(memberAccount.getLoginPassword())));
+        }
         // 支付密码做MD5加密处理
         if (!StringUtils.isEmpty(memberAccount.getTradingPassword())) {
-        	memberAccount.setTradingPassword(Md5Util.MD5By32(StringUtils.lowerCase(memberAccount.getTradingPassword())));
+            memberAccount.setTradingPassword(Md5Util.MD5By32(StringUtils.lowerCase(memberAccount.getTradingPassword())));
         }
-		return memberAccountDao.memberEdit(memberAccount);
-	}
+        return memberAccountDao.memberEdit(memberAccount);
+    }
 }

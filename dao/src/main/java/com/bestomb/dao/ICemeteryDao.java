@@ -60,6 +60,7 @@ public interface ICemeteryDao {
 
     /**
      * 根据对象及分页条件获取分页数据集合
+     *
      * @param page
      * @param provinceId
      * @param cityId
@@ -86,10 +87,27 @@ public interface ICemeteryDao {
     List<Cemetery> selectByMemberId(@Param("member_id") Integer memberId);
 
     /**
+     * 根据会员编号和分页条件查询陵园集合
+     *
+     * @param memberId
+     * @return
+     */
+    List<Cemetery> pagingByMemberId(@Param("page") Page page, @Param("member_id") Integer memberId);
+
+    /**
      * 根据陵园编号查询陵园园主编号
      *
      * @param cemeteryIds
      * @return
      */
     List<Cemetery> selectMemberIdByCemeteryIds(@Param("ids") List<Integer> cemeteryIds);
+
+    /**
+     * 根据时间范围统计新增陵园总数
+     *
+     * @param beginTime
+     * @param endTime
+     * @return
+     */
+    long countByTime(@Param("beginTime") Integer beginTime, @Param("endTime") Integer endTime);
 }

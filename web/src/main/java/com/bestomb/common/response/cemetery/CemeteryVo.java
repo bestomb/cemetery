@@ -15,11 +15,20 @@ public class CemeteryVo {
 
     private Integer storageSize;
 
+    //省编号
+    private String provinceId;
+
     //省地址名称
     private String provinceName;
 
+    //市编号
+    private String cityId;
+
     //市地址名称
     private String cityName;
+
+    //区编号
+    private String countyId;
 
     //区地址名称
     private String countyName;
@@ -34,6 +43,30 @@ public class CemeteryVo {
     private String communityName;
 
     private String createTimeForStr;
+
+    public String getProvinceId() {
+        return provinceId;
+    }
+
+    public void setProvinceId(String provinceId) {
+        this.provinceId = provinceId;
+    }
+
+    public String getCityId() {
+        return cityId;
+    }
+
+    public void setCityId(String cityId) {
+        this.cityId = cityId;
+    }
+
+    public String getCountyId() {
+        return countyId;
+    }
+
+    public void setCountyId(String countyId) {
+        this.countyId = countyId;
+    }
 
     public Integer getId() {
         return id;

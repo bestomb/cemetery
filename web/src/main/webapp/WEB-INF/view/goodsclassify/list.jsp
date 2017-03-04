@@ -168,6 +168,36 @@
                                     case 10:
                                         firstClassifyName = "植物肥料";
                                         break;
+                                    case 11:
+                                        firstClassifyName = "祭品（广场）";
+                                        break;
+                                    case 12:
+                                        firstClassifyName = "祭品（湖泊）";
+                                        break;
+                                    case 13:
+                                        firstClassifyName = "祭品（盆栽植物）";
+                                        break;
+                                    case 14:
+                                        firstClassifyName = "祭品（食品）";
+                                        break;
+                                    case 15:
+                                        firstClassifyName = "祭品（用品）";
+                                        break;
+                                    case 16:
+                                        firstClassifyName = "祭品（金钱）";
+                                        break;
+                                    case 17:
+                                        firstClassifyName = "祭品（特色）";
+                                        break;
+                                    case 18:
+                                        firstClassifyName = "祭品（守护）";
+                                        break;
+                                    case 19:
+                                        firstClassifyName = "祭品（休闲娱乐）";
+                                        break;
+                                    case 20:
+                                        firstClassifyName = "祭品（儿童用品）";
+                                        break;
                                 }
 
                                 tableBody += '<tr>'

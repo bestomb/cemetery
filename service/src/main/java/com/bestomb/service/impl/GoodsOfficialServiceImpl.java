@@ -15,6 +15,7 @@ import com.bestomb.entity.GoodsOfficialWithBLOBs;
 import com.bestomb.entity.Mall;
 import com.bestomb.entity.SecondClassificationGoodsRelat;
 import com.bestomb.service.IGoodsOfficialService;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,6 +59,60 @@ public class GoodsOfficialServiceImpl implements IGoodsOfficialService {
             logger.info("pageNo [" + page.getPageNo() + "], pageSize [" + page.getPageSize() + "], 根据条件查询官网商城商品列表无数据");
             return new PageResponse(page, null);
         }
+        List<GoodsOfficialBO> goodsBOList = new ArrayList<GoodsOfficialBO>();
+        for (GoodsOfficialWithBLOBs m : goodsOfficialList) {
+            GoodsOfficialBO goodsBo = new GoodsOfficialBO();
+            BeanUtils.copyProperties(m, goodsBo);
+            goodsBOList.add(goodsBo);
+        }
+        return new PageResponse(page, goodsBOList);
+    }
+
+    /**
+     * 根据商品分类和分页信息查询商品数据
+     *
+     * @param firstClass
+     * @param secondClass
+     * @param page
+     * @return
+     * @throws EqianyuanException
+     */
+    public PageResponse getList(String firstClass, String secondClass, Pager page) throws EqianyuanException {
+        List<GoodsOfficialWithBLOBs> goodsOfficialList = null;
+        if(StringUtils.isEmpty(secondClass)){
+            Mall mall = new Mall();
+            if(!StringUtils.isEmpty(firstClass)){
+                mall.setType(Integer.parseInt(firstClass));
+            }
+
+            int dataCount = goodsOfficialDao.getPageListCount(mall);
+
+            page.setTotalRow(dataCount);
+            if (dataCount <= 0) {
+                logger.info("根据条件查询官网商城商品列表无数据");
+                return new PageResponse(page, null);
+            }
+            goodsOfficialList = goodsOfficialDao.getPageList(mall, page);
+            if (CollectionUtils.isEmpty(goodsOfficialList)) {
+                logger.info("pageNo [" + page.getPageNo() + "], pageSize [" + page.getPageSize() + "], 根据条件查询官网商城商品列表无数据");
+                return new PageResponse(page, null);
+            }
+        }else{
+            //根据二级商品分类查询商品总数
+            int dataCount = goodsOfficialDao.selectCountBySecondClassify(Integer.parseInt(secondClass));
+
+            page.setTotalRow(dataCount);
+            if (dataCount <= 0) {
+                logger.info("根据条件查询官网商城商品列表无数据");
+                return new PageResponse(page, null);
+            }
+            goodsOfficialList = goodsOfficialDao.selectBySecondClassify(Integer.parseInt(secondClass), page);
+            if (CollectionUtils.isEmpty(goodsOfficialList)) {
+                logger.info("pageNo [" + page.getPageNo() + "], pageSize [" + page.getPageSize() + "], 根据条件查询官网商城商品列表无数据");
+                return new PageResponse(page, null);
+            }
+        }
+
         List<GoodsOfficialBO> goodsBOList = new ArrayList<GoodsOfficialBO>();
         for (GoodsOfficialWithBLOBs m : goodsOfficialList) {
             GoodsOfficialBO goodsBo = new GoodsOfficialBO();

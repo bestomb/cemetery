@@ -1,18 +1,5 @@
 package com.bestomb.service.impl;
 
-import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.CollectionUtils;
-import org.springframework.util.ObjectUtils;
-
 import com.bestomb.common.Page;
 import com.bestomb.common.constant.ExceptionMsgConstant;
 import com.bestomb.common.exception.EqianyuanException;
@@ -25,25 +12,22 @@ import com.bestomb.common.util.VIPIDFilterUtil;
 import com.bestomb.common.util.YamlForMapHandleUtil;
 import com.bestomb.common.util.yamlMapper.ClientConf;
 import com.bestomb.common.util.yamlMapper.SystemConf;
-import com.bestomb.dao.ICemeteryDao;
-import com.bestomb.dao.ICemeteryIdBuildDao;
-import com.bestomb.dao.ICityDao;
-import com.bestomb.dao.ICommunityDao;
-import com.bestomb.dao.ICountyDao;
-import com.bestomb.dao.IMemberAccountDao;
-import com.bestomb.dao.IProvinceDao;
-import com.bestomb.dao.ITownDao;
-import com.bestomb.dao.IVillageDao;
-import com.bestomb.entity.Cemetery;
-import com.bestomb.entity.CemeteryIdBuild;
-import com.bestomb.entity.City;
-import com.bestomb.entity.Community;
-import com.bestomb.entity.County;
-import com.bestomb.entity.MemberAccount;
-import com.bestomb.entity.Province;
-import com.bestomb.entity.Town;
-import com.bestomb.entity.Village;
+import com.bestomb.dao.*;
+import com.bestomb.entity.*;
 import com.bestomb.service.ICemeteryService;
+import com.bestomb.service.ITombstoneService;
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
+import org.springframework.util.ObjectUtils;
+
+import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 陵园业务逻辑接口实现类
@@ -95,6 +79,12 @@ public class CemeteryServiceImpl implements ICemeteryService {
 
     @Autowired
     private ICommunityDao communityDao;
+
+    @Autowired
+    private CommonService commonService;
+
+    @Autowired
+    private ITombstoneService tombstoneService;
 
     /**
      * 添加陵园
@@ -436,6 +426,12 @@ public class CemeteryServiceImpl implements ICemeteryService {
             throw new EqianyuanException(ExceptionMsgConstant.GET_CONFIGURATION_ERROR);
         }
 
+        //判断客户端配置初始化陵园容量大小是否存在
+        Object initStorageSize = YamlForMapHandleUtil.getMapByKey(ClientConf.getMap(), ClientConf.Cemetery.init_storage_size.toString());
+        if (ObjectUtils.isEmpty(initStorageSize)) {
+            logger.warn("batchSend fail , because init_storage_size not exists the client-conf.yaml");
+            throw new EqianyuanException(ExceptionMsgConstant.GET_CONFIGURATION_ERROR);
+        }
         //陵园乡内容长度是否超出DB许可长度
         try {
             if (cemeteryByEditRequest.getTownName().getBytes(SystemConf.PLATFORM_CHARSET.toString()).length > CEMETERY_TOWN_NAME_MAX_BYTES_BY_DB) {
@@ -500,6 +496,10 @@ public class CemeteryServiceImpl implements ICemeteryService {
         Cemetery cemetery = new Cemetery();
         BeanUtils.copyProperties(cemeteryByEditRequest, cemetery);
         cemetery.setCreateTime(CalendarUtil.getSystemSeconds());
+        cemetery.setMemberId(Integer.parseInt(cemeteryByEditRequest.getMemberId()));
+        cemetery.setId(Integer.parseInt(cemeteryByEditRequest.getId()));
+        cemetery.setStorageSize(Integer.parseInt(String.valueOf(initStorageSize)));
+        cemetery.setRemainingStorageSize(Integer.parseInt(String.valueOf(initStorageSize)));
 
         //根据区编号和乡名称查询乡数据
         Town town = townDao.selectByName(cemeteryByEditRequest.getCountyId(), cemeteryByEditRequest.getTownName());
@@ -540,7 +540,7 @@ public class CemeteryServiceImpl implements ICemeteryService {
         }
 
         setAddress(cemetery, town, village, community);
-        cemeteryDao.insertSelective(cemetery);
+        cemeteryDao.updateByPrimaryKeySelective(cemetery);
     }
 
     /**
@@ -866,6 +866,47 @@ public class CemeteryServiceImpl implements ICemeteryService {
     }
 
     /**
+     * 分页获取我的陵园集合
+     *
+     * @param memberId 会员编号
+     * @return
+     */
+    public PageResponse pagingByMemberId(Integer memberId, String pageNo, int pageSize) throws EqianyuanException {
+        if (ObjectUtils.isEmpty(memberId)) {
+            logger.info("getMineList fail , because memberId is null");
+            throw new EqianyuanException(ExceptionMsgConstant.MEMBER_NO_AUTHORIZATION_BY_LOGIN);
+        }
+
+        //根据会员编号获取陵园总数
+        Long dataCount = cemeteryDao.countByMemberId(String.valueOf(memberId));
+
+        int page_no = Integer.parseInt(pageNo);
+        Page page = new Page(page_no, pageSize);
+
+        if (ObjectUtils.isEmpty(dataCount)) {
+            logger.info("会员【" + memberId + "】还没有建设陵园");
+            return new PageResponse(page_no, pageSize, dataCount, null);
+        }
+
+        //根据会员编号和分页条件查找陵园集合数据
+        List<Cemetery> cemeteries = cemeteryDao.pagingByMemberId(page, memberId);
+
+        if (CollectionUtils.isEmpty(cemeteries)) {
+            logger.info("pageNo [" + pageNo + "], pageSize [" + pageSize + "], cemetery [" + memberId + "] get Cemetery List is null");
+            return new PageResponse(page_no, pageSize, dataCount, null);
+        }
+
+        List<CemeteryBo> cemeteryBos = new ArrayList<CemeteryBo>();
+        for (Cemetery cemetery : cemeteries) {
+            CemeteryBo cemeteryBo = new CemeteryBo();
+            BeanUtils.copyProperties(cemetery, cemeteryBo);
+            cemeteryBo.setCreateTimeForStr(CalendarUtil.secondsTimeToDateTimeString(cemeteryBo.getCreateTime()));
+            cemeteryBos.add(cemeteryBo);
+        }
+        return new PageResponse(page_no, pageSize, dataCount, cemeteryBos);
+    }
+
+    /**
      * 根据陵园编号获取陵园信息
      *
      * @param cemeteryId
@@ -1110,5 +1151,20 @@ public class CemeteryServiceImpl implements ICemeteryService {
             }
         }
         return new PageResponse(pageNo, pageSize, dataCount, cemeteryBos);
+    }
+
+    /**
+     * 删除陵园
+     * @param cemeteryId
+     * @return
+     * @throws EqianyuanException
+     */
+    public boolean deleteCemetery(Integer memberId, String cemeteryId) throws EqianyuanException {
+        //检查当前登录会员是否拥有对该陵园的管理权限
+        Cemetery cemetery = commonService.hasPermissionsByCemetery(cemeteryId, memberId);
+        cemeteryDao.deleteByPrimaryKey(cemeteryId);
+
+
+        return true;
     }
 }

@@ -115,7 +115,7 @@ public class WebsiteCemeteryController extends BaseController {
     @RequestMapping("/arbitraryDoor")
     @ResponseBody
     public ServerResponse arbitraryDoor(CemeteryByAreaListRequest cemeteryByAreaListRequest, String behavior,
-                                        String pageNo,
+                                        @RequestParam(value = "pageNo", required = false, defaultValue = "1") String pageNo,
                                         @RequestParam(value = "pageSize", required = false, defaultValue = "64") int pageSize) throws EqianyuanException {
         PageResponse pageResponse = websiteCemeteryService.arbitraryDoor(cemeteryByAreaListRequest, behavior, pageNo, pageSize);
         return new ServerResponse.ResponseBuilder().data(pageResponse).build();
@@ -128,9 +128,10 @@ public class WebsiteCemeteryController extends BaseController {
      */
     @RequestMapping("/getMineList")
     @ResponseBody
-    public ServerResponse getMineList() throws EqianyuanException {
-        List<CemeteryByMineVo> cemeteryByMineVos = websiteCemeteryService.getMineList();
-        return new ServerResponse.ResponseBuilder().data(cemeteryByMineVos).build();
+    public ServerResponse getMineList(@RequestParam(value = "pageNo", required = false, defaultValue = "1") String pageNo,
+                                      @RequestParam(value = "pageSize", required = false, defaultValue = "64") int pageSize) throws EqianyuanException {
+        PageResponse pageResponse = websiteCemeteryService.getMineList(pageNo, pageSize);
+        return new ServerResponse.ResponseBuilder().data(pageResponse).build();
     }
 
     /**
@@ -216,4 +217,17 @@ public class WebsiteCemeteryController extends BaseController {
         return websiteCemeteryService.hasOperationAuth(cemeteryId, memberLoginVo.getMemberId());
     }
 
+    /**
+     * 陵园删除
+     *
+     * @param cemeteryId 陵园编号
+     * @return
+     */
+    @RequestMapping(value = "/deleteCemetery")
+    @ResponseBody
+    public ServerResponse deleteCemetery(String cemeteryId) throws  EqianyuanException{
+        MemberLoginVo memberLoginVo = (MemberLoginVo) SessionUtil.getAttribute(SessionContextUtil.getInstance().getSession(SessionUtil.getSessionByHeader()), SystemConf.WEBSITE_SESSION_MEMBER.toString());
+        boolean flag = websiteCemeteryService.deleteCemetery(memberLoginVo.getMemberId(), cemeteryId);
+        return new ServerResponse.ResponseBuilder().data(flag).build();
+    }
 }

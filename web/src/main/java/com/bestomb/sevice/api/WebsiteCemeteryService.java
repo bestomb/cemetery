@@ -120,19 +120,17 @@ public class WebsiteCemeteryService {
      *
      * @return
      */
-    public List<CemeteryByMineVo> getMineList() throws EqianyuanException {
+    public PageResponse getMineList(String pageNo, int pageSize) throws EqianyuanException {
         /**
          * 从session池中获取系统用户信息
          */
         MemberLoginVo memberLoginVo = (MemberLoginVo) SessionUtil.getAttribute(SessionContextUtil.getInstance().getSession(SessionUtil.getSessionByHeader()), SystemConf.WEBSITE_SESSION_MEMBER.toString());
-        List<CemeteryBo> cemeteryBos = cemeteryService.getListByMemberId(memberLoginVo.getMemberId());
-        List<CemeteryByMineVo> cemeteryByMineVos = new ArrayList<CemeteryByMineVo>();
-        for (CemeteryBo cemeteryBo : cemeteryBos) {
-            CemeteryByMineVo cemeteryByMineVo = new CemeteryByMineVo();
-            BeanUtils.copyProperties(cemeteryBo, cemeteryByMineVo);
-            cemeteryByMineVos.add(cemeteryByMineVo);
+        PageResponse pageResponse = cemeteryService.pagingByMemberId(memberLoginVo.getMemberId(), pageNo, pageSize);
+        List<CemeteryBo> cemeteryBos = (List<CemeteryBo>) pageResponse.getList();
+        if (!CollectionUtils.isEmpty(cemeteryBos)) {
+            setListByPageResponse(pageResponse, cemeteryBos);
         }
-        return cemeteryByMineVos;
+        return pageResponse;
     }
 
     /**
@@ -229,5 +227,16 @@ public class WebsiteCemeteryService {
      */
     public boolean hasOperationAuth(String cemeteryId, Integer memberId) {
         return authService.hasOperationAuth(cemeteryId, memberId);
+    }
+
+    /**
+     * 陵园删除
+     *
+     * @param cemeteryId
+     * @return
+     * @throws EqianyuanException
+     */
+    public boolean deleteCemetery(Integer memberId, String cemeteryId) throws EqianyuanException {
+        return cemeteryService.deleteCemetery(memberId, cemeteryId);
     }
 }

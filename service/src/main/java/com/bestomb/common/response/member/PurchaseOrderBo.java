@@ -11,6 +11,7 @@ public class PurchaseOrderBo{
     private String createTime;
     private Integer type; // 订单类型（1：会员购物订单、2：会员店铺订单、3：系统订单）
     private BigDecimal price;
+	private String goods;
     
     
 	public String getId() {
@@ -56,5 +57,13 @@ public class PurchaseOrderBo{
 
 	public void setPrice(BigDecimal price) {
 		this.price = price;
+	}
+
+	public String getGoods() {
+		return goods;
+	}
+
+	public void setGoods(String goods) {
+		this.goods = goods;
 	}
 }

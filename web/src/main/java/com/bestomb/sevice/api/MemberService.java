@@ -94,7 +94,6 @@ public class MemberService {
 
         //获取验证码
         String verifyCode = VerifyCodeUtils.random(verifyCodeLength, VerifyCodeUtils.SEEDS_BY_NUMBER);
-
         //替换消息模板内容
         message = StringTemplateReplaceUtil.getStr(message, "\\?", verifyCode);
 
@@ -129,10 +128,11 @@ public class MemberService {
      * @param loginPassword   登录密码
      * @param confirmPassword 确认密码
      * @param inviterId       邀请者编号
+     * @param nickName        昵称
      * @throws EqianyuanException
      */
-    public void register(String mobile, String verifyCode, String loginPassword, String confirmPassword, String inviterId) throws EqianyuanException {
-        memberService.register(mobile, verifyCode, loginPassword, confirmPassword, inviterId);
+    public void register(String mobile, String verifyCode, String loginPassword, String confirmPassword, String inviterId, String nickName) throws EqianyuanException {
+        memberService.register(mobile, verifyCode, loginPassword, confirmPassword, inviterId, nickName);
     }
 
     /**

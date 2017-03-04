@@ -29,7 +29,7 @@ public class Page {
     private List<String> orderByType;
 
     public Page(int pageNo, int pageSize) {
-        this.pageNo = (pageNo <= 0 ? 1 : pageNo - 1) * pageSize;
+        this.pageNo = (pageNo <= 1 ? 0 : pageNo - 1) * pageSize;
         this.pageSize = pageSize;
     }
 

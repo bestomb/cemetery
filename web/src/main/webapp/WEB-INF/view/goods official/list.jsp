@@ -41,6 +41,37 @@
                         <button type="button" class="btn btn-default btn-lg add">添加商品</button>
                         <button type="button" class="btn btn-danger btn-lg delete">删除商品</button>
                     </div>
+                    <div class="panel-body panel-search">
+                        <form class="form-inline">
+                            <div class="form-group">
+                                <label>一级分类</label>
+                                <a class="btn btn-default firstClassify" classid="1" href="#" role="button">大门</a>
+                                <a class="btn btn-default firstClassify" classid="2" href="#" role="button">墓碑</a>
+                                <a class="btn btn-default firstClassify" classid="3" href="#" role="button">祭品（香）</a>
+                                <a class="btn btn-default firstClassify" classid="4" href="#" role="button">祭品（蜡烛）</a>
+                                <a class="btn btn-default firstClassify" classid="5" href="#" role="button">祭品（花）</a>
+                                <a class="btn btn-default firstClassify" classid="6" href="#" role="button">普通祭品</a>
+                                <a class="btn btn-default firstClassify" classid="7" href="#" role="button">扩展陵园存储容量</a>
+                                <a class="btn btn-default firstClassify" classid="8" href="#" role="button">增加可建陵园数</a>
+                                <a class="btn btn-default firstClassify" classid="9" href="#" role="button">动物饲料</a>
+                                <a class="btn btn-default firstClassify" classid="10" href="#" role="button">植物肥料</a>
+                                <a class="btn btn-default firstClassify" classid="11" href="#" role="button">祭品（广场）</a>
+                                <a class="btn btn-default firstClassify" classid="12" href="#" role="button">祭品（湖泊）</a>
+                                <a class="btn btn-default firstClassify" classid="13" href="#" role="button">祭品（盆栽植物）</a>
+                                <a class="btn btn-default firstClassify" classid="14" href="#" role="button">祭品（食品）</a>
+                                <a class="btn btn-default firstClassify" classid="15" href="#" role="button">祭品（用品）</a>
+                                <a class="btn btn-default firstClassify" classid="16" href="#" role="button">祭品（金钱）</a>
+                                <a class="btn btn-default firstClassify" classid="17" href="#" role="button">祭品（特色）</a>
+                                <a class="btn btn-default firstClassify" classid="18" href="#" role="button">祭品（守护）</a>
+                                <a class="btn btn-default firstClassify" classid="19" href="#" role="button">祭品（休闲娱乐）</a>
+                                <a class="btn btn-default firstClassify" classid="20" href="#" role="button">祭品（儿童用品）</a>
+                            </div>
+
+                            <div class="form-group second_classify_panel">
+                                <label>二级分类</label>
+                            </div>
+                        </form>
+                    </div>
                     <div class="alert alert-warning alert-dismissable hidden operatorTip">
                         <button type="button" class="close" data-dismiss="operatorTip"
                                 aria-hidden="true">
@@ -176,6 +207,36 @@
                                     case 10:
                                         firstClassifyName = "植物肥料";
                                         break;
+                                    case 11:
+                                        firstClassifyName = "祭品（广场）";
+                                        break;
+                                    case 12:
+                                        firstClassifyName = "祭品（湖泊）";
+                                        break;
+                                    case 13:
+                                        firstClassifyName = "祭品（盆栽植物）";
+                                        break;
+                                    case 14:
+                                        firstClassifyName = "祭品（食品）";
+                                        break;
+                                    case 15:
+                                        firstClassifyName = "祭品（用品）";
+                                        break;
+                                    case 16:
+                                        firstClassifyName = "祭品（金钱）";
+                                        break;
+                                    case 17:
+                                        firstClassifyName = "祭品（特色）";
+                                        break;
+                                    case 18:
+                                        firstClassifyName = "祭品（守护）";
+                                        break;
+                                    case 19:
+                                        firstClassifyName = "祭品（休闲娱乐）";
+                                        break;
+                                    case 20:
+                                        firstClassifyName = "祭品（儿童用品）";
+                                        break;
                                 }
 
                                 tableBody += '<tr>'
@@ -203,6 +264,55 @@
 
         //获取列表数据
         pagination.list();
+
+        //一级分类点击事件
+        $(document).on("click", ".firstClassify", function(){
+            //获取一级分类编号
+            var classId = $(this).attr("classid");
+
+            //根据一级分类编号异步查询二级分类
+            $.ajax({
+                type: "POST",
+                url: "/second_classify/getList",
+                data: {'firstClassify': classId},
+                success: function (resp) {
+                    var second = '<label>二级分类</label>';
+                    if (resp.code == "200"){
+                        if(resp.data.length > 0) {
+                            $(resp.data).each(function () {
+                                second += '<button type="button" class="btn btn-link secondClassify" classid="'+this.id+'">'+this.name+'</button>';
+                            });
+
+                            $(".second_classify_panel").html(second);
+                        }else{
+                            $(".second_classify_panel").html(second);
+                        }
+                    } else {
+                        $("#form-tip").removeClass("hidden alert-success").addClass("alert-warning").show().find("strong").text(resp.message);
+                        $(".submit").removeAttr("disabled");
+                    }
+                }
+            });
+
+            //根据一级分类编号异步查询商品分页数据集合
+            //将分页信息设置为第1页
+            pagination.page.pageNo=1;
+            pagination.data.firstClass=classId;
+            pagination.data.secondClass=null;
+            pagination.list();
+        });
+
+        //二级分类点击事件
+        $(document).on("click", ".secondClassify", function(){
+            //获取二级分类编号
+            var classId = $(this).attr("classid");
+
+            //根据二级分类编号异步查询商品分页数据集合
+            //将分页信息设置为第1页
+            pagination.page.pageNo=1;
+            pagination.data.secondClass=classId;
+            pagination.list();
+        });
 
         $(".delete").click(function () {
             //清空ids集合

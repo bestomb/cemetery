@@ -18,6 +18,17 @@ public interface IGoodsOfficialService {
     PageResponse getList(Pager page) throws EqianyuanException;
 
     /**
+     * 根据分类信息和分页信息查询商品集合
+     *
+     * @param firstClass
+     * @param secondClass
+     * @param page
+     * @return
+     * @throws EqianyuanException
+     */
+    PageResponse getList(String firstClass, String secondClass, Pager page) throws EqianyuanException;
+
+    /**
      * 根据商品编号查询商品详情
      *
      * @param goodsId

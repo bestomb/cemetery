@@ -63,8 +63,9 @@ public class MemberController extends BaseController {
                                    String verifyCode,
                                    String loginPassword,
                                    String confirmPassword,
-                                   String inviterId) throws EqianyuanException {
-        memberService.register(mobile, verifyCode, loginPassword, confirmPassword, inviterId);
+                                   String inviterId,
+                                   String nickName) throws EqianyuanException {
+        memberService.register(mobile, verifyCode, loginPassword, confirmPassword, inviterId, nickName);
         return new ServerResponse();
     }
 

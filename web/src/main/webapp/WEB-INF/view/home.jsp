@@ -71,7 +71,7 @@
         <!-- /.navbar-static-side -->
     </nav>
 
-    <iframe id="contentIframe" frameborder="0" style="border:0px;width: 100%;min-height: 600px;"></iframe>
+    <iframe id="contentIframe" src="/dashboard/getStatistics" frameborder="0" style="border:0px;width: 100%;min-height: 600px;"></iframe>
 </div>
 </body>
 <script>

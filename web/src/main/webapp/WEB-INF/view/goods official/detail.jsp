@@ -64,6 +64,17 @@
                                             <option value="8">增加可建陵园数</option>
                                             <option value="9">动物饲料</option>
                                             <option value="10">植物肥料</option>
+
+                                            <option value="11">祭品（广场）</option>
+                                            <option value="12">祭品（湖泊）</option>
+                                            <option value="13">祭品（盆栽植物）</option>
+                                            <option value="14">祭品（食品）</option>
+                                            <option value="15">祭品（用品）</option>
+                                            <option value="16">祭品（金钱）</option>
+                                            <option value="17">祭品（特色）</option>
+                                            <option value="18">祭品（守护）</option>
+                                            <option value="19">祭品（休闲娱乐）</option>
+                                            <option value="20">祭品（儿童用品）</option>
                                         </select>
                                     </div>
                                     <div class="form-group">
@@ -135,6 +146,26 @@
                         case 4:
                             ;
                         case 5:
+                            ;
+                        case 11:
+                            ;
+                        case 12:
+                            ;
+                        case 13:
+                            ;
+                        case 14:
+                            ;
+                        case 15:
+                            ;
+                        case 16:
+                            ;
+                        case 17:
+                            ;
+                        case 18:
+                            ;
+                        case 19:
+                            ;
+                        case 20:
                             ;
                         case 6:
                             $("#lifecycle").parent("div").removeClass("hide");

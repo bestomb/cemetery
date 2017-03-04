@@ -10,13 +10,15 @@
         <result column="death_time" property="deathTime" jdbcType="VARCHAR"/>
         <result column="sort" property="sort" jdbcType="INTEGER"/>
         <result column="age" property="age" jdbcType="INTEGER"/>
+        <result column="creater" property="creater" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createTime" jdbcType="VARCHAR"/>
     </resultMap>
     <resultMap id="ResultMapWithBLOBs" type="com.bestomb.entity.MasterWithBLOBs" extends="BaseResultMap">
         <result column="life_introduce" property="lifeIntroduce" jdbcType="LONGVARCHAR"/>
         <result column="last_wish" property="lastWish" jdbcType="LONGVARCHAR"/>
     </resultMap>
     <sql id="Base_Column_List">
-    id, name, portrait, tombstone_id, birthday, death_time, sort, age
+    id, name, portrait, tombstone_id, birthday, death_time, sort, age, creater, create_time
   </sql>
     <sql id="Blob_Column_List">
     life_introduce, last_wish
@@ -39,12 +41,12 @@
     <insert id="insert" parameterType="com.bestomb.entity.MasterWithBLOBs">
     insert into master (id, name, portrait, 
       tombstone_id, birthday, death_time, 
-      sort, life_introduce, last_wish, age
+      sort, life_introduce, last_wish, age, creater, create_time
       )
     values (#{id,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{portrait,jdbcType=VARCHAR}, 
       #{tombstoneId,jdbcType=VARCHAR}, #{birthday,jdbcType=VARCHAR}, #{deathTime,jdbcType=VARCHAR},
       #{sort,jdbcType=INTEGER}, #{lifeIntroduce,jdbcType=LONGVARCHAR}, #{lastWish,jdbcType=LONGVARCHAR},
-      #{age,jdbcType=INTEGER}
+      #{age,jdbcType=INTEGER}, #{creater,jdbcType=VARCHAR}, #{createTime,jdbcType=VARCHAR}
       )
   </insert>
     <insert id="insertSelective" parameterType="com.bestomb.entity.MasterWithBLOBs">
@@ -83,6 +85,12 @@
             <if test="age != null">
                 age,
             </if>
+            <if test="creater != null">
+                creater,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null">
@@ -114,6 +122,12 @@
             </if>
             <if test="age != null">
                 #{age,jdbcType=INTEGER},
+            </if>
+            <if test="creater != null">
+                #{creater,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=VARCHAR},
             </if>
         </trim>
     </insert>
@@ -147,6 +161,12 @@
             <if test="age != null">
                 age = #{age,jdbcType=INTEGER},
             </if>
+            <if test="creater != null">
+                creater = #{creater,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=VARCHAR},
+            </if>
         </set>
         where id = #{id,jdbcType=VARCHAR}
     </update>
@@ -160,7 +180,9 @@
       sort = #{sort,jdbcType=INTEGER},
       life_introduce = #{lifeIntroduce,jdbcType=LONGVARCHAR},
       last_wish = #{lastWish,jdbcType=LONGVARCHAR},
-      age = #{age,jdbcType=INTEGER}
+      age = #{age,jdbcType=INTEGER},
+      creater = #{creater,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=VARCHAR}
     where id = #{id,jdbcType=VARCHAR}
   </update>
     <update id="updateByPrimaryKey" parameterType="com.bestomb.entity.Master">
@@ -171,7 +193,9 @@
       birthday = #{birthday,jdbcType=VARCHAR},
       death_time = #{deathTime,jdbcType=VARCHAR},
       sort = #{sort,jdbcType=INTEGER},
-      age = #{age,jdbcType=INTEGER}
+      age = #{age,jdbcType=INTEGER},
+      creater = #{creater,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=VARCHAR}
     where id = #{id,jdbcType=VARCHAR}
   </update>
 
@@ -220,4 +244,16 @@
         </foreach>
     </select>
 
+    <!-- 根据时间范围统计新增纪念人总数 -->
+    <select id="countByTime" resultType="java.lang.Long">
+        select count(1) from master
+        <where>
+            <if test="beginTime != null">
+                and data_time <![CDATA[ > ]]> ${beginTime}
+            </if>
+            <if test="endTime != null">
+                and data_time <![CDATA[ < ]]> ${endTime}
+            </if>
+        </where>
+    </select>
 </mapper>

@@ -230,6 +230,7 @@
         order by c.create_time asc
         limit ${page.pageNo}, ${page.pageSize}
     </select>
+
     <select id="selectByAreaPagination" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
@@ -266,6 +267,7 @@
           select id from cemetery where community_id = #{community_id} limit ${page.pageNo}, ${page.pageSize}
         ) a
     </select>
+
     <select id="selectByMemberId" resultMap="BaseResultByCustomModel">
         select
         c.id, c.name, c.province_id, c.county_id, c.city_id, c.town_id, c.village_id, c.community_id, c.password,
@@ -279,7 +281,20 @@
         group by c.id
         order by c.create_time asc
     </select>
-
+    <select id="pagingByMemberId" resultMap="BaseResultByCustomModel">
+        select
+        c.id, c.name, c.province_id, c.county_id, c.city_id, c.town_id, c.village_id, c.community_id, c.password,
+        c.member_id, c.is_open, c.remaining_storage_size, c.storage_size, c.create_time
+        ,m.file_address modelAddress
+        from
+        cemetery c LEFT JOIN goods_use_relat gur on (c.id = gur.object_id and gur.type=1)
+        LEFT JOIN goods_official go on (gur.goods_id = go.id)
+        left JOIN model m on (go.extend_attribute = m.id)
+        where c.member_id = ${member_id}
+        group by c.id
+        order by c.create_time asc
+        limit ${page.pageNo}, ${page.pageSize}
+    </select>
     <select id="selectMemberIdByCemeteryIds" resultMap="BaseResultMap">
         select
         id, member_id
@@ -290,4 +305,16 @@
         </foreach>
     </select>
 
+    <!-- 根据时间范围统计新增陵园总数 -->
+    <select id="countByTime" resultType="java.lang.Long">
+        select count(1) from cemetery
+        <where>
+            <if test="beginTime != null">
+                and create_time <![CDATA[ > ]]> ${beginTime}
+            </if>
+            <if test="endTime != null">
+                and create_time <![CDATA[ < ]]> ${endTime}
+            </if>
+        </where>
+    </select>
 </mapper>

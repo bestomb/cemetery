@@ -131,7 +131,7 @@
   	<!-- 获取订单分页列表 -->
   	<select id="getPageList" resultMap="BaseResultMap">
     	select
-    	<include refid="Base_Column_List" />
+    	<include refid="Base_Column_List" />,<include refid="Blob_Column_List" />
     	from purchase_order
    		where member_id = #{order.memberId,jdbcType=INTEGER}
     	limit ${page.start}, ${page.pageSize}

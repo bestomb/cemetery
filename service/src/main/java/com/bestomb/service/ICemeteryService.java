@@ -72,6 +72,14 @@ public interface ICemeteryService {
     List<CemeteryBo> getListByMemberId(Integer memberId) throws EqianyuanException;
 
     /**
+     * 分页获取我的陵园集合
+     *
+     * @param memberId 会员编号
+     * @return
+     */
+    PageResponse pagingByMemberId(Integer memberId, String pageNo, int pageSize) throws EqianyuanException;
+
+    /**
      * 根据陵园编号查找陵园信息
      *
      * @param cemeteryId
@@ -109,4 +117,13 @@ public interface ICemeteryService {
      * @throws EqianyuanException
      */
     PageResponse getList(CemeteryByAreaListRequest cemeteryByAreaListRequest, int pageNo, int pageSize) throws EqianyuanException;
+
+    /**
+     * 删除陵园
+     *
+     * @param cemeteryId
+     * @return
+     * @throws EqianyuanException
+     */
+    boolean deleteCemetery(Integer memberId, String cemeteryId) throws EqianyuanException;
 }

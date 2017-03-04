@@ -85,6 +85,7 @@ public class OrderServiceImpl implements IOrderService {
         for (PurchaseOrder o : orders) {
             PurchaseOrderBo bo = new PurchaseOrderBo();
             BeanUtils.copyProperties(o, bo);
+            bo.setOrderNumber(o.getId());
             bo.setCreateTime(CalendarUtil.secondsTimeToDateTimeString(o.getCreateTime())); // 转化创建时间
             resultList.add(bo);
         }

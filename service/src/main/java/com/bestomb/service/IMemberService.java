@@ -20,8 +20,9 @@ public interface IMemberService {
      * @param loginPassword
      * @param confirmPassword 确认密码
      * @param inviterId
+     * @param nickName        昵称
      */
-    void register(String mobile, String verifyCode, String loginPassword, String confirmPassword, String inviterId) throws EqianyuanException;
+    void register(String mobile, String verifyCode, String loginPassword, String confirmPassword, String inviterId, String nickName) throws EqianyuanException;
 
     /**
      * 会员登录
@@ -33,6 +34,7 @@ public interface IMemberService {
 
     /**
      * 根据id查询单条信息
+     *
      * @param memberId 主键ID
      */
     MemberAccountBo getInfo(String memberId) throws EqianyuanException;
@@ -40,10 +42,11 @@ public interface IMemberService {
     /**
      * 分页查询
      */
-    PageResponse getList(int pageNo, int pageSize,String type)throws EqianyuanException;
-    
+    PageResponse getList(int pageNo, int pageSize, String type) throws EqianyuanException;
+
     /***
      * 修改会员资料
+     *
      * @param memberAccount
      * @return
      * @throws EqianyuanException

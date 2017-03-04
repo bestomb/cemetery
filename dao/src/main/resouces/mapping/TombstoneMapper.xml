@@ -166,4 +166,36 @@
     order by t.sort asc
     limit ${page.start}, ${page.pageSize}
   </select>
+
+  <!-- 根据陵园编号和墓碑种类（人物墓碑区、宠物墓碑区）查询墓区中，当前建设墓碑的位置上有没有数据 -->
+  <select id="selectByPosition" resultType="java.lang.Integer">
+    select
+    count(1)
+    from
+    tombstone
+    <where>
+      <if test="sort != null">
+        and sort = ${sort}
+      </if>
+      <if test="species != null">
+        and species = ${species}
+      </if>
+      <if test="cemeteryId != null">
+        and cemetery_id = ${cemeteryId}
+      </if>
+    </where>
+  </select>
+
+  <!-- 根据时间范围统计新增陵园总数 -->
+  <select id="countByTime" resultType="java.lang.Long">
+    select count(1) from tombstone
+    <where>
+      <if test="beginTime != null">
+        and create_time <![CDATA[ > ]]> ${beginTime}
+      </if>
+      <if test="endTime != null">
+        and create_time <![CDATA[ < ]]> ${endTime}
+      </if>
+    </where>
+  </select>
 </mapper>

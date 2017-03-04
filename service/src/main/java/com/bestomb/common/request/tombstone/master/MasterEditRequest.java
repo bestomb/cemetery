@@ -41,6 +41,12 @@ public class MasterEditRequest {
     //纪念人年龄
     private Integer age;
 
+    //创建人
+    private String creater;
+
+    //创建时间
+    private String createTime;
+
     public String getId() {
         return id;
     }
@@ -143,5 +149,21 @@ public class MasterEditRequest {
 
     public void setPortraitName(String portraitName) {
         this.portraitName = portraitName;
+    }
+
+    public String getCreater() {
+        return creater;
+    }
+
+    public void setCreater(String creater) {
+        this.creater = creater;
+    }
+
+    public String getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(String createTime) {
+        this.createTime = createTime;
     }
 }
