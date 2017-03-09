@@ -69,7 +69,11 @@ public class FileUtilHandle {
             f1.mkdirs();
         }
 
-        String fullName = SystemConf.FILE_UPLOAD_TEMP_DIRECTORY.toString() + File.separator + multipartFile.getOriginalFilename();
+//        String fullName = SystemConf.FILE_UPLOAD_TEMP_DIRECTORY.toString() + File.separator + multipartFile.getOriginalFilename();
+        String orginalFileName = multipartFile.getOriginalFilename();
+        String fileSuffix = orginalFileName.substring(orginalFileName.lastIndexOf("."));
+        String fileName = System.currentTimeMillis() + fileSuffix;
+        String fullName = SystemConf.FILE_UPLOAD_TEMP_DIRECTORY.toString() + File.separator + fileName;
         String fullPath = absoluteDirectory + fullName;
         // 附件处理上传
         try {
@@ -80,7 +84,7 @@ public class FileUtilHandle {
         }
 
         FileResponse fileResponse = new FileResponse();
-        fileResponse.setFileName(multipartFile.getOriginalFilename());
+        fileResponse.setFileName(fileName);
         fileResponse.setFilePath(fullPath);
         fileResponse.setFileSize(String.valueOf(multipartFile.getSize()));
         return fileResponse;

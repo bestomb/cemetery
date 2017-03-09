@@ -10,6 +10,8 @@ public class Park {
 
     private String goodsId;
 
+    private String modelAddress;
+
     public Park(){}
     public Park(String cemeteryId, String goodsId){
         this.cemeteryId = cemeteryId;
@@ -60,5 +62,13 @@ public class Park {
 
     public void setGoodsId(String goodsId) {
         this.goodsId = goodsId == null ? null : goodsId.trim();
+    }
+
+    public String getModelAddress() {
+        return modelAddress;
+    }
+
+    public void setModelAddress(String modelAddress) {
+        this.modelAddress = modelAddress;
     }
 }

@@ -219,10 +219,8 @@
                             $("#extend_count").parent("div").removeClass("hide");
                             $("#extend_count").val(_this.extendAttribute)
                             break;
-                        case 9:
-                            $("#extend_model_id").parent("div").removeClass("hide");
-
-                            $("#extend_model_id").val(_this.extendAttribute);
+                        case 9:;
+                        case 10:
                             break;
                     }
                 } else {
@@ -286,7 +284,6 @@
                     break;
                 case 9:;
                 case 10:
-                    $("#extend_model_id").parent("div").removeClass("hide");
                     break;
             }
         });
@@ -343,7 +340,6 @@
                     break;
                 case 9:;
                 case 10:
-                    $("input[name='extendAttribute']").val($("#extend_model_id").val())
                     break;
             }
 

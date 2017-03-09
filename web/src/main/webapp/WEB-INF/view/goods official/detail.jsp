@@ -185,9 +185,6 @@
                         case 9:
                             ;
                         case 10:
-                            $("#extend_model_id").parent("div").removeClass("hide");
-
-                            $("#extend_model_id").val(_this.extendAttribute);
                             break;
                     }
                 } else {

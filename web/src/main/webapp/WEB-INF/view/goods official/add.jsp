@@ -204,7 +204,6 @@
                     break;
                 case 9:;
                 case 10:
-                    $("#extend_model_id").parent("div").removeClass("hide");
                     break;
             }
         });
@@ -229,10 +228,6 @@
                 case 4:
                     ;
                 case 5:
-                    ;
-                case 9:
-                    ;
-                case 10:
                     ;
                 case 11:
                     ;
@@ -262,6 +257,9 @@
                     break;
                 case 8:
                     $("input[name='extendAttribute']").val($("#extend_count").val());
+                    break;
+                case 9:;
+                case 10:
                     break;
             }
             //异步提交表单

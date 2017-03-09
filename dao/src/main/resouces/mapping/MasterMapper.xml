@@ -91,6 +91,9 @@
             <if test="createTime != null">
                 create_time,
             </if>
+            <if test="dataTime != null">
+                data_time,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null">
@@ -128,6 +131,9 @@
             </if>
             <if test="createTime != null">
                 #{createTime,jdbcType=VARCHAR},
+            </if>
+            <if test="dataTime != null">
+                #{dataTime},
             </if>
         </trim>
     </insert>

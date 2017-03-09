@@ -165,7 +165,9 @@ public class GoodsOfficialServiceImpl implements IGoodsOfficialService {
         goodsOfficialWithBLOBs.setPrice(goodsEditRequest.getPrice());
         goodsOfficialWithBLOBs.setDescription(goodsEditRequest.getDescription());
         goodsOfficialWithBLOBs.setType(Integer.parseInt(goodsEditRequest.getType()));
-        goodsOfficialWithBLOBs.setLifecycle(Integer.parseInt(goodsEditRequest.getLifecycle()));
+        if(!StringUtils.isEmpty(goodsEditRequest.getLifecycle())){
+            goodsOfficialWithBLOBs.setLifecycle(Integer.parseInt(goodsEditRequest.getLifecycle()));
+        }
         goodsOfficialWithBLOBs.setExtendAttribute(goodsEditRequest.getExtendAttribute());
         goodsOfficialWithBLOBs.setImages(imagePath + File.separator + fileResponse.getFileName());
 
@@ -218,7 +220,9 @@ public class GoodsOfficialServiceImpl implements IGoodsOfficialService {
         goodsOfficialWithBLOBs.setPrice(goodsEditRequest.getPrice());
         goodsOfficialWithBLOBs.setDescription(goodsEditRequest.getDescription());
         goodsOfficialWithBLOBs.setType(Integer.parseInt(goodsEditRequest.getType()));
-        goodsOfficialWithBLOBs.setLifecycle(Integer.parseInt(goodsEditRequest.getLifecycle()));
+        if(!StringUtils.isEmpty(goodsEditRequest.getLifecycle())){
+            goodsOfficialWithBLOBs.setLifecycle(Integer.parseInt(goodsEditRequest.getLifecycle()));
+        }
         goodsOfficialWithBLOBs.setExtendAttribute(goodsEditRequest.getExtendAttribute());
         //持久化商品数据
         goodsOfficialDao.updateByPrimaryKeySelective(goodsOfficialWithBLOBs);

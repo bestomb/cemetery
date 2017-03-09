@@ -7,6 +7,7 @@
         <result column="growing_days" property="growingDays" jdbcType="INTEGER"/>
         <result column="life_value" property="lifeValue" jdbcType="INTEGER"/>
         <result column="goods_id" property="goodsId" jdbcType="VARCHAR"/>
+        <result column="file_address" property="modelAddress" jdbcType="VARCHAR"/>
     </resultMap>
     <sql id="Base_Column_List">
     id, cemetery_id, growing_days, life_value, goods_id
@@ -97,8 +98,6 @@
     where id = #{id,jdbcType=VARCHAR}
   </update>
 
-    <!-- 封装分页查询表名 -->
-    <sql id="pageQueryTable">park</sql>
     <!-- 封装商城商品查询条件 -->
     <sql id="whereCondition">
         where goods_id in ( select id from plants_and_animals where type = #{park.type, jdbcType=INTEGER} )
@@ -109,16 +108,18 @@
     <!-- 根据条件查询分页列表总数 -->
     <select id="getPageListCount" resultType="java.lang.Integer">
         select count(1) from
-        <include refid="pageQueryTable"/>
-        <include refid="whereCondition"/>
+        park right join plants_and_animals paa on (park.goods_id = paa.id and paa.type = #{park.type, jdbcType=INTEGER})
+        left join model on (paa.model_id = model.id)
+        where cemetery_id = #{park.cemeteryId, jdbcType=INTEGER}
     </select>
     <!-- 根据条件查询分页列表 -->
     <select id="getPageList" resultMap="BaseResultMap">
         select
-        <include refid="Base_Column_List"/>
+        park.id, park.cemetery_id, park.growing_days, park.life_value, park.goods_id, model.file_address
         from
-        <include refid="pageQueryTable"/>
-        <include refid="whereCondition"/>
+        park right join plants_and_animals paa on (park.goods_id = paa.id and paa.type = #{park.type, jdbcType=INTEGER})
+        left join model on (paa.model_id = model.id)
+        where cemetery_id = #{park.cemeteryId, jdbcType=INTEGER}
         limit ${page.start}, ${page.pageSize}
     </select>
 
