@@ -11,6 +11,15 @@ public class Park {
     private String goodsId;
 
     private String modelAddress;
+    private Integer phase;
+
+    public Integer getPhase() {
+        return phase;
+    }
+
+    public void setPhase(Integer phase) {
+        this.phase = phase;
+    }
 
     public Park(){}
     public Park(String cemeteryId, String goodsId){

@@ -8,6 +8,7 @@
         <result column="life_value" property="lifeValue" jdbcType="INTEGER"/>
         <result column="goods_id" property="goodsId" jdbcType="VARCHAR"/>
         <result column="file_address" property="modelAddress" jdbcType="VARCHAR"/>
+        <result column="phase" property="phase" jdbcType="INTEGER"/>
     </resultMap>
     <sql id="Base_Column_List">
     id, cemetery_id, growing_days, life_value, goods_id
@@ -115,7 +116,7 @@
     <!-- 根据条件查询分页列表 -->
     <select id="getPageList" resultMap="BaseResultMap">
         select
-        park.id, park.cemetery_id, park.growing_days, park.life_value, park.goods_id, model.file_address
+        park.id, park.cemetery_id, park.growing_days, park.life_value, park.goods_id, model.file_address, paa.phase
         from
         park right join plants_and_animals paa on (park.goods_id = paa.id and paa.type = #{park.type, jdbcType=INTEGER})
         left join model on (paa.model_id = model.id)

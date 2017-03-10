@@ -19,9 +19,19 @@
     from goods_use_relat
     where id = #{id,jdbcType=VARCHAR}
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+  <select id="countByObjectId" resultType="java.lang.Integer">
+    select
+    count(1)
+    from goods_use_relat
+    where object_id = #{objectId }
+  </select>
+  <delete id="deleteByPrimaryKey">
     delete from goods_use_relat
     where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByObjectId" parameterType="java.lang.String">
+    delete from goods_use_relat
+    where object_id = #{objectId }
   </delete>
   <insert id="insert" parameterType="com.bestomb.entity.GoodsUseRelat">
     <selectKey keyProperty="id" resultType="String" order="BEFORE">

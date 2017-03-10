@@ -143,15 +143,36 @@ public class BackpackImpl implements IBackpackService {
                 }
                 switch (goodsOfficial.getType()) {
                     case 1:
+                        // 类型为1、2的商品使用后需要插入商品使用信息关联表（无时间限制），该商品在背包表中数量不变
+                        String cemeteryId = useGoods.getCemeteryId();
+                        //先去商品使用关联表中根据陵园编号查询数据
+                        int dataCntByCemetery = goodsUseRelatDao.countByObjectId(cemeteryId);
+
+                        //如果商品使用关联数据数量为0，则新增数据，如果不为空，则删除数据后再新增
+                        if(dataCntByCemetery > 0){
+                            goodsUseRelatDao.deleteByObjectId(cemeteryId);
+                        }
+
+                        GoodsUseRelat goodsUseRelatByCemetery = new GoodsUseRelat(goodsOfficial.getType(), useGoods.getMemberId(), useGoods.getGoodsId(), cemeteryId, CalendarUtil.getSystemSeconds(), goodsOfficial.getLifecycle());
+                        flag = goodsUseRelatDao.insertSelective(goodsUseRelatByCemetery) > 0;
+                        if (!flag) {
+                            logger.error("会员（" + useGoods.getMemberId() + "）使用商品（" + useGoods.getGoodsId() + "）时，插入商品使用信息关联表失败。");
+                        }
+                        break;
                     case 2: {
                         // 类型为1、2的商品使用后需要插入商品使用信息关联表（无时间限制），该商品在背包表中数量不变
-                        String objectId = useGoods.getCemeteryId();
                         // 如果墓碑编号不为空，则使用墓碑编号
-                        if (!StringUtils.isEmpty(useGoods.getTombstoneId())) {
-                            objectId = useGoods.getTombstoneId();
+                        String tombstoneId = useGoods.getTombstoneId();
+                        //先去商品使用关联表中根据陵园编号查询数据
+                        int dataCntByTombstone = goodsUseRelatDao.countByObjectId(tombstoneId);
+
+                        //如果商品使用关联数据数量为0，则新增数据，如果不为空，则删除数据后再新增
+                        if(dataCntByTombstone > 0){
+                            goodsUseRelatDao.deleteByObjectId(tombstoneId);
                         }
-                        GoodsUseRelat goodsUseRelat = new GoodsUseRelat(goodsOfficial.getType(), useGoods.getMemberId(), useGoods.getGoodsId(), objectId, CalendarUtil.getSystemSeconds(), goodsOfficial.getLifecycle());
-                        flag = goodsUseRelatDao.insertSelective(goodsUseRelat) > 0;
+
+                        GoodsUseRelat goodsUseRelatByTombstone = new GoodsUseRelat(goodsOfficial.getType(), useGoods.getMemberId(), useGoods.getGoodsId(), tombstoneId, CalendarUtil.getSystemSeconds(), goodsOfficial.getLifecycle());
+                        flag = goodsUseRelatDao.insertSelective(goodsUseRelatByTombstone) > 0;
                         if (!flag) {
                             logger.error("会员（" + useGoods.getMemberId() + "）使用商品（" + useGoods.getGoodsId() + "）时，插入商品使用信息关联表失败。");
                         }

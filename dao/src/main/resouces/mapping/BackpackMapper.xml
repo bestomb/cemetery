@@ -28,6 +28,9 @@
     where id = #{id,jdbcType=VARCHAR}
   </delete>
     <insert id="insert" parameterType="com.bestomb.entity.Backpack">
+        <selectKey keyProperty="id" resultType="String" order="BEFORE">
+            select replace(uuid(),'-','') from dual
+        </selectKey>
     insert into backpack (id, member_id, source, 
       count, goods_id)
     values (#{id,jdbcType=VARCHAR}, #{memberId,jdbcType=INTEGER}, #{source,jdbcType=INTEGER}, 

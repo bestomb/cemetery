@@ -12,6 +12,16 @@ public class CemeteryByAreaVo {
 
     private Integer isOpen;
 
+    private String modelAddress;
+
+    public String getModelAddress() {
+        return modelAddress;
+    }
+
+    public void setModelAddress(String modelAddress) {
+        this.modelAddress = modelAddress;
+    }
+
     public Integer getId() {
         return id;
     }

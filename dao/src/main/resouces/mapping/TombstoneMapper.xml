@@ -144,7 +144,7 @@
   </select>
 
   <!-- 根据查询条件查询陵园墓碑列表 -->
-  <select id="selectByCondition" resultMap="BaseResultMap">
+  <select id="selectByCondition" resultMap="BaseResultByCustomModel">
     select
     t.id, t.sort, t.cemetery_id, t.member_id, t.type, t.species, t.create_time
     ,m.file_address
