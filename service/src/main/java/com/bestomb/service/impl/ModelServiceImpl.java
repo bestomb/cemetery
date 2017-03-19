@@ -98,6 +98,14 @@ public class ModelServiceImpl implements IModelService {
             throw new EqianyuanException(ExceptionMsgConstant.MODEL_CLASSIFY_ID_IS_EMPTY);
         }
 
+        //根据分类编号查询分类对象
+        ModelClassify modelClassify = modelClassifyDao.selectByPrimaryKey(modelByEditRequest.getClassifyId());
+        if (ObjectUtils.isEmpty(modelClassify)
+                || StringUtils.isEmpty(modelClassify.getId())) {
+            logger.info("add fail , because model classify id [" + modelByEditRequest.getClassifyId() + "] query data is empty");
+            throw new EqianyuanException(ExceptionMsgConstant.MODEL_CLASSIFY_DATA_NOT_EXISTS);
+        }
+
         //模型分类名称内容长度是否超出DB许可长度
         try {
             if (modelByEditRequest.getName().getBytes(SystemConf.PLATFORM_CHARSET.toString()).length > MODEL_NAME_MAX_BYTES_BY_DB) {
@@ -119,29 +127,52 @@ public class ModelServiceImpl implements IModelService {
             throw new EqianyuanException(ExceptionMsgConstant.FILE_UPDATE_ERROR);
         }
 
-        FileResponse fileResponse = fileResponses.get(0);
-
-        //模型实体文件地址是否为空
-        if (StringUtils.isEmpty(fileResponse.getFilePath())) {
-            logger.info("add fail , because file address is empty");
-            throw new EqianyuanException(ExceptionMsgConstant.MODEL_FILE_ADDRESS_IS_EMPTY);
+        if(fileResponses.size() < 3){
+            logger.info("请确保PC、Android、IOS附件是否正确上传");
+            return ;
         }
 
-        //根据分类编号查询分类对象
-        ModelClassify modelClassify = modelClassifyDao.selectByPrimaryKey(modelByEditRequest.getClassifyId());
-        if (ObjectUtils.isEmpty(modelClassify)
-                || StringUtils.isEmpty(modelClassify.getId())) {
-            logger.info("add fail , because model classify id [" + modelByEditRequest.getClassifyId() + "] query data is empty");
-            throw new EqianyuanException(ExceptionMsgConstant.MODEL_CLASSIFY_DATA_NOT_EXISTS);
-        }
+        String fileName = null;
+        String fileNamePrefix = null;
+        String fileNameSuffix = null;
 
-        //移动临时附件到持久目录
-        FileUtilHandle.moveFile(fileResponse.getFilePath(), SystemConf.MODEL_FILE_UPLOAD_FIXED_DIRECTORY.toString());
+        for (int i=0;i<fileResponses.size();i++) {
+            FileResponse fileResponse = fileResponses.get(i);
+
+            //模型实体文件地址是否为空
+            if (StringUtils.isEmpty(fileResponse.getFilePath())) {
+                logger.info("add fail , because file address is empty");
+                throw new EqianyuanException(ExceptionMsgConstant.MODEL_FILE_ADDRESS_IS_EMPTY);
+            }
+
+            //移动临时附件到持久目录
+            FileUtilHandle.moveFile(fileResponse.getFilePath(), SystemConf.MODEL_FILE_UPLOAD_FIXED_DIRECTORY.toString());
+
+            String newName ;
+
+            switch (i){
+                case 0:
+                    fileName = fileResponse.getFileName();
+                    fileNamePrefix = fileName.substring(0, fileName.indexOf("."));
+                    fileNameSuffix = fileName.substring(fileName.indexOf("."));
+                    break;
+                case 1:
+                    newName = fileNamePrefix + "_a" + fileNameSuffix;
+                    //附件重命名
+                    FileUtilHandle.rename(SystemConf.MODEL_FILE_UPLOAD_FIXED_DIRECTORY.toString()+File.separator+fileResponse.getFileName(), newName);
+                    break;
+                case 2:
+                    newName = fileNamePrefix + "_i" + fileNameSuffix;
+                    //附件重命名
+                    FileUtilHandle.rename(SystemConf.MODEL_FILE_UPLOAD_FIXED_DIRECTORY.toString()+File.separator+fileResponse.getFileName(), newName);
+                    break;
+            }
+        }
 
         //持久化模型数据
         Model model = new Model();
         BeanUtils.copyProperties(modelByEditRequest, model);
-        model.setFileAddress(SystemConf.MODEL_FILE_UPLOAD_FIXED_DIRECTORY.toString() + File.separator + fileResponse.getFileName());
+        model.setFileAddress(SystemConf.MODEL_FILE_UPLOAD_FIXED_DIRECTORY.toString() + File.separator + fileName);
         modelDao.insertSelective(model);
     }
 
@@ -179,20 +210,56 @@ public class ModelServiceImpl implements IModelService {
         //模型文件上传
         List<FileResponse> fileResponses = fileService.upload(request, fileType);
         if (!CollectionUtils.isEmpty(fileResponses)) {
-            FileResponse fileResponse = fileResponses.get(0);
-
-            //模型实体文件地址是否为空
-            if (StringUtils.isEmpty(fileResponse.getFilePath())) {
-                logger.info("modify fail , because file address is empty");
-                throw new EqianyuanException(ExceptionMsgConstant.MODEL_FILE_ADDRESS_IS_EMPTY);
+            if (fileResponses.size() < 3) {
+                logger.info("请确保PC、Android、IOS附件是否正确上传");
+                return;
             }
 
-            //移动临时附件到持久目录
-            FileUtilHandle.moveFile(fileResponse.getFilePath(), SystemConf.MODEL_FILE_UPLOAD_FIXED_DIRECTORY.toString());
-            model.setFileAddress(SystemConf.MODEL_FILE_UPLOAD_FIXED_DIRECTORY.toString() + File.separator + fileResponse.getFileName());
+            String fileName = null;
+            String fileNamePrefix = null;
+            String fileNameSuffix = null;
 
+            for (int i = 0; i < fileResponses.size(); i++) {
+                FileResponse fileResponse = fileResponses.get(i);
+
+                //模型实体文件地址是否为空
+                if (StringUtils.isEmpty(fileResponse.getFilePath())) {
+                    logger.info("modify fail , because file address is empty");
+                    throw new EqianyuanException(ExceptionMsgConstant.MODEL_FILE_ADDRESS_IS_EMPTY);
+                }
+
+                //移动临时附件到持久目录
+                FileUtilHandle.moveFile(fileResponse.getFilePath(), SystemConf.MODEL_FILE_UPLOAD_FIXED_DIRECTORY.toString());
+
+                String newName;
+
+                switch (i) {
+                    case 0:
+                        fileName = fileResponse.getFileName();
+                        fileNamePrefix = fileName.substring(0, fileName.indexOf("."));
+                        fileNameSuffix = fileName.substring(fileName.indexOf("."));
+                        break;
+                    case 1:
+                        newName = fileNamePrefix + "_a" + fileNameSuffix;
+                        //附件重命名
+                        FileUtilHandle.rename(SystemConf.MODEL_FILE_UPLOAD_FIXED_DIRECTORY.toString() + File.separator + fileResponse.getFileName(), newName);
+                        break;
+                    case 2:
+                        newName = fileNamePrefix + "_i" + fileNameSuffix;
+                        //附件重命名
+                        FileUtilHandle.rename(SystemConf.MODEL_FILE_UPLOAD_FIXED_DIRECTORY.toString() + File.separator + fileResponse.getFileName(), newName);
+                        break;
+                }
+            }
+
+            model.setFileAddress(SystemConf.MODEL_FILE_UPLOAD_FIXED_DIRECTORY.toString() + File.separator + fileName);
             //删除原数据绑定的模型文件
+            String oldFileNamePrefix = modelById.getFileAddress().substring(0, modelById.getFileAddress().indexOf("."));
+            String oldFileNameSuffix = modelById.getFileAddress().substring(modelById.getFileAddress().indexOf("."));
+
             FileUtilHandle.deleteFile(SessionUtil.getSession().getServletContext().getRealPath("/") + modelById.getFileAddress());
+            FileUtilHandle.deleteFile(SessionUtil.getSession().getServletContext().getRealPath("/") + oldFileNamePrefix +"_a"+oldFileNameSuffix);
+            FileUtilHandle.deleteFile(SessionUtil.getSession().getServletContext().getRealPath("/") + oldFileNamePrefix +"_i"+oldFileNameSuffix);
         }
 
         modelDao.updateByPrimaryKeySelective(model);

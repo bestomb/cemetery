@@ -65,8 +65,8 @@ public class MemberController extends BaseController {
                                    String confirmPassword,
                                    String inviterId,
                                    String nickName) throws EqianyuanException {
-        memberService.register(mobile, verifyCode, loginPassword, confirmPassword, inviterId, nickName);
-        return new ServerResponse();
+        MemberAccountVo vo = memberService.register(mobile, verifyCode, loginPassword, confirmPassword, inviterId, nickName);
+        return new ServerResponse.ResponseBuilder().data(vo).build();
     }
 
     /**
@@ -296,4 +296,18 @@ public class MemberController extends BaseController {
         return new ServerResponse.ResponseBuilder().data(flag).build();
     }
 
+    /***
+     * 会员交易币获得、消费明细
+     *
+     * @return
+     * @throws EqianyuanException
+     */
+    @RequestMapping(value = "/tradingDetail")
+    @ResponseBody
+    public ServerResponse listByTradingDetail(@RequestParam(value = "pageNo", required = false, defaultValue = "1") int pageNo,
+                                              @RequestParam(value = "pageSize", required = false, defaultValue = "10") int pageSize) throws EqianyuanException {
+        int memberId = getLoginMember().getMemberId();
+        PageResponse pageResponse = memberService.listByTradingDetail(pageNo, pageSize, memberId);
+        return new ServerResponse.ResponseBuilder().data(pageResponse).build();
+    }
 }

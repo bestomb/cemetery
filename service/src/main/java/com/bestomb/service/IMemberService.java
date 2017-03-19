@@ -22,7 +22,7 @@ public interface IMemberService {
      * @param inviterId
      * @param nickName        昵称
      */
-    void register(String mobile, String verifyCode, String loginPassword, String confirmPassword, String inviterId, String nickName) throws EqianyuanException;
+    MemberAccount register(String mobile, String verifyCode, String loginPassword, String confirmPassword, String inviterId, String nickName) throws EqianyuanException;
 
     /**
      * 会员登录

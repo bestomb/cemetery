@@ -54,6 +54,9 @@ public class OrderServiceImpl implements IOrderService {
     @Autowired
     private IPlantsAndAnimalsDao plantsAndAnimalsDao;
 
+    @Autowired
+    private ITradingDao tradingDao;
+
     /***
      * 查询订单分页列表
      *
@@ -284,10 +287,35 @@ public class OrderServiceImpl implements IOrderService {
             //持久化会员背包数据
             backpackDao.insertByGoodsBuy(backpackList);
 
+            List<TradingDetail> transactionals = new ArrayList<TradingDetail>();
+
             if(!CollectionUtils.isEmpty(memberSaleList)){
                 //将会员发布商品销售额叠加到会员账户
                 memberAccountDao.batchUpdateBySale(memberSaleList);
+
+                for (Map<String, Object> map : memberSaleList) {
+                    //构建交易币明细数据
+                    TradingDetail tradingDetail = new TradingDetail();
+                    tradingDetail.setType(1);//1:获得，2：消费
+                    tradingDetail.setInstructions("商城物品销售");
+                    tradingDetail.setTrading(Double.parseDouble(String.valueOf(map.get("tradingAmount"))));
+                    tradingDetail.setCreateTime(CalendarUtil.getSystemSeconds());
+                    tradingDetail.setMemberId(Integer.parseInt(String.valueOf(map.get("memberId"))));
+                    transactionals.add(tradingDetail);
+                }
             }
+
+            //构建交易币明细数据
+            TradingDetail tradingDetail = new TradingDetail();
+            tradingDetail.setType(2);//1:获得，2：消费
+            tradingDetail.setInstructions("商城购物");
+            tradingDetail.setTrading(goodsAmount);
+            tradingDetail.setCreateTime(CalendarUtil.getSystemSeconds());
+            tradingDetail.setMemberId(memberId);
+            transactionals.add(tradingDetail);
+
+            //持久化交易币交易明细
+            tradingDao.batchInsert(transactionals);
         }else{
             logger.debug("会员账户没有足够的交易币或积分");
             throw new EqianyuanException(ExceptionMsgConstant.TRADING_OR_INTEGRAL_IS_NOT_ENOUGH);

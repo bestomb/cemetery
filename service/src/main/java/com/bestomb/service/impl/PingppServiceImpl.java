@@ -110,7 +110,7 @@ public class PingppServiceImpl implements IPingggService {
         String amount = String.valueOf(webHooksJSON.getJSONObject("data").getJSONObject("object").get("amount"));
 
         logger.debug("订单编号：" + orderNo + " 金额：" + amount);
-        //将支付金额转为double型
+        //将支付金额转为double型\
         double tradingAmount;
         if (amount.length() > 2) {
             //元
@@ -134,6 +134,7 @@ public class PingppServiceImpl implements IPingggService {
         //构建交易币明细数据
         TradingDetail tradingDetail = new TradingDetail();
         tradingDetail.setType(1);//1:获得，2：消费
+        tradingDetail.setInstructions("充值");
         tradingDetail.setTrading(tradingAmount);
         tradingDetail.setCreateTime(CalendarUtil.getSystemSeconds());
         tradingDetail.setMemberId(memberId);

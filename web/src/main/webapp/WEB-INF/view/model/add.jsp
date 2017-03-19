@@ -46,8 +46,16 @@
                                         <input class="form-control" name="name">
                                     </div>
                                     <div class="form-group">
-                                        <label>模型文件</label>
-                                        <input class="form-control" name="file" type="file">
+                                        <label>PC端模型文件</label>
+                                        <input class="form-control" name="file" type="file" value="选择PC端模型">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Android端模型文件</label>
+                                        <input class="form-control" name="file2" type="file" value="选择Android端模型">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>IOS端模型文件</label>
+                                        <input class="form-control" name="file3" type="file" value="选择IOS端模型">
                                     </div>
 
                                     <input type="button" class="btn btn-outline btn-success submit" value="添加">

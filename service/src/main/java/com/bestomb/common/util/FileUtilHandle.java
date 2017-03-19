@@ -194,4 +194,30 @@ public class FileUtilHandle {
 
         return file.length();
     }
+
+    /**
+     * 文件重命名
+     *
+     * @param filePath
+     * @param newName
+     * @throws EqianyuanException
+     */
+    public static void rename(String filePath, String newName) throws EqianyuanException {
+        if (StringUtils.isEmpty(filePath)) {
+            logger.info("rename fail , because file path is empty");
+            throw new EqianyuanException(ExceptionMsgConstant.FILE_MOVE_ERROR);
+        }
+
+        String absoluteDirectory = SessionUtil.getSession().getServletContext().getRealPath("/");
+
+        File file = new File(absoluteDirectory + filePath);
+        if (!file.exists()) {
+            logger.info("rename fail , because file no exists");
+            throw new EqianyuanException(ExceptionMsgConstant.FILE_NO_EXISTS);
+        }
+
+        String path = filePath.substring(0, filePath.lastIndexOf(File.separator) + 1);
+        File newFile = new File(absoluteDirectory + path + newName);
+        file.renameTo(newFile);
+    }
 }

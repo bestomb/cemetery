@@ -32,6 +32,6 @@ execute_node: 10-12
 #api_key
 #app_id  应用ID
 pingpp:
-  #api_key: sk_live_SKC4GCCeXjbHGeXn1OnfnHWT
+  api_key: sk_live_SKC4GCCeXjbHGeXn1OnfnHWT
   app_id: app_fv9Sa1qnvL4SrjLy
-  api_key: sk_test_5an944jrLinT8q1W5SjjLOaT
+#  api_key: sk_test_5an944jrLinT8q1W5SjjLOaT

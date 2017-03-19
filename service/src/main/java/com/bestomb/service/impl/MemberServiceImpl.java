@@ -53,7 +53,7 @@ public class MemberServiceImpl implements IMemberService {
      * @param nickName        昵称
      */
     @Transactional(rollbackFor = Exception.class)
-    public void register(String mobile, String verifyCode, String loginPassword, String confirmPassword, String inviterId, String nickName) throws EqianyuanException {
+    public MemberAccount register(String mobile, String verifyCode, String loginPassword, String confirmPassword, String inviterId, String nickName) throws EqianyuanException {
         //手机号码是否为空
         if (StringUtils.isEmpty(mobile)) {
             logger.warn("register fail , because mobile is null.");
@@ -169,6 +169,7 @@ public class MemberServiceImpl implements IMemberService {
 
         memberAccountDao.insertSelective(memberAccount);
         SessionUtil.removeAttribute(SystemConf.VERIFY_CODE.toString());
+        return memberAccount;
     }
 
     /**

@@ -9,10 +9,7 @@ import com.bestomb.common.util.*;
 import com.bestomb.common.util.yamlMapper.ClientConf;
 import com.bestomb.common.util.yamlMapper.SystemConf;
 import com.bestomb.entity.*;
-import com.bestomb.service.IBackpackService;
-import com.bestomb.service.ILeaveMessage;
-import com.bestomb.service.IMemberService;
-import com.bestomb.service.IOrderService;
+import com.bestomb.service.*;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.BeanUtils;
@@ -23,7 +20,9 @@ import org.springframework.util.ObjectUtils;
 
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -43,6 +42,9 @@ public class MemberService {
     private ILeaveMessage leaveMessage; // 祭祀留言接口
     @Autowired
     private IBackpackService backpackService; // 背包接口
+
+    @Autowired
+    private ITradingService tradingService;//交易币接口
 
     /**
      * 发送短信验证码
@@ -131,8 +133,13 @@ public class MemberService {
      * @param nickName        昵称
      * @throws EqianyuanException
      */
-    public void register(String mobile, String verifyCode, String loginPassword, String confirmPassword, String inviterId, String nickName) throws EqianyuanException {
-        memberService.register(mobile, verifyCode, loginPassword, confirmPassword, inviterId, nickName);
+    public MemberAccountVo register(String mobile, String verifyCode, String loginPassword, String confirmPassword, String inviterId, String nickName) throws EqianyuanException {
+        MemberAccountVo vo = new MemberAccountVo();
+
+        MemberAccount account = memberService.register(mobile, verifyCode, loginPassword, confirmPassword, inviterId, nickName);
+        vo.setMemberId(account.getMemberId());
+        vo.setNickName(account.getNickName());
+        return vo;
     }
 
     /**
@@ -341,4 +348,48 @@ public class MemberService {
         return backpackService.sell(goodsPersonage);
     }
 
+    /**
+     * 查询获取会员交易币明细
+     *
+     * @param pageNo
+     * @param pageSize
+     * @param memberId
+     * @return
+     */
+    public PageResponse listByTradingDetail(int pageNo, int pageSize, int memberId) {
+        PageResponse pageResponse = tradingService.listByTradingDetail(pageNo, pageSize, memberId);
+        List<TradingDetail> tradingDetails = (List<TradingDetail>) pageResponse.getList();
+        if (!CollectionUtils.isEmpty(tradingDetails)) {
+            setListByPageResponse(pageResponse, tradingDetails);
+        }
+        return pageResponse;
+    }
+
+    /**
+     * 设置分页返回对象数据
+     *
+     * @param pageResponse
+     * @param tradingDetails
+     */
+    private void setListByPageResponse(PageResponse pageResponse, List<TradingDetail> tradingDetails) {
+        List<TradingDetailVO> tradingDetailVOs = new ArrayList<TradingDetailVO>();
+        for (TradingDetail tradingDetail : tradingDetails) {
+            TradingDetailVO tradingDetailVO = new TradingDetailVO();
+            BeanUtils.copyProperties(tradingDetail, tradingDetailVO);
+            tradingDetailVO.setCreateTime(CalendarUtil.secondsTimeToDateTimeString(tradingDetail.getCreateTime()));
+            String typeDesc = "";
+            switch (tradingDetail.getType()) {
+                case 1:
+                    typeDesc = "获得";
+                    break;
+                case 2:
+                    typeDesc = "消费";
+                    break;
+            }
+            tradingDetailVO.setType(typeDesc);
+            tradingDetailVOs.add(tradingDetailVO);
+        }
+
+        pageResponse.setList(tradingDetailVOs);
+    }
 }
