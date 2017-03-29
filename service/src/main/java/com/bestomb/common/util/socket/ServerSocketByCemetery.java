@@ -213,7 +213,9 @@ public class ServerSocketByCemetery {
                             osw = new OutputStreamWriter(client.getOutputStream());
                             bw = new BufferedWriter(osw);
                             pw = new PrintWriter(osw);
-                            pw.println(String.valueOf(strByline));
+                            String content = new String(strByline.getBytes("UTF-8"), "UTF-8");
+                            logger.info("客户端发送内容："+strByline +" ; new String:"+content);
+                            pw.println(content);
                             pw.flush();
                         }
                     }
