@@ -173,7 +173,7 @@ public class ServerSocketByCemetery {
                     osw = new OutputStreamWriter(client.getOutputStream());
                     bw = new BufferedWriter(osw);
                     PrintWriter pw = new PrintWriter(osw);
-                    pw.println("协议连接建立成功<end>");
+                    pw.println("connect server socket success<end>");
                     pw.flush();
 
                     ConcurrentLinkedQueue<Socket> clients = clientMapByCemetery.get(cemeteryId);
@@ -213,9 +213,8 @@ public class ServerSocketByCemetery {
                             osw = new OutputStreamWriter(client.getOutputStream());
                             bw = new BufferedWriter(osw);
                             pw = new PrintWriter(osw);
-                            String content = new String(strByline.getBytes("UTF-8"), "UTF-8");
-                            logger.info("客户端发送内容："+strByline +" ; new String:"+content);
-                            pw.println(content);
+                            logger.info("客户端发送内容："+strByline);
+                            pw.println(strByline);
                             pw.flush();
                         }
                     }

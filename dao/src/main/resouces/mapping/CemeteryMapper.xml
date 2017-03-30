@@ -39,7 +39,7 @@
         where c.id = #{id,jdbcType=INTEGER}
         group by c.id
     </select>
-    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
     delete from cemetery
     where id = #{id,jdbcType=INTEGER}
   </delete>

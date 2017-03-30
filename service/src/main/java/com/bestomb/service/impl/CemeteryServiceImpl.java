@@ -511,7 +511,7 @@ public class CemeteryServiceImpl implements ICemeteryService {
             Village village = addVillage(town.getId(), cemeteryByEditRequest.getVillageName());
             Community community = addCommunity(village.getId(), cemeteryByEditRequest.getCommunityName(), Integer.parseInt(String.valueOf(renameCount)));
             setAddress(cemetery, town, village, community);
-            cemeteryDao.insertSelective(cemetery);
+            cemeteryDao.updateByPrimaryKeySelective(cemetery);
             return;
         }
 
@@ -524,7 +524,7 @@ public class CemeteryServiceImpl implements ICemeteryService {
             //村数据都不存在的话，社是肯定不存在，所以，可以直接插入社数据
             Community community = addCommunity(village.getId(), cemeteryByEditRequest.getCommunityName(), Integer.parseInt(String.valueOf(renameCount)));
             setAddress(cemetery, town, village, community);
-            cemeteryDao.insertSelective(cemetery);
+            cemeteryDao.updateByPrimaryKeySelective(cemetery);
             return;
         }
 
@@ -535,7 +535,7 @@ public class CemeteryServiceImpl implements ICemeteryService {
                 || StringUtils.isEmpty(community.getId())) {
             community = addCommunity(village.getId(), cemeteryByEditRequest.getCommunityName(), Integer.parseInt(String.valueOf(renameCount)));
             setAddress(cemetery, town, village, community);
-            cemeteryDao.insertSelective(cemetery);
+            cemeteryDao.updateByPrimaryKeySelective(cemetery);
             return;
         }
 
