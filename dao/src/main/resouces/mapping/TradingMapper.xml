@@ -110,18 +110,14 @@
     where id = #{id,jdbcType=VARCHAR}
   </update>
 
-
   <insert id="batchInsert" parameterType="com.bestomb.entity.TradingDetail" >
-    <selectKey keyProperty="id" resultType="String" order="BEFORE">
-      select replace(uuid(),'-','') from dual
-    </selectKey>
     insert into trading_detail (id, instructions, trading,
     type, create_time, member_id
     )
     values
     <foreach collection="tradingDetails" item="item" index="index" separator=",">
-      (#{id,jdbcType=VARCHAR}, #{instructions,jdbcType=VARCHAR}, #{trading,jdbcType=DOUBLE},
-      #{type,jdbcType=INTEGER}, #{createTime,jdbcType=INTEGER}, #{memberId,jdbcType=INTEGER}
+      (replace(uuid(),'-',''), #{item.instructions,jdbcType=VARCHAR}, #{item.trading,jdbcType=DOUBLE},
+      #{item.type,jdbcType=INTEGER}, #{item.createTime,jdbcType=INTEGER}, #{item.memberId,jdbcType=INTEGER}
       )
     </foreach>
   </insert>

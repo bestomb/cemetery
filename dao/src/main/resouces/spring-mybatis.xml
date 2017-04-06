@@ -11,12 +11,11 @@
     <aop:config></aop:config>
 
     <!-- 数据源 -->
-    <bean id="datasource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
-
-        <property name="driverClassName" value="com.mysql.jdbc.Driver" />
-        <property name="url" value="jdbc:mysql://139.196.149.131:3306/cemetery?useUnicode=true&amp;characterEncoding=UTF-8&amp;allowMultiQueries=true"></property>
-        <property name="username" value="jason" />
-        <property name="password" value="123456" />
+    <!--<bean id="datasource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">-->
+        <!--<property name="driverClassName" value="com.mysql.jdbc.Driver" />-->
+        <!--<property name="url" value="jdbc:mysql://139.196.149.131:3306/cemetery?useUnicode=true&amp;characterEncoding=UTF-8&amp;allowMultiQueries=true"></property>-->
+        <!--<property name="username" value="jason" />-->
+        <!--<property name="password" value="123456" />-->
         <!--<property name="url" value="jdbc:mysql://114.119.8.225:3306/cemetery?useUnicode=true&amp;characterEncoding=UTF-8&amp;allowMultiQueries=true"></property>-->
         <!--<property name="username" value="cemetery" />-->
         <!--<property name="password" value="123456" />-->
@@ -24,15 +23,30 @@
         <!--<property name="username" value="root" />-->
         <!--<property name="password" value="eqianyuan" />-->
         <!-- 数据库连接池保持的最小连接数 -->
-        <property name="minIdle" value="5" />
+        <!--<property name="minIdle" value="30" />-->
         <!-- 数据库连接池保持的最大连接数 -->
-        <property name="maxIdle" value="30" />
+        <!--<property name="maxIdle" value="100" />-->
         <!-- 取得连接时是否进行有效性验证 -->
-        <property name="testOnBorrow" value="true" />
+        <!--<property name="testOnBorrow" value="true" />-->
         <!-- 返回连接时是否进行有效性验证 -->
-        <property name="testOnReturn" value="true" />
+        <!--<property name="testOnReturn" value="true" />-->
         <!-- 连接空闲时是否进行有效性验证 -->
-        <property name="testWhileIdle" value="true" />
+        <!--<property name="testWhileIdle" value="true" />-->
+    <!--</bean>-->
+
+    <bean id="datasource" class="org.apache.commons.dbcp.BasicDataSource"
+          destroy-method="close">
+        <property name="driverClassName" value="com.mysql.jdbc.Driver" />
+        <property name="url" value="jdbc:mysql://139.196.149.131:3306/cemetery?useUnicode=true&amp;characterEncoding=UTF-8&amp;allowMultiQueries=true" />
+        <property name="username" value="jason" />
+        <property name="password" value="123456" />
+        <property name="initialSize" value="20" />
+        <property name="maxActive" value="100" />
+        <property name="maxIdle" value="30" />
+        <property name="minIdle" value="20" />
+        <property name="maxWait" value="60000" />
+        <property name="validationQuery" value="SELECT 1" />
+        <property name="testOnBorrow" value="true"/>
     </bean>
 
     <bean id="sessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">

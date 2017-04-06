@@ -91,7 +91,7 @@
     </update>
     <select id="countByPagination" resultType="java.lang.Long">
     select count(1) from music
-      where cemetery_id = #{cemetery_id}
+      where cemetery_id = #{cemetery_id, jdbcType=VARCHAR}
   </select>
     <select id="selectByPagination" resultMap="BaseResultMap">
         select

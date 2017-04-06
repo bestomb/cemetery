@@ -128,6 +128,9 @@ public class PingppServiceImpl implements IPingggService {
             return;
         }
 
+        //人民币：虚拟币=1:100
+        tradingAmount = tradingAmount * 100;
+
         //持久化会员充值金额
         memberAccountDao.updateTradingAmount(tradingAmount, memberId);
 
