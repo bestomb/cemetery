@@ -8,7 +8,9 @@ import com.bestomb.common.response.PageResponse;
 import com.bestomb.common.response.member.LeaveMessageBo;
 import com.bestomb.common.util.CalendarUtil;
 import com.bestomb.dao.ILeaveMessageDao;
+import com.bestomb.dao.IMemberAccountDao;
 import com.bestomb.entity.LeaveMessage;
+import com.bestomb.entity.MemberAccount;
 import com.bestomb.service.ILeaveMessage;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -38,6 +40,9 @@ public class LeaveMessageImpl implements ILeaveMessage {
     @Autowired
     private CommonService commonService;
 
+    @Autowired
+    private IMemberAccountDao memberAccountDao;
+
     /***
      * 查询我（接收到）的留言
      *
@@ -65,12 +70,30 @@ public class LeaveMessageImpl implements ILeaveMessage {
             logger.info("pageNo [" + page.getPageNo() + "], pageSize [" + page.getPageSize() + "], 根据条件查询我（接收到）的留言无数据l");
             return new PageResponse(page, null);
         }
+
+        List<String> memberIds = new ArrayList<String>();
+        for (LeaveMessage entity : messages) {
+            memberIds.add(String.valueOf(entity.getMemberId()));
+        }
+
+        //根据会员编号查询获取会员昵称
+        List<MemberAccount> memberAccounts = memberAccountDao.selectByMemberIds(memberIds);
+
         // 使用BO返回
         List<LeaveMessageBo> resultList = new ArrayList<LeaveMessageBo>();
         for (LeaveMessage entity : messages) {
             LeaveMessageBo bo = new LeaveMessageBo();
             BeanUtils.copyProperties(entity, bo);
             bo.setCreateTime(CalendarUtil.secondsTimeToDateTimeString(entity.getCreateTime())); // 转化创建时间
+
+            if (!CollectionUtils.isEmpty(memberAccounts)) {
+                for (MemberAccount memberAccount : memberAccounts) {
+                    if (entity.getMemberId().equals(memberAccount.getMemberId())) {
+                        bo.setMemberNickName(memberAccount.getNickName());
+                        break;
+                    }
+                }
+            }
             resultList.add(bo);
         }
 
@@ -104,12 +127,30 @@ public class LeaveMessageImpl implements ILeaveMessage {
             logger.info("pageNo [" + page.getPageNo() + "], pageSize [" + page.getPageSize() + "], 根据条件查询我（发出）的留言无数据l");
             return new PageResponse(page, null);
         }
+
+        List<String> memberIds = new ArrayList<String>();
+        for (LeaveMessage entity : messages) {
+            memberIds.add(String.valueOf(entity.getMemberId()));
+        }
+
+        //根据会员编号查询获取会员昵称
+        List<MemberAccount> memberAccounts = memberAccountDao.selectByMemberIds(memberIds);
+
         // 使用BO返回
         List<LeaveMessageBo> resultList = new ArrayList<LeaveMessageBo>();
         for (LeaveMessage entity : messages) {
             LeaveMessageBo bo = new LeaveMessageBo();
             BeanUtils.copyProperties(entity, bo);
             bo.setCreateTime(CalendarUtil.secondsTimeToDateTimeString(entity.getCreateTime())); // 转化创建时间
+
+            if (!CollectionUtils.isEmpty(memberAccounts)) {
+                for (MemberAccount memberAccount : memberAccounts) {
+                    if (entity.getMemberId().equals(memberAccount.getMemberId())) {
+                        bo.setMemberNickName(memberAccount.getNickName());
+                        break;
+                    }
+                }
+            }
             resultList.add(bo);
         }
 
@@ -159,12 +200,30 @@ public class LeaveMessageImpl implements ILeaveMessage {
             logger.info("pageNo [" + page.getPageNo() + "], pageSize [" + page.getPageSize() + "], 根据条件查询纪念人的留言无数据");
             return new PageResponse(page, null);
         }
+
+        List<String> memberIds = new ArrayList<String>();
+        for (LeaveMessage entity : messages) {
+            memberIds.add(String.valueOf(entity.getMemberId()));
+        }
+
+        //根据会员编号查询获取会员昵称
+        List<MemberAccount> memberAccounts = memberAccountDao.selectByMemberIds(memberIds);
+
         // 使用BO返回
         List<LeaveMessageBo> resultList = new ArrayList<LeaveMessageBo>();
         for (LeaveMessage entity : messages) {
             LeaveMessageBo bo = new LeaveMessageBo();
             BeanUtils.copyProperties(entity, bo);
             bo.setCreateTime(CalendarUtil.secondsTimeToDateTimeString(entity.getCreateTime())); // 转化创建时间
+
+            if (!CollectionUtils.isEmpty(memberAccounts)) {
+                for (MemberAccount memberAccount : memberAccounts) {
+                    if (entity.getMemberId().equals(memberAccount.getMemberId())) {
+                        bo.setMemberNickName(memberAccount.getNickName());
+                        break;
+                    }
+                }
+            }
             resultList.add(bo);
         }
 
@@ -184,12 +243,30 @@ public class LeaveMessageImpl implements ILeaveMessage {
             logger.info("根据条件查询纪念人的留言的回复留言无数据");
             return Collections.EMPTY_LIST;
         }
+
+        List<String> memberIds = new ArrayList<String>();
+        for (LeaveMessage entity : messages) {
+            memberIds.add(String.valueOf(entity.getMemberId()));
+        }
+
+        //根据会员编号查询获取会员昵称
+        List<MemberAccount> memberAccounts = memberAccountDao.selectByMemberIds(memberIds);
+
         // 使用BO返回
         List<LeaveMessageBo> resultList = new ArrayList<LeaveMessageBo>();
         for (LeaveMessage entity : messages) {
             LeaveMessageBo bo = new LeaveMessageBo();
             BeanUtils.copyProperties(entity, bo);
             bo.setCreateTime(CalendarUtil.secondsTimeToDateTimeString(entity.getCreateTime())); // 转化创建时间
+
+            if (!CollectionUtils.isEmpty(memberAccounts)) {
+                for (MemberAccount memberAccount : memberAccounts) {
+                    if (entity.getMemberId().equals(memberAccount.getMemberId())) {
+                        bo.setMemberNickName(memberAccount.getNickName());
+                        break;
+                    }
+                }
+            }
             resultList.add(bo);
         }
         return resultList;

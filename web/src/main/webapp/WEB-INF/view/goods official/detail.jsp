@@ -125,6 +125,7 @@
             type: "POST",
             url: "/goodsOfficial/getInfo",
             data: {goodsId: "${param.goodsId}"},
+            dataType: "json",
             success: function (response) {
                 if (response.code == "200") {
                     var _this = response.data;

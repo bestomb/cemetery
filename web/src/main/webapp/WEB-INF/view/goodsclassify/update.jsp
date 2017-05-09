@@ -93,6 +93,7 @@
             type: "POST",
             url: "/second_classify/getInfo",
             data: {id: "${param.id}"},
+            dataType: "json",
             success: function (response) {
                 if (response.code == "200") {
                     var _this = response.data;
@@ -125,6 +126,7 @@
                 cache: false,
                 contentType: false, //改变默认文本传输，允许文件传输
                 processData: false, //允许data传递对象
+                dataType: "json",
                 success: function (response) {
                     if (response.code == "200") {
                         $("#form-tip").removeClass("hidden alert-warning").addClass("alert-success").show().find("strong").text(response.message);

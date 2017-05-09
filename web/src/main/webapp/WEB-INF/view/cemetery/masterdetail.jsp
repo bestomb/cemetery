@@ -95,6 +95,7 @@
             type: "POST",
             url: "/sys_master/queryid",
             data: {id: "${param.id}"},
+            dataType: "json",
             success: function (response) {
 
                 if (response.code == "200") {

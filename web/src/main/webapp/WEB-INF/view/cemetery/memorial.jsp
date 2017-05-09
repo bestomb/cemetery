@@ -119,6 +119,7 @@
                     type: "POST",
                     url: "/sys_master/getlistmaster",
                     data: $.extend({}, pagination.data, pagination.page),
+                    dataType: "json",
                     success: function (response) {
                         //设置分页
                         pagination.page.pageNo = response.data.pageNo;

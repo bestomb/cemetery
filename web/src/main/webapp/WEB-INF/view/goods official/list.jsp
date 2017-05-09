@@ -162,6 +162,7 @@
                     type: "POST",
                     url: "/goodsOfficial/getList",
                     data: $.extend({}, pagination.data, pagination.page),
+                    dataType: "json",
                     success: function (response) {
                         //设置分页
                         pagination.page.pageNo = response.data.pageNo;
@@ -275,6 +276,7 @@
                 type: "POST",
                 url: "/second_classify/getList",
                 data: {'firstClassify': classId},
+                dataType: "json",
                 success: function (resp) {
                     var second = '<label>二级分类</label>';
                     if (resp.code == "200"){
@@ -345,6 +347,7 @@
                 url: "/goodsOfficial/delete",
                 traditional: true,
                 data: {"goodsId": ids},
+                dataType: "json",
                 success: function (response) {
                     $("#myModal").modal('hide')
                     $(".operatorTip").removeClass("hidden").find("span").text(response.message);

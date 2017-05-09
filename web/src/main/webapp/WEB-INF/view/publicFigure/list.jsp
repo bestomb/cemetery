@@ -145,6 +145,7 @@
                     type: "POST",
                     url: "/sys_publfigures/publifigureslist",
                     data: $.extend({}, pagination.data, pagination.page),
+                    dataType: "json",
                     success: function (response) {
                         //设置分页
                         pagination.page.pageNo = response.data.pageNo;

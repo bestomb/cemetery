@@ -13,6 +13,7 @@ import com.bestomb.common.util.yamlMapper.SystemConf;
 import com.bestomb.controller.BaseController;
 import com.bestomb.entity.*;
 import com.bestomb.sevice.api.MemberService;
+import com.sun.corba.se.spi.activation.Server;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -70,6 +71,20 @@ public class MemberController extends BaseController {
     }
 
     /**
+     * 密码找回
+     * @param mobile
+     * @param verifyCode
+     * @param loginPassword
+     * @param confirmPassword
+     * @return
+     */
+    @RequestMapping("/findPassword")
+    public @ResponseBody ServerResponse findPwd(String mobile, String verifyCode, String loginPassword, String confirmPassword) throws EqianyuanException{
+        boolean flag = memberService.findPwd(mobile, verifyCode, loginPassword, confirmPassword);
+        return new ServerResponse.ResponseBuilder().data(flag).build();
+    }
+
+    /**
      * 带验证码登录
      *
      * @param loginAccount   登录账号
@@ -120,6 +135,30 @@ public class MemberController extends BaseController {
         return new ServerResponse.ResponseBuilder().data(memberAccountVo).build();
     }
 
+    /**
+     * 更换手机号码
+     *
+     * @param mobile
+     * @param verifyCode
+     * @return
+     * @throws EqianyuanException
+     */
+    @RequestMapping("/updateMobile")
+    public @ResponseBody ServerResponse updateMobile(String mobile, String verifyCode) throws EqianyuanException {
+        // 从session池中获取系统用户信息
+        int memberId = getLoginMember().getMemberId();
+        boolean flag = memberService.updateMobile(memberId, mobile, verifyCode);
+
+        if (flag) { // 编辑成功后，则重置session中会员信息
+            MemberAccountVo memberAccountVo = memberService.getInfo(memberId);
+            MemberLoginVo memberLoginVo = new MemberLoginVo();
+            BeanUtils.copyProperties(memberAccountVo, memberLoginVo);
+            SessionUtil.setAttribute(SessionUtil.getClientSession(), SystemConf.WEBSITE_SESSION_MEMBER.toString(), memberLoginVo);
+        }
+
+        return new ServerResponse.ResponseBuilder().data(flag).build();
+    }
+
     /***
      * 编辑会员资料信息
      *
@@ -127,7 +166,7 @@ public class MemberController extends BaseController {
      * @return
      * @throws EqianyuanException
      */
-    @RequestMapping(value = "/edit", method = {RequestMethod.PUT, RequestMethod.POST})
+    @RequestMapping(value = "/edit")
     @ResponseBody
     public ServerResponse editMemberInfo(MemberAccount memberAccount) throws EqianyuanException {
         // 从session池中获取系统用户信息

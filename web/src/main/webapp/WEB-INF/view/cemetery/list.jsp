@@ -111,6 +111,7 @@
                     type: "POST",
                     url: "/cemetery/getListByArea",
                     data: $.extend({}, pagination.data, pagination.page),
+                    dataType: "json",
                     success: function (response) {
                         //设置分页
                         pagination.page.pageNo = response.data.pageNo;
@@ -167,6 +168,7 @@
                 type: "GET",
                 url: postUrl,
                 data: postData,
+                dataType: "json",
                 success: function (resp) {
                     if (resp.code == "200") {
                         eval(callBack + "(resp.data)");

@@ -103,6 +103,7 @@
             type: "POST",
             url: "/sys_publfigures/info",
             data: {id: "${param.id}"},
+            dataType: "json",
             success: function (response) {
                 if (response.code == "200") {
                     var _this = response.data;
@@ -143,6 +144,7 @@
                 url: "/sys_publfigures/modify",
                 traditional: true,
                 data: {"id": id, "status": statusvalue, "auditOpinion": $("textarea[name='auditOpinion']").val()},
+                dataType: "json",
                 success: function (response) {
 
                     if (response.code == "200") {
@@ -166,6 +168,7 @@
             url: "/sys_publfigures/modify",
             traditional: true,
             data: {"id": id, "status": 2},
+            dataType: "json",
             success: function (response) {
                 var butongyi = ["驳回"];
                 var status;

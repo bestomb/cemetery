@@ -106,6 +106,7 @@
     <include refid="Base_Column_List"/>
     from memorial_record
     where master_id = #{masterId,jdbcType=VARCHAR}
+    order by create_time desc
     limit ${page.start}, ${page.pageSize}
   </select>
 

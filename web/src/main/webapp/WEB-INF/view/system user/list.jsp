@@ -134,6 +134,7 @@
                     type: "POST",
                     url: "/system_user/paginationList",
                     data: $.extend({}, pagination.data, pagination.page),
+                    dataType: "json",
                     success: function (response) {
                         //设置分页
                         pagination.page.pageNo = response.data.pageNo;
@@ -208,6 +209,7 @@
                 url: "/system_user/delete",
                 traditional: true,
                 data: {"id": ids},
+                dataType: "json",
                 success: function (response) {
                     $("#myModal").modal('hide')
                     $(".operatorTip").removeClass("hidden").find("span").text(response.message);
@@ -267,6 +269,7 @@
             type: "POST",
             url: "/system_role/list",
             data: null,
+            dataType: "json",
             success: function (response) {
                 var search_by_role = "<option value=''>-- 请选择角色 --</option>";
                 if (response.code == "200"

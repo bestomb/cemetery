@@ -131,7 +131,7 @@
     			select id from cemetery where member_id = #{memberId,jdbcType=INTEGER}
     		)
     	)
-    )
+    ) and reply_id is null
   </select>
     <!-- 查询我（接收到）的留言分页列表 -->
     <select id="getReceivedMessage" resultMap="ResultMapWithBLOBs">
@@ -146,14 +146,14 @@
         select id from cemetery where member_id = #{memberId,jdbcType=INTEGER}
         )
         )
-        )
+        ) and reply_id is null
         limit ${page.start}, ${page.pageSize}
     </select>
 
     <!-- 查询我（发出）的留言总数 -->
     <select id="getPushedMessageCount" resultType="java.lang.Integer">
     select count(1) from leave_message
-    where member_id = #{memberId,jdbcType=INTEGER}
+    where member_id = #{memberId,jdbcType=INTEGER} and reply_id is null
   </select>
     <!-- 查询我（发出）的留言分页列表 -->
     <select id="getPushedMessage" resultMap="ResultMapWithBLOBs">
@@ -162,7 +162,7 @@
         ,
         <include refid="Blob_Column_List"/>
         from leave_message
-        where member_id = #{memberId,jdbcType=INTEGER}
+        where member_id = #{memberId,jdbcType=INTEGER} and reply_id is null
         limit ${page.start}, ${page.pageSize}
     </select>
 

@@ -71,6 +71,7 @@
             type: "POST",
             url: "/model/info",
             data: {id: "${param.id}"},
+            dataType: "json",
             success: function (response) {
                 if (response.code == "200") {
                     var _this = response.data;

@@ -86,6 +86,7 @@
                     password: $("#password").val(),
                     verify_code: $("#validate_code").val()
                 },
+                dataType: "json",
                 success: function(resp){
                     if(resp.code == "200"){
                         //跳转到主页

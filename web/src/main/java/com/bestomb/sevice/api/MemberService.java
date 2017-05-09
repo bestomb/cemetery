@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
@@ -140,6 +141,30 @@ public class MemberService {
         vo.setMemberId(account.getMemberId());
         vo.setNickName(account.getNickName());
         return vo;
+    }
+
+    /**
+     * 密码找回
+     * @param mobile
+     * @param verifyCode
+     * @param loginPassword
+     * @param confirmPassword
+     * @return
+     */
+    public boolean findPwd(String mobile, String verifyCode, String loginPassword, String confirmPassword) throws EqianyuanException{
+        return memberService.findPwd(mobile, verifyCode, loginPassword, confirmPassword);
+    }
+
+    /**
+     * 更换手机号码
+     *
+     * @param mobile
+     * @param verifyCode
+     * @return
+     * @throws EqianyuanException
+     */
+    public boolean updateMobile(int memberId, String mobile, String verifyCode) throws EqianyuanException{
+        return memberService.updateMobile(memberId, mobile, verifyCode);
     }
 
     /**
@@ -392,4 +417,5 @@ public class MemberService {
 
         pageResponse.setList(tradingDetailVOs);
     }
+
 }

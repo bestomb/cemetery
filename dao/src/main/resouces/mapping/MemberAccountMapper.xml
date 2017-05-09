@@ -29,6 +29,12 @@
     from member_account
     where mobile_number = #{mobile_number}
   </select>
+    <select id="selectByMobileNumber" resultType="java.lang.Integer" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from member_account
+        where mobile_number = #{mobile_number}
+    </select>
     <select id="selectByInviterId" resultType="java.lang.Integer" parameterType="java.lang.Integer">
     select
     count(1)

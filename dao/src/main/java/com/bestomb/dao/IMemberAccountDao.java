@@ -21,6 +21,13 @@ public interface IMemberAccountDao {
     int selectByMobile(@Param("mobile_number") Long mobile);
 
     /**
+     * 根据手机号码查询会员信息
+     * @param mobile
+     * @return
+     */
+    MemberAccount selectByMobileNumber(@Param("mobile_number") Long mobile);
+
+    /**
      * 根据邀请者编号查询数据数量
      *
      * @param inviterId

@@ -97,6 +97,7 @@
             url: "/system_role/list",
             traditional: true,
             data: null,
+            dataType: "json",
             success: function (response) {
                 if (response.code == "200" && response.data.length > 0) {
                     roleTree = $.fn.zTree.init($("#roleTree"), setting, response.data);
@@ -128,6 +129,7 @@
                 type: "POST",
                 url: "/system_user/add",
                 data: $('form').serialize() + "&roleId=" + roleIds.join(","),
+                dataType: "json",
                 success: function (response) {
                     if (response.code == "200") {
                         $("#form-tip").removeClass("hidden alert-warning").addClass("alert-success").show().find("strong").text(response.message);

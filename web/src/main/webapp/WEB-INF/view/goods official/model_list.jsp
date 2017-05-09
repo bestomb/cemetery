@@ -88,6 +88,7 @@
                     type: "POST",
                     url: "/model/paginationList",
                     data: $.extend({}, pagination.data, pagination.page),
+                    dataType: "json",
                     success: function (response) {
                         //设置分页
                         pagination.page.pageNo = response.data.pageNo;
@@ -157,6 +158,7 @@
             type: "post",
             url: "/model_classify/getLevelOneListByParentId",
             data: {"parentId": parentId},
+            dataType: "json",
             success: function (response) {
                 if (response.code == "200" && response.data.length > 0) {
                     $(response.data).each(function () {

@@ -123,6 +123,7 @@
                     type: "POST",
                     url: "/second_classify/paginationList",
                     data: $.extend({}, pagination.data, pagination.page),
+                    dataType: "json",
                     success: function (response) {
                         //设置分页
                         pagination.page.pageNo = response.data.pageNo;
@@ -254,6 +255,7 @@
                 url: "/second_classify/delete",
                 traditional: true,
                 data: {"id": ids},
+                dataType: "json",
                 success: function (response) {
                     $("#myModal").modal('hide')
                     $(".operatorTip").removeClass("hidden").find("span").text(response.message);

@@ -159,6 +159,7 @@
                     type: "POST",
                     url: "/model/paginationList",
                     data: $.extend({}, pagination.data, pagination.page),
+                    dataType: "json",
                     success: function (response) {
                         //设置分页
                         pagination.page.pageNo = response.data.pageNo;
@@ -244,6 +245,7 @@
                 url: "/model/delete",
                 traditional: true,
                 data: {"id": ids},
+                dataType: "json",
                 success: function (response) {
                     $("#myModal").modal('hide')
                     $(".operatorTip").removeClass("hidden").find("span").text(response.message);
@@ -314,6 +316,7 @@
             type: "post",
             url: "/model_classify/getLevelOneListByParentId",
             data: {"parentId": parentId},
+            dataType: "json",
             success: function (response) {
                 if (response.code == "200" && response.data.length > 0) {
                     $(response.data).each(function () {
@@ -365,6 +368,7 @@
                 type: "post",
                 url: "/model_classify/add",
                 data: nodeInfo,
+                dataType: "json",
                 success: function (response) {
                     if (response.code == "200") {
                         nodeInfo.id = response.data.id;
@@ -410,6 +414,7 @@
             url: "/model_classify/delete",
             data: {"id": treeNode.id},
             async: false,
+            dataType: "json",
             success: function (response) {
                 if (response.code != "200") {
                     returnFlag = false;
@@ -438,6 +443,7 @@
             type: "post",
             url: "/model_classify/modify",
             data: {"id": treeNode.id, "name": treeNode.name, "parentId": treeNode.parentId},
+            dataType: "json",
             success: function (response) {
                 if (response.code != "200") {
                     treeNode.name = oldName;

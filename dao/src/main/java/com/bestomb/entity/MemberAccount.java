@@ -32,7 +32,7 @@ public class MemberAccount {
     	if (mobileNumber!=null) { return false; }
     	if (loginPassword!=null) { return false; }
     	if (nickName!=null) { return false; }
-    	if (inviterId!=null) { return false; }
+//    	if (inviterId!=null) { return false; }
     	if (tradingPassword!=null) { return false; }
     	return true;
     }

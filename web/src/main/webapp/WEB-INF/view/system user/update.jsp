@@ -81,6 +81,7 @@
             type: "POST",
             url: "/system_user/info",
             data: {id: "${param.id}"},
+            dataType: "json",
             success: function (response) {
                 if (response.code == "200") {
                     var _this = response.data;
@@ -119,6 +120,7 @@
                 type: "POST",
                 url: "/system_user/modify",
                 data: $('form').serialize() + "&roleId=" + roleIds.join(","),
+                dataType: "json",
                 success: function (response) {
                     if (response.code == "200") {
                         $("#form-tip").removeClass("hidden alert-warning").addClass("alert-success").show().find("strong").text(response.message);
@@ -158,6 +160,7 @@
             url: "/system_role/list",
             traditional: true,
             data: null,
+            dataType: "json",
             success: function (response) {
                 if (response.code != "200" || response.data.length <= 0) {
                     return false;

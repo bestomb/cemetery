@@ -108,6 +108,7 @@
       type: "POST",
       url: "/system_MemberAccount/info",
       data: {memberId: ${param.id}},
+      dataType: "json",
       success: function (response) {
         if (response.code == "200") {
           var _this = response.data;
@@ -149,6 +150,7 @@
       url: "/sys_memberrole/list",
       traditional: true,
       data: {memberId: "${param.id}"},
+      dataType: "json",
       success: function (response) {
         if (response.code != "200" || response.data.length <= 0) {
           return false;
@@ -171,6 +173,7 @@
       url: "/sys_memberrole/memberadd",
       traditional: true,
       data: {memberId: "${param.id}", type:$("#ch1:checked").val()},
+      dataType: "json",
       success: function (response) {
 
         if (response.code == "200") {

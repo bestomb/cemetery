@@ -134,6 +134,7 @@
           type: "POST",
           url: "/system_MemberAccount/getlistmemberCount",
           data: $.extend({}, pagination.data, pagination.page),
+          dataType: "json",
           success: function (response) {
             //设置分页
             pagination.page.pageNo = response.data.pageNo;

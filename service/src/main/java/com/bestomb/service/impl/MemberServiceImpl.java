@@ -173,6 +173,134 @@ public class MemberServiceImpl implements IMemberService {
     }
 
     /**
+     * 密码找回
+     * @param mobile 手机号码
+     * @param verifyCode    短信验证码
+     * @param loginPassword 密码
+     * @param confirmPassword   确认密码
+     * @return
+     */
+    public boolean findPwd(String mobile, String verifyCode, String loginPassword, String confirmPassword) throws EqianyuanException{
+        //手机号码是否为空
+        if (StringUtils.isEmpty(mobile)) {
+            logger.warn("findPwd fail , because mobile is null.");
+            throw new EqianyuanException(ExceptionMsgConstant.MOBILE_IS_EMPTY);
+        }
+
+        //密码是否为空
+        if (StringUtils.isEmpty(loginPassword)) {
+            logger.warn("findPwd fail , because loginPassword is null.");
+            throw new EqianyuanException(ExceptionMsgConstant.LOGIN_PASSWORD_IS_EMPTY);
+        }
+
+        //确认密码是否为空
+        if (StringUtils.isEmpty(confirmPassword)) {
+            logger.warn("findPwd fail , because confirmPassword is null.");
+            throw new EqianyuanException(ExceptionMsgConstant.CONFIRM_PASSWORD_IS_EMPTY);
+        }
+
+        //验证码是否为空
+        if (StringUtils.isEmpty(verifyCode)) {
+            logger.warn("findPwd fail , because verifyCode is null");
+            throw new EqianyuanException(ExceptionMsgConstant.VALIDATA_CODE_IS_EMPTY);
+        }
+
+        //判断两次密码是否一致
+        if (!StringUtils.equals(loginPassword, confirmPassword)) {
+            logger.warn("findPwd fail , because the two  passwords don't match.");
+            throw new EqianyuanException(ExceptionMsgConstant.TWO_PASSWORD_DO_NOT_MATCH);
+        }
+
+        //获取客户端session
+        HttpSession session = SessionUtil.getClientSession();
+
+        //从session中获取验证码数据
+        String codeByValidation = (String) SessionUtil.getAttribute(session, SystemConf.VERIFY_CODE.toString());
+        if (StringUtils.isEmpty(codeByValidation)) {
+            logger.warn("findPwd fail, because there is no verification code in the session attribute.");
+            throw new EqianyuanException(ExceptionMsgConstant.VALIDATA_CODE_VALIDATION_ERROR);
+        }
+
+        //比较用户提交验证码与session中验证码是否一致
+        if (!StringUtils.equalsIgnoreCase(verifyCode, codeByValidation)) {
+            logger.warn("register fail, because session attribute verification code and request param code not consistent.");
+            throw new EqianyuanException(ExceptionMsgConstant.VALIDATA_CODE_VALIDATION_ERROR);
+        }
+
+        //根据手机号码查询会员数据信息
+        MemberAccount memberAccount = memberAccountDao.selectByMobileNumber(Long.parseLong(mobile));
+        if(memberAccount == null || memberAccount.getMemberId() == null){
+            return false;
+        }
+
+        //密码加密处理
+        String encryptionPwd = Md5Util.MD5By32(StringUtils.lowerCase(loginPassword));
+        memberAccount.setLoginPassword(encryptionPwd);
+        memberAccountDao.updateByPrimaryKeySelective(memberAccount);
+        SessionUtil.removeAttribute(SystemConf.VERIFY_CODE.toString());
+        return true;
+    }
+
+    /**
+     * 修改手机号码
+     * @param mobile
+     * @param verifyCode
+     * @return
+     * @throws EqianyuanException
+     */
+    public boolean updateMobile(int memberId, String mobile, String verifyCode) throws EqianyuanException{
+        //手机号码是否为空
+        if (StringUtils.isEmpty(mobile)) {
+            logger.warn("updateMobile fail , because mobile is null.");
+            throw new EqianyuanException(ExceptionMsgConstant.MOBILE_IS_EMPTY);
+        }
+
+        //验证码是否为空
+        if (StringUtils.isEmpty(verifyCode)) {
+            logger.warn("updateMobile fail , because verifyCode is null");
+            throw new EqianyuanException(ExceptionMsgConstant.VALIDATA_CODE_IS_EMPTY);
+        }
+
+        //正则判断是否为正确手机号
+        if (!RegexUtils.isMobile(mobile)) {
+            logger.warn("updateMobile fail , because mobile is not correct ");
+            throw new EqianyuanException(ExceptionMsgConstant.MOBILE_IS_NOT_CORRECT);
+        }
+
+        //获取客户端session
+        HttpSession session = SessionUtil.getClientSession();
+
+        //从session中获取验证码数据
+        String codeByValidation = (String) SessionUtil.getAttribute(session, SystemConf.VERIFY_CODE.toString());
+        if (StringUtils.isEmpty(codeByValidation)) {
+            logger.warn("updateMobile fail, because there is no verification code in the session attribute.");
+            throw new EqianyuanException(ExceptionMsgConstant.VALIDATA_CODE_VALIDATION_ERROR);
+        }
+
+        //比较用户提交验证码与session中验证码是否一致
+        if (!StringUtils.equalsIgnoreCase(verifyCode, codeByValidation)) {
+            logger.warn("updateMobile fail, because session attribute verification code and request param code not consistent.");
+            throw new EqianyuanException(ExceptionMsgConstant.VALIDATA_CODE_VALIDATION_ERROR);
+        }
+
+        //检查手机号是否已经注册过
+        int memberCountByMobile = memberAccountDao.selectByMobile(Long.parseLong(mobile));
+
+        //当会员数量大于0，说明已经被注册，则抛出对应错误提示
+        if (memberCountByMobile > 0) {
+            logger.warn("updateMobile fail, because mobile is already register.");
+            throw new EqianyuanException(ExceptionMsgConstant.MOBILE_IS_ALREADY_REGISTER);
+        }
+
+        MemberAccount memberAccount = memberAccountDao.selectByPrimaryKey(memberId);
+
+        memberAccount.setMobileNumber(Long.parseLong(mobile));
+        memberAccountDao.updateByPrimaryKeySelective(memberAccount);
+        SessionUtil.removeAttribute(SystemConf.VERIFY_CODE.toString());
+        return true;
+    }
+
+    /**
      * 会员登录
      *
      * @param loginAccount  登录账号

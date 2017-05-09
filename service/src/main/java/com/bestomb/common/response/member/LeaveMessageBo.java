@@ -8,7 +8,8 @@ public class LeaveMessageBo {
     private String replyId; // 被回复留言ID
     private String createTime; 
     private String content; // 留言
-    
+	private String memberNickName;	//留言会员昵称
+
 	public String getId() {
 		return id;
 	}
@@ -45,5 +46,12 @@ public class LeaveMessageBo {
 	public void setContent(String content) {
 		this.content = content;
 	}
-	
+
+	public String getMemberNickName() {
+		return memberNickName;
+	}
+
+	public void setMemberNickName(String memberNickName) {
+		this.memberNickName = memberNickName;
+	}
 }

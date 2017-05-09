@@ -78,6 +78,7 @@
             type: "POST",
             url: "/system_user/info",
             data: {id: "${param.id}"},
+            dataType: "json",
             success: function (response) {
                 if (response.code == "200") {
                     var _this = response.data;
@@ -122,6 +123,7 @@
             url: "/system_role/list",
             traditional: true,
             data: null,
+            dataType: "json",
             success: function (response) {
                 if (response.code != "200" || response.data.length <= 0) {
                     return false;

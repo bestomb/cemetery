@@ -123,6 +123,7 @@
                     type: "POST",
                     url: "/system_role/paginationList",
                     data: $.extend({}, pagination.data, pagination.page),
+                    dataType: "json",
                     success: function (response) {
                         //设置分页
                         pagination.page.pageNo = response.data.pageNo;
@@ -190,6 +191,7 @@
                 url: "/system_role/delete",
                 traditional: true,
                 data: {"id": ids},
+                dataType: "json",
                 success: function (response) {
                     $("#myModal").modal('hide')
                     $(".operatorTip").removeClass("hidden").find("span").text(response.message);

@@ -89,6 +89,7 @@
             url: "/system_menu/list",
             traditional: true,
             data: null,
+            dataType: "json",
             success: function (response) {
                 if (response.code == "200" && response.data.length > 0) {
                     menuTree = $.fn.zTree.init($("#menuTree"), setting, response.data);
@@ -120,6 +121,7 @@
                 type: "POST",
                 url: "/system_role/add",
                 data: $('form').serialize()+"&menuId="+menuIds.join(","),
+                dataType: "json",
                 success: function(response){
                     if (response.code == "200") {
                         $("#form-tip").removeClass("hidden alert-warning").addClass("alert-success").show().find("strong").text(response.message);

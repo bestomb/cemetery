@@ -112,6 +112,7 @@
             type: "POST",
             url: "/cemetery/getInfoById",
             data: {cemeteryId: "${param.id}"},
+            dataType: "json",
             success: function (response) {
                 if (response.code == "200") {
                     var _this = response.data;
@@ -166,6 +167,7 @@
             url: "/cemetery/list",
             traditional: true,
             data: null,
+            dataType: "json",
             success: function (response) {
                 if (response.code != "200" || response.data.length <= 0) {
                     return false;

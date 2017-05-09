@@ -25,6 +25,26 @@ public interface IMemberService {
     MemberAccount register(String mobile, String verifyCode, String loginPassword, String confirmPassword, String inviterId, String nickName) throws EqianyuanException;
 
     /**
+     * 密码找回
+     * @param mobile 手机号码
+     * @param verifyCode    短信验证码
+     * @param loginPassword 密码
+     * @param confirmPassword   确认密码
+     * @return
+     * @throws EqianyuanException
+     */
+    boolean findPwd(String mobile, String verifyCode, String loginPassword, String confirmPassword) throws EqianyuanException;
+
+    /**
+     * 更换手机号码
+     * @param mobile
+     * @param verifyCode
+     * @return
+     * @throws EqianyuanException
+     */
+    boolean updateMobile(int memberId, String mobile, String verifyCode) throws EqianyuanException;
+
+    /**
      * 会员登录
      *
      * @param loginAccount  登录账号
