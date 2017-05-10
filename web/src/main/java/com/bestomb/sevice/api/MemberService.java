@@ -179,13 +179,15 @@ public class MemberService {
         BeanUtils.copyProperties(memberLoginBo, memberLoginVo);
 
         //获取客户端session
-        HttpSession session;
+        HttpSession session = null;
         try {
             session = SessionUtil.getClientSession();
         } catch (EqianyuanException e) {
             session = SessionUtil.getSession();
+        } finally{
             SessionContextUtil.getInstance().addSession(session);
         }
+
         SessionUtil.setAttribute(session, SystemConf.WEBSITE_SESSION_MEMBER.toString(), memberLoginVo);
         return memberLoginVo;
     }

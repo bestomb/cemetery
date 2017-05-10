@@ -17,9 +17,7 @@
                 <property name="supportedMediaTypes">
                     <list>
                         <!-- 这里顺序不能反，一定先写text/html,不然ie下出现下载提示 -->
-                        <!--<value>text/html;charset=UTF-8</value>-->
-                        <!--<value>application/json;charset=UTF-8</value>-->
-                        <value>text/plain;charset=UTF-8</value>
+                        <value>text/html;charset=UTF-8</value>
                     </list>
                 </property>
             </bean>

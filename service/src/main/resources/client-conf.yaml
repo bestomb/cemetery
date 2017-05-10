@@ -9,7 +9,8 @@ SMS:
   CorpID: GZLKJ0005699
   Pwd: xy@666
   BatchSend2: http://sdk.zhongguowuxian.com:98/ws/BatchSend2.aspx
-  BatchSend2_message: 欢迎注册中国网陵会员，验证码?，请在10分钟内按页面提示提交验证码，切勿将验证码泄露与他人。
+#  BatchSend2_message: 欢迎注册中国网陵会员，验证码?，请在10分钟内按页面提示提交验证码，切勿将验证码泄露与他人。
+  BatchSend2_message: 您的短信验证码为?，请在10分钟内按页面提示提交验证码，切勿将验证码泄露与他人。
 
 ### 会员初始默认可建设陵园总数 ###
 constructionCount: 3

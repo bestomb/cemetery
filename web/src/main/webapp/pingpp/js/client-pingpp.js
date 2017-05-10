@@ -13,6 +13,7 @@ function getCharge(amount, channel, jsessionId) {
         url: "/pingpp_api/getCharge",
         async: false,
         data: data,
+        dataType: "json",
         success: function (resp) {
             var respJSON = $.parseJSON(resp);
             //如果是扫码支付，则提取支付URL并生成二维码返回
