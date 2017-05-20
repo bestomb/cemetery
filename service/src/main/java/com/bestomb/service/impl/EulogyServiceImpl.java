@@ -8,7 +8,10 @@ import com.bestomb.common.response.PageResponse;
 import com.bestomb.common.response.master.eulogy.EulogyBo;
 import com.bestomb.common.util.CalendarUtil;
 import com.bestomb.dao.IEulogyDao;
+import com.bestomb.dao.IMemberAccountDao;
 import com.bestomb.entity.Eulogy;
+import com.bestomb.entity.LeaveMessage;
+import com.bestomb.entity.MemberAccount;
 import com.bestomb.service.IEulogyService;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -32,6 +35,9 @@ public class EulogyServiceImpl implements IEulogyService {
 
     @Autowired
     private IEulogyDao eulogyDao;
+
+    @Autowired
+    private IMemberAccountDao memberAccountDao;
 
     /**
      * 添加祭文悼词
@@ -91,10 +97,30 @@ public class EulogyServiceImpl implements IEulogyService {
             logger.info("pageNo [" + page.getPageNo() + "], pageSize [" + page.getPageSize() + "], 根据条件查询陵园纪念人祭文悼词列表无数据");
             return new PageResponse(page, null);
         }
+
+        List<String> memberIds = new ArrayList<String>();
+        for (Eulogy m : eulogies) {
+            memberIds.add(String.valueOf(m.getMemberId()));
+        }
+
+        //根据会员编号查询获取会员昵称
+        List<MemberAccount> memberAccounts = memberAccountDao.selectByMemberIds(memberIds);
+
         List<EulogyBo> eulogyBos = new ArrayList<EulogyBo>();
         for (Eulogy m : eulogies) {
             EulogyBo eulogyBo = new EulogyBo();
             BeanUtils.copyProperties(m, eulogyBo);
+            eulogyBo.setCreateTime(CalendarUtil.secondsTimeToDateTimeString(m.getCreateTime())); // 转化创建时间
+
+            if (!CollectionUtils.isEmpty(memberAccounts)) {
+                for (MemberAccount memberAccount : memberAccounts) {
+                    if (m.getMemberId().equals(memberAccount.getMemberId())) {
+                        eulogyBo.setMemberNickName(memberAccount.getNickName());
+                        break;
+                    }
+                }
+            }
+
             eulogyBos.add(eulogyBo);
         }
         return new PageResponse(page, eulogyBos);

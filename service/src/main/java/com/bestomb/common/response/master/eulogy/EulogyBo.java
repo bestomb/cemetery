@@ -7,9 +7,11 @@ public class EulogyBo {
 
     private String masterId;
 
-    private Integer createTime;
+    private String createTime;
 
     private String content;
+
+    private String memberNickName;
 
     public String getId() {
         return id;
@@ -35,11 +37,11 @@ public class EulogyBo {
         this.masterId = masterId == null ? null : masterId.trim();
     }
 
-    public Integer getCreateTime() {
+    public String getCreateTime() {
         return createTime;
     }
 
-    public void setCreateTime(Integer createTime) {
+    public void setCreateTime(String createTime) {
         this.createTime = createTime;
     }
 
@@ -49,5 +51,13 @@ public class EulogyBo {
 
     public void setContent(String content) {
         this.content = content == null ? null : content.trim();
+    }
+
+    public String getMemberNickName() {
+        return memberNickName;
+    }
+
+    public void setMemberNickName(String memberNickName) {
+        this.memberNickName = memberNickName;
     }
 }
